@@ -23,6 +23,12 @@ namespace StoreWebApi.Helper
                 .ForMember(dst => dst.Description, opt => opt.MapFrom(a => a.Description));
             CreateMap<RefreshToken, RefreshTokenDto>()
                 .ForMember(dst => dst.RefreshToken, opt => opt.MapFrom(a => a.Token));
+            CreateMap<Order, OrderDto>()
+                .ForMember(dst => dst.Status, opt => opt.MapFrom(a => a.Status))
+                .ForMember(dst => dst.CreatedAt, opt => opt.MapFrom(a => a.CreatedAt))
+                .ForMember(dst => dst.UpdatedAt, opt => opt.MapFrom(a => a.UpdatedAt))
+                .ForMember(dst => dst.TotalAmount, opt => opt.MapFrom(a => a.TotalAmount));
+
 
         }
     }

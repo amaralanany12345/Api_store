@@ -13,6 +13,7 @@ namespace StoreWebApi.Interfaces
         string generateRandomRefreshToken();
         Task<RefreshToken> createRefreshToken(int userId);
         Task<SigningResponse> refreshToken(int userId);
+        Task<User> getCurrentUser();
 
     }
 }

@@ -16,7 +16,16 @@ namespace StoreWebApi.Configuration
             builder.Property(A => A.PasswordHash).IsRequired();
             builder.Property(A => A.Role).IsRequired();
             builder.Property(A => A.CreatedAt).IsRequired();
+            //builder.HasData(uploadData());
 
+        }
+
+        private User[] uploadData()
+        {
+            return new User[]
+            {
+                new User{},
+            };
         }
     }
 }

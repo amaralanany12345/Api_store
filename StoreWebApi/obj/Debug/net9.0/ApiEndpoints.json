@@ -8,27 +8,17 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "name",
+        "Name": "Name",
         "Type": "System.String",
         "IsRequired": false
       },
       {
-        "Name": "descrption",
+        "Name": "Description",
         "Type": "System.String",
         "IsRequired": false
       }
     ],
-    "ReturnTypes": [
-      {
-        "Type": "StoreWebApi.DTO.CategoryDto",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
+    "ReturnTypes": []
   },
   {
     "ContainingType": "StoreWebApi.Controllers.CategoryController",
@@ -44,17 +34,7 @@
         "IsRequired": false
       }
     ],
-    "ReturnTypes": [
-      {
-        "Type": "StoreWebApi.DTO.CategoryDto",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
+    "ReturnTypes": []
   },
   {
     "ContainingType": "StoreWebApi.Controllers.CategoryController",
@@ -65,8 +45,8 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "CategoryId",
-        "Type": "System.Int32",
+        "Name": "CategoryName",
+        "Type": "System.String",
         "IsRequired": false
       }
     ],
@@ -81,8 +61,8 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "CategoryId",
-        "Type": "System.Int32",
+        "Name": "CategoryName",
+        "Type": "System.String",
         "IsRequired": false
       },
       {
@@ -96,17 +76,7 @@
         "IsRequired": false
       }
     ],
-    "ReturnTypes": [
-      {
-        "Type": "StoreWebApi.DTO.CategoryDto",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
+    "ReturnTypes": []
   },
   {
     "ContainingType": "StoreWebApi.Controllers.CategoryController",
@@ -116,17 +86,7 @@
     "IsController": true,
     "Order": 0,
     "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.List\u00601[[StoreWebApi.DTO.CategoryDto, StoreWebApi, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
+    "ReturnTypes": []
   },
   {
     "ContainingType": "StoreWebApi.Controllers.ItemController",
@@ -137,37 +97,27 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "name",
+        "Name": "Name",
         "Type": "System.String",
         "IsRequired": false
       },
       {
-        "Name": "price",
+        "Name": "Price",
         "Type": "System.Int32",
         "IsRequired": false
       },
       {
-        "Name": "stockQuantity",
+        "Name": "StockQuantity",
         "Type": "System.Int32",
         "IsRequired": false
       },
       {
-        "Name": "categoryId",
-        "Type": "System.Int32",
+        "Name": "CategoryName",
+        "Type": "System.String",
         "IsRequired": false
       }
     ],
-    "ReturnTypes": [
-      {
-        "Type": "StoreWebApi.DTO.ItemDto",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
+    "ReturnTypes": []
   },
   {
     "ContainingType": "StoreWebApi.Controllers.ItemController",
@@ -183,17 +133,7 @@
         "IsRequired": false
       }
     ],
-    "ReturnTypes": [
-      {
-        "Type": "StoreWebApi.DTO.ItemDto",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
+    "ReturnTypes": []
   },
   {
     "ContainingType": "StoreWebApi.Controllers.ItemController",
@@ -204,8 +144,8 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "itemId",
-        "Type": "System.Int32",
+        "Name": "itemName",
+        "Type": "System.String",
         "IsRequired": false
       }
     ],
@@ -220,8 +160,8 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "ItemId",
-        "Type": "System.Int32",
+        "Name": "itemName",
+        "Type": "System.String",
         "IsRequired": false
       },
       {
@@ -240,17 +180,7 @@
         "IsRequired": false
       }
     ],
-    "ReturnTypes": [
-      {
-        "Type": "StoreWebApi.DTO.ItemDto",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
+    "ReturnTypes": []
   },
   {
     "ContainingType": "StoreWebApi.Controllers.ItemController",
@@ -260,17 +190,7 @@
     "IsController": true,
     "Order": 0,
     "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.List\u00601[[StoreWebApi.DTO.ItemDto, StoreWebApi, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
+    "ReturnTypes": []
   },
   {
     "ContainingType": "StoreWebApi.Controllers.ItemController",
@@ -286,17 +206,120 @@
         "IsRequired": false
       }
     ],
-    "ReturnTypes": [
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "StoreWebApi.Controllers.OrderController",
+    "Method": "createOrder",
+    "RelativePath": "api/Order",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "StoreWebApi.Controllers.OrderController",
+    "Method": "addOrderITemToOrder",
+    "RelativePath": "api/Order/addItem",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
       {
-        "Type": "System.Collections.Generic.List\u00601[[StoreWebApi.DTO.ItemDto, StoreWebApi, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
+        "Name": "itemId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "quantity",
+        "Type": "System.Int32",
+        "IsRequired": false
       }
-    ]
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "StoreWebApi.Controllers.OrderController",
+    "Method": "getAllOrders",
+    "RelativePath": "api/Order/allOrders",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "StoreWebApi.Controllers.OrderController",
+    "Method": "cancelOrder",
+    "RelativePath": "api/Order/CancelOrder",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "StoreWebApi.Controllers.OrderController",
+    "Method": "deleteOrderItemFromOrder",
+    "RelativePath": "api/Order/deleteItem",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "itemId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "StoreWebApi.Controllers.OrderController",
+    "Method": "getOrder",
+    "RelativePath": "api/Order/order",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "StoreWebApi.Controllers.OrderController",
+    "Method": "getOrderItems",
+    "RelativePath": "api/Order/OrderItems",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "StoreWebApi.Controllers.ReceiptController",
+    "Method": "createReceipt",
+    "RelativePath": "api/Receipt",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "orderId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "StoreWebApi.Controllers.UserController",
+    "Method": "getCurrentUser",
+    "RelativePath": "api/User/currentUser",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
   },
   {
     "ContainingType": "StoreWebApi.Controllers.UserController",
@@ -312,17 +335,7 @@
         "IsRequired": false
       }
     ],
-    "ReturnTypes": [
-      {
-        "Type": "StoreWebApi.Models.SigningResponse",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
+    "ReturnTypes": []
   },
   {
     "ContainingType": "StoreWebApi.Controllers.UserController",
@@ -343,17 +356,17 @@
         "IsRequired": false
       }
     ],
-    "ReturnTypes": [
-      {
-        "Type": "StoreWebApi.Models.SigningResponse",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "StoreWebApi.Controllers.UserController",
+    "Method": "signOut",
+    "RelativePath": "api/User/signOut",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
   },
   {
     "ContainingType": "StoreWebApi.Controllers.UserController",
@@ -389,16 +402,6 @@
         "IsRequired": false
       }
     ],
-    "ReturnTypes": [
-      {
-        "Type": "StoreWebApi.Models.SigningResponse",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
+    "ReturnTypes": []
   }
 ]

@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using StoreWebApi;
 using StoreWebApi.Models;
 using AutoMapper;
 using StoreWebApi.Helper;
@@ -11,9 +10,23 @@ using StoreWebApi.Interfaces;
 using StoreWebApi.Services;
 using Serilog;
 using Microsoft.OpenApi.Models;
+using Serilog.Sinks.MSSqlServer;
+using StoreWebApi.zAppContexts;
+using StoreWebApi.ExceptionHandler;
+using StoreWebApi.Actions;
+using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+//builder.Services.AddProblemDetails(configure =>
+//{
+//    configure.CustomizeProblemDetails = context =>
+//    {
+//        context.ProblemDetails.Extensions.TryAdd("requestId", context.HttpContext.TraceIdentifier);
+//    };
+//});
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
@@ -26,14 +39,23 @@ builder.Services.AddControllers().AddJsonOptions(options =>
         System.Text.Json.Serialization.ReferenceHandler.Preserve;
 });
 
-//var logger = new LoggerConfiguration().ReadFrom.Configuration(builder.Configuration).CreateLogger();
-//builder.Services.AddSerilog(logger);
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Warning)
+    .MinimumLevel.Override("System", Serilog.Events.LogEventLevel.Warning)
+    .WriteTo.Console()
+    //.WriteTo.File("logs/log.txt", rollingInterval: RollingInterval.Day)
+    .WriteTo.MSSqlServer(
+        connectionString: builder.Configuration.GetConnectionString("DefaultConnection"),
+        sinkOptions: new MSSqlServerSinkOptions
+        {
+            TableName = "Logs",
+            AutoCreateSqlTable = true
+        })
+.CreateLogger();
 
-//builder.Host.UseSerilog((context,configuration) =>
-//{
-//    configuration.ReadFrom.Configuration(context.Configuration);
+builder.Host.UseSerilog();
 
-//});
 
 builder.Services.AddControllers();
 // CORS policy for your Angular app
@@ -56,12 +78,29 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+builder.Services.AddDbContext<WalletAppDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("WalletConnectionString"));
+});
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("refreshTokenIsValid", policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.Requirements.Add(new ValidRefreshToken());
+    });
+});
+
 builder.Services.AddScoped<IItem, ItemService>();
 builder.Services.AddScoped<ICategory, CategoryService>();
 builder.Services.AddScoped<IUser,UserService>();
-
-
-
+builder.Services.AddScoped<IOrder,OrderService>();
+builder.Services.AddScoped<IEmail,EmailService>();
+builder.Services.AddScoped<IPaymentGateWay, PaymentGateWayService>();
+builder.Services.AddScoped(typeof(IGenericRepo<>), typeof(GenericRepoService<>));
+builder.Services.AddScoped<IUnitOfWork,UnitOfWorkService>();
+builder.Services.AddScoped<IAuthorizationHandler, CheckRefreshTokenIsValid>();
 // JWT Authentication setup
 var JwtOptions = builder.Configuration.GetSection("Jwt").Get<Jwt>();
 builder.Services.AddSingleton(JwtOptions);
@@ -129,6 +168,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("AllowSpecificOrigin");
+app.UseExceptionHandler();
+//app.UseMiddleware<GlobalExceptionHandler>();
 
 app.UseAuthentication();
 app.UseAuthorization();

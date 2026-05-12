@@ -1,0 +1,192 @@
+2026-05-11 12:35:57.269 +03:00 [INF] User profile is available. Using 'C:\Users\Aalan\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-05-11 12:35:57.434 +03:00 [INF] Now listening on: https://localhost:7273
+2026-05-11 12:35:57.436 +03:00 [INF] Now listening on: http://localhost:5129
+2026-05-11 12:35:57.512 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-05-11 12:35:57.514 +03:00 [INF] Hosting environment: Development
+2026-05-11 12:35:57.515 +03:00 [INF] Content root path: D:\Projects\StoreWebApi\StoreWebApi
+2026-05-11 12:36:34.718 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7273/swagger/index.html - null null
+2026-05-11 12:36:34.923 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7273/swagger/index.html - 200 null text/html;charset=utf-8 204.115ms
+2026-05-11 12:36:34.990 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7273/_framework/aspnetcore-browser-refresh.js - null null
+2026-05-11 12:36:34.990 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7273/_vs/browserLink - null null
+2026-05-11 12:36:35.000 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7273/_framework/aspnetcore-browser-refresh.js - 200 13773 application/javascript; charset=utf-8 10.3879ms
+2026-05-11 12:36:35.023 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7273/_vs/browserLink - 200 null text/javascript; charset=UTF-8 32.9479ms
+2026-05-11 12:36:35.176 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7273/swagger/v1/swagger.json - null null
+2026-05-11 12:36:35.327 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7273/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 151.5598ms
+2026-05-11 12:36:47.887 +03:00 [INF] Request starting HTTP/2 PUT https://localhost:7273/api/Order/addItem?orderId=1&itemId=10&quantity=2 - null 0
+2026-05-11 12:36:47.902 +03:00 [INF] CORS policy execution failed.
+2026-05-11 12:36:47.903 +03:00 [INF] Request origin https://localhost:7273 does not have permission to access the resource.
+2026-05-11 12:36:47.934 +03:00 [INF] Executing endpoint 'StoreWebApi.Controllers.OrderController.addOrderITemToOrder (StoreWebApi)'
+2026-05-11 12:36:47.953 +03:00 [INF] Route matched with {action = "addOrderITemToOrder", controller = "Order"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[StoreWebApi.Models.OrderItem]] addOrderITemToOrder(Int32, Int32, Int32) on controller StoreWebApi.Controllers.OrderController (StoreWebApi).
+2026-05-11 12:36:48.181 +03:00 [WRN] You do not have a valid license key for the Lucky Penny software AutoMapper. This is allowed for development and testing scenarios. If you are running in production you are required to have a licensed version. Please visit https://luckypennysoftware.com to obtain a valid license.
+2026-05-11 12:36:50.658 +03:00 [INF] Executed DbCommand (59ms) [Parameters=[@__orderId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [o].[Id], [o].[CreatedAt], [o].[CustomerId], [o].[Status], [o].[TotalAmount], [o].[UpdatedAt], [o].[UserId], [u].[Id], [u].[Balance], [u].[CreatedAt], [u].[Email], [u].[PasswordHash], [u].[Role], [u].[UserName]
+FROM [Orders] AS [o]
+INNER JOIN [Users] AS [u] ON [o].[CustomerId] = [u].[Id]
+WHERE [o].[Id] = @__orderId_0
+2026-05-11 12:36:50.768 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[@__itemId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [i].[Id], [i].[CategoryId], [i].[Name], [i].[Price], [i].[StockQuantity]
+FROM [Items] AS [i]
+WHERE [i].[Id] = @__itemId_0
+2026-05-11 12:36:50.793 +03:00 [INF] Executed action StoreWebApi.Controllers.OrderController.addOrderITemToOrder (StoreWebApi) in 2833.7646ms
+2026-05-11 12:36:50.797 +03:00 [INF] Executed endpoint 'StoreWebApi.Controllers.OrderController.addOrderITemToOrder (StoreWebApi)'
+2026-05-11 12:36:50.800 +03:00 [ERR] An unhandled exception has occurred while executing the request.
+System.ArgumentException: your balance is not enough
+   at StoreWebApi.Services.OrderService.AddOrderItemToOrder(Int32 orderId, Int32 itemId, Int32 quantity) in D:\Projects\StoreWebApi\StoreWebApi\Services\OrderService.cs:line 67
+   at StoreWebApi.Controllers.OrderController.addOrderITemToOrder(Int32 orderId, Int32 itemId, Int32 quantity) in D:\Projects\StoreWebApi\StoreWebApi\Controllers\OrderController.cs:line 32
+   at lambda_method6(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddlewareImpl.Invoke(HttpContext context)
+2026-05-11 12:36:50.861 +03:00 [INF] Request finished HTTP/2 PUT https://localhost:7273/api/Order/addItem?orderId=1&itemId=10&quantity=2 - 500 null text/plain; charset=utf-8 2973.691ms
+2026-05-11 12:40:04.606 +03:00 [INF] User profile is available. Using 'C:\Users\Aalan\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-05-11 12:40:04.750 +03:00 [INF] Now listening on: https://localhost:7273
+2026-05-11 12:40:04.751 +03:00 [INF] Now listening on: http://localhost:5129
+2026-05-11 12:40:04.866 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-05-11 12:40:04.867 +03:00 [INF] Hosting environment: Development
+2026-05-11 12:40:04.867 +03:00 [INF] Content root path: D:\Projects\StoreWebApi\StoreWebApi
+2026-05-11 12:40:05.345 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7273/swagger/index.html - null null
+2026-05-11 12:40:05.497 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7273/swagger/index.html - 200 null text/html;charset=utf-8 153.8965ms
+2026-05-11 12:40:05.587 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7273/_vs/browserLink - null null
+2026-05-11 12:40:05.587 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7273/_framework/aspnetcore-browser-refresh.js - null null
+2026-05-11 12:40:05.593 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7273/_framework/aspnetcore-browser-refresh.js - 200 13773 application/javascript; charset=utf-8 6.1186ms
+2026-05-11 12:40:05.612 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7273/_vs/browserLink - 200 null text/javascript; charset=UTF-8 25.4808ms
+2026-05-11 12:40:05.778 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7273/swagger/v1/swagger.json - null null
+2026-05-11 12:40:05.898 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7273/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 120.8208ms
+2026-05-11 12:40:32.979 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7273/swagger/index.html - null null
+2026-05-11 12:40:32.983 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7273/swagger/index.html - 200 null text/html;charset=utf-8 3.8317ms
+2026-05-11 12:40:33.037 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7273/_vs/browserLink - null null
+2026-05-11 12:40:33.038 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7273/_framework/aspnetcore-browser-refresh.js - null null
+2026-05-11 12:40:33.039 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7273/_framework/aspnetcore-browser-refresh.js - 200 13773 application/javascript; charset=utf-8 0.5192ms
+2026-05-11 12:40:33.045 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7273/_vs/browserLink - 200 null text/javascript; charset=UTF-8 8.0127ms
+2026-05-11 12:40:33.174 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7273/swagger/v1/swagger.json - null null
+2026-05-11 12:40:33.188 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7273/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 13.9141ms
+2026-05-11 12:42:05.353 +03:00 [INF] Request starting HTTP/2 PUT https://localhost:7273/api/Order/addItem?orderId=1&itemId=10&quantity=2 - null 0
+2026-05-11 12:42:05.361 +03:00 [INF] CORS policy execution failed.
+2026-05-11 12:42:05.362 +03:00 [INF] Request origin https://localhost:7273 does not have permission to access the resource.
+2026-05-11 12:42:05.384 +03:00 [INF] Executing endpoint 'StoreWebApi.Controllers.OrderController.addOrderITemToOrder (StoreWebApi)'
+2026-05-11 12:42:05.400 +03:00 [INF] Route matched with {action = "addOrderITemToOrder", controller = "Order"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[StoreWebApi.Models.OrderItem]] addOrderITemToOrder(Int32, Int32, Int32) on controller StoreWebApi.Controllers.OrderController (StoreWebApi).
+2026-05-11 12:42:05.631 +03:00 [WRN] You do not have a valid license key for the Lucky Penny software AutoMapper. This is allowed for development and testing scenarios. If you are running in production you are required to have a licensed version. Please visit https://luckypennysoftware.com to obtain a valid license.
+2026-05-11 12:42:06.764 +03:00 [INF] Executed DbCommand (35ms) [Parameters=[@__orderId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [o].[Id], [o].[CreatedAt], [o].[CustomerId], [o].[Status], [o].[TotalAmount], [o].[UpdatedAt], [o].[UserId], [u].[Id], [u].[Balance], [u].[CreatedAt], [u].[Email], [u].[PasswordHash], [u].[Role], [u].[UserName]
+FROM [Orders] AS [o]
+INNER JOIN [Users] AS [u] ON [o].[CustomerId] = [u].[Id]
+WHERE [o].[Id] = @__orderId_0
+2026-05-11 12:42:06.855 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[@__itemId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [i].[Id], [i].[CategoryId], [i].[Name], [i].[Price], [i].[StockQuantity]
+FROM [Items] AS [i]
+WHERE [i].[Id] = @__itemId_0
+2026-05-11 12:42:06.869 +03:00 [INF] Executed action StoreWebApi.Controllers.OrderController.addOrderITemToOrder (StoreWebApi) in 1465.9009ms
+2026-05-11 12:42:06.869 +03:00 [INF] Executed endpoint 'StoreWebApi.Controllers.OrderController.addOrderITemToOrder (StoreWebApi)'
+2026-05-11 12:42:06.871 +03:00 [ERR] An unhandled exception has occurred while executing the request.
+System.ArgumentException: your balance is not enough
+   at StoreWebApi.Services.OrderService.AddOrderItemToOrder(Int32 orderId, Int32 itemId, Int32 quantity) in D:\Projects\StoreWebApi\StoreWebApi\Services\OrderService.cs:line 67
+   at StoreWebApi.Controllers.OrderController.addOrderITemToOrder(Int32 orderId, Int32 itemId, Int32 quantity) in D:\Projects\StoreWebApi\StoreWebApi\Controllers\OrderController.cs:line 32
+   at lambda_method6(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddlewareImpl.Invoke(HttpContext context)
+2026-05-11 12:42:06.916 +03:00 [INF] Request finished HTTP/2 PUT https://localhost:7273/api/Order/addItem?orderId=1&itemId=10&quantity=2 - 500 null text/plain; charset=utf-8 1563.455ms
+2026-05-11 12:43:56.247 +03:00 [INF] User profile is available. Using 'C:\Users\Aalan\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-05-11 12:43:56.394 +03:00 [INF] Now listening on: https://localhost:7273
+2026-05-11 12:43:56.395 +03:00 [INF] Now listening on: http://localhost:5129
+2026-05-11 12:43:56.487 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-05-11 12:43:56.487 +03:00 [INF] Hosting environment: Development
+2026-05-11 12:43:56.488 +03:00 [INF] Content root path: D:\Projects\StoreWebApi\StoreWebApi
+2026-05-11 12:43:56.964 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7273/swagger/index.html - null null
+2026-05-11 12:43:57.108 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7273/swagger/index.html - 200 null text/html;charset=utf-8 145.8312ms
+2026-05-11 12:43:57.169 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7273/_framework/aspnetcore-browser-refresh.js - null null
+2026-05-11 12:43:57.171 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7273/_vs/browserLink - null null
+2026-05-11 12:43:57.177 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7273/_framework/aspnetcore-browser-refresh.js - 200 13773 application/javascript; charset=utf-8 8.0059ms
+2026-05-11 12:43:57.203 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7273/_vs/browserLink - 200 null text/javascript; charset=UTF-8 32.5147ms
+2026-05-11 12:43:57.398 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7273/swagger/v1/swagger.json - null null
+2026-05-11 12:43:57.561 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7273/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 163.2699ms
+2026-05-11 12:44:06.144 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7273/api/Category?CategoryName=1 - null null
+2026-05-11 12:44:06.171 +03:00 [INF] Executing endpoint 'StoreWebApi.Controllers.CategoryController.getCategoryByName (StoreWebApi)'
+2026-05-11 12:44:06.191 +03:00 [INF] Route matched with {action = "getCategoryByName", controller = "Category"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[StoreWebApi.DTO.CategoryDto]] getCategoryByName(System.String) on controller StoreWebApi.Controllers.CategoryController (StoreWebApi).
+2026-05-11 12:44:06.473 +03:00 [WRN] You do not have a valid license key for the Lucky Penny software AutoMapper. This is allowed for development and testing scenarios. If you are running in production you are required to have a licensed version. Please visit https://luckypennysoftware.com to obtain a valid license.
+2026-05-11 12:44:07.416 +03:00 [INF] Executed DbCommand (26ms) [Parameters=[@__name_0='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [c].[Id], [c].[Description], [c].[Name]
+FROM [Categories] AS [c]
+WHERE [c].[Name] = @__name_0
+2026-05-11 12:44:07.444 +03:00 [INF] Executed action StoreWebApi.Controllers.CategoryController.getCategoryByName (StoreWebApi) in 1248.3045ms
+2026-05-11 12:44:07.446 +03:00 [INF] Executed endpoint 'StoreWebApi.Controllers.CategoryController.getCategoryByName (StoreWebApi)'
+2026-05-11 12:44:07.451 +03:00 [ERR] An unhandled exception has occurred while executing the request.
+System.ArgumentException: category is not found
+   at StoreWebApi.Services.CategoryService.getCategory(String name) in D:\Projects\StoreWebApi\StoreWebApi\Services\CategoryService.cs:line 55
+   at StoreWebApi.Controllers.CategoryController.getCategoryByName(String CategoryName) in D:\Projects\StoreWebApi\StoreWebApi\Controllers\CategoryController.cs:line 36
+   at lambda_method6(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddlewareImpl.Invoke(HttpContext context)
+2026-05-11 12:44:07.495 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7273/api/Category?CategoryName=1 - 500 null text/plain; charset=utf-8 1351.1915ms
+2026-05-11 12:44:27.918 +03:00 [INF] User profile is available. Using 'C:\Users\Aalan\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-05-11 12:44:28.066 +03:00 [INF] Now listening on: https://localhost:7273
+2026-05-11 12:44:28.067 +03:00 [INF] Now listening on: http://localhost:5129
+2026-05-11 12:44:28.187 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-05-11 12:44:28.187 +03:00 [INF] Hosting environment: Development
+2026-05-11 12:44:28.187 +03:00 [INF] Content root path: D:\Projects\StoreWebApi\StoreWebApi
+2026-05-11 12:44:28.600 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7273/swagger/index.html - null null
+2026-05-11 12:44:28.823 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7273/swagger/index.html - 200 null text/html;charset=utf-8 222.8714ms
+2026-05-11 12:44:28.874 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7273/_vs/browserLink - null null
+2026-05-11 12:44:28.874 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7273/_framework/aspnetcore-browser-refresh.js - null null
+2026-05-11 12:44:28.880 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7273/_framework/aspnetcore-browser-refresh.js - 200 13773 application/javascript; charset=utf-8 6.5077ms
+2026-05-11 12:44:28.904 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7273/_vs/browserLink - 200 null text/javascript; charset=UTF-8 30.0023ms
+2026-05-11 12:44:28.949 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7273/swagger/v1/swagger.json - null null
+2026-05-11 12:44:29.132 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7273/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 183.0829ms
+2026-05-11 12:44:32.152 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7273/api/Category/AllCategories - null null
+2026-05-11 12:44:32.180 +03:00 [INF] Executing endpoint 'StoreWebApi.Controllers.CategoryController.getAllCategories (StoreWebApi)'
+2026-05-11 12:44:32.195 +03:00 [INF] Route matched with {action = "getAllCategories", controller = "Category"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Collections.Generic.List`1[StoreWebApi.DTO.CategoryDto]]] getAllCategories() on controller StoreWebApi.Controllers.CategoryController (StoreWebApi).
+2026-05-11 12:44:32.361 +03:00 [WRN] You do not have a valid license key for the Lucky Penny software AutoMapper. This is allowed for development and testing scenarios. If you are running in production you are required to have a licensed version. Please visit https://luckypennysoftware.com to obtain a valid license.
+2026-05-11 12:44:33.997 +03:00 [INF] Executed DbCommand (774ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [c].[Id], [c].[Description], [c].[Name]
+FROM [Categories] AS [c]
+2026-05-11 12:44:34.081 +03:00 [INF] Executing OkObjectResult, writing value of type 'System.Collections.Generic.List`1[[StoreWebApi.DTO.CategoryDto, StoreWebApi, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-05-11 12:44:34.149 +03:00 [INF] Executed action StoreWebApi.Controllers.CategoryController.getAllCategories (StoreWebApi) in 1950.5448ms
+2026-05-11 12:44:34.149 +03:00 [INF] Executed endpoint 'StoreWebApi.Controllers.CategoryController.getAllCategories (StoreWebApi)'
+2026-05-11 12:44:34.156 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7273/api/Category/AllCategories - 200 111 application/json; charset=utf-8 2003.9419ms
+2026-05-11 12:45:56.518 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7273/api/Category/AllCategories - null null
+2026-05-11 12:45:56.522 +03:00 [INF] Executing endpoint 'StoreWebApi.Controllers.CategoryController.getAllCategories (StoreWebApi)'
+2026-05-11 12:45:56.522 +03:00 [INF] Route matched with {action = "getAllCategories", controller = "Category"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Collections.Generic.List`1[StoreWebApi.DTO.CategoryDto]]] getAllCategories() on controller StoreWebApi.Controllers.CategoryController (StoreWebApi).
+2026-05-11 12:45:56.545 +03:00 [INF] Executed DbCommand (6ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [c].[Id], [c].[Description], [c].[Name]
+FROM [Categories] AS [c]
+2026-05-11 12:45:56.548 +03:00 [INF] Executing OkObjectResult, writing value of type 'System.Collections.Generic.List`1[[StoreWebApi.DTO.CategoryDto, StoreWebApi, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-05-11 12:45:56.548 +03:00 [INF] Executed action StoreWebApi.Controllers.CategoryController.getAllCategories (StoreWebApi) in 26.2137ms
+2026-05-11 12:45:56.549 +03:00 [INF] Executed endpoint 'StoreWebApi.Controllers.CategoryController.getAllCategories (StoreWebApi)'
+2026-05-11 12:45:56.549 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7273/api/Category/AllCategories - 200 111 application/json; charset=utf-8 30.8632ms

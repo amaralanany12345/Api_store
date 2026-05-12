@@ -13,6 +13,7 @@ namespace StoreWebApi.Configuration
             builder.Property(a => a.CreatedAt).IsRequired();
             builder.Property(a => a.UpdatedAt).IsRequired();
             builder.HasOne(a => a.Customer).WithMany().HasForeignKey(a => a.CustomerId);
+            builder.HasOne(a => a.Receipt).WithOne(a => a.Order).HasForeignKey<Receipt>(a => a.orderId);
 
         }
     }

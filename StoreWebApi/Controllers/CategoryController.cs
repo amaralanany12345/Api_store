@@ -4,12 +4,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StoreWebApi.DTO;
 using StoreWebApi.Interfaces;
+using StoreWebApi.Models;
 using StoreWebApi.Services;
 
 namespace StoreWebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Policy = "refreshTokenIsValid")]
     public class CategoryController : ControllerBase
     {
         private readonly ICategory _categoryService;
@@ -17,36 +19,53 @@ namespace StoreWebApi.Controllers
         {
             _categoryService = categoryService;
         }
-
+        /// <summary>
+        /// create category
+        /// </summary>
         [HttpPost]
-        public async Task<ActionResult<CategoryDto>> createCategory(string name, string descrption)
+        public async Task<IActionResult> createCategory([FromQuery] CategoryDto categoryData)
         {
-            return Ok(await _categoryService.createCategory(name, descrption));
+            return Ok(await _categoryService.createCategory(categoryData.Name,categoryData.Description));
         }
+        /// <summary>
+        /// get all categories
+        /// </summary>
         [HttpGet("AllCategories")]
         [Authorize(Roles = "Admin,Customer")]
         //[Authorize(Roles = "Admin")]
-        public async Task<ActionResult<List<CategoryDto>>> getAllCategories()
+        public async Task<IActionResult> getAllCategories()
         {
             return Ok(await _categoryService.getAllCategories());
         }
+        /// <summary>
+        /// get category by name
+        /// </summary>
         [HttpGet]
-        public async Task<ActionResult<CategoryDto>> getCategoryByName(string CategoryName)
+        //[ProducesResponseType(typeof(CategoryDto), StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> getCategoryByName(string CategoryName)
         {
             return Ok(await _categoryService.getCategory(CategoryName));
         }
+        /// <summary>
+        /// delete category by name
+        /// </summary>
         [HttpDelete]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult> deleteCategory(int CategoryId)
+        //[Authorize(Roles = "Admin")]
+        public async Task<IActionResult> deleteCategory(string CategoryName)
         {
-            await _categoryService.deleteCategory(CategoryId);
+            await _categoryService.deleteCategory(CategoryName);
             return Ok();
         }
+        /// <summary>
+        /// update category
+        /// </summary>
         [HttpPut]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<CategoryDto>> updateCategory(int CategoryId, string newName, string newDescription)
+        //[Authorize(Roles = "Admin")]
+        public async Task<IActionResult> updateCategory(string CategoryName, string newName, string newDescription)
         {
-            return Ok(await _categoryService.updateCategory(CategoryId, newName, newDescription));
+            return Ok(await _categoryService.updateCategory(CategoryName, newName, newDescription));
         }
+
     }
 }

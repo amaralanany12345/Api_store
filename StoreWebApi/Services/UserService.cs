@@ -5,6 +5,7 @@ using StoreWebApi.DTO;
 using StoreWebApi.Enums;
 using StoreWebApi.Interfaces;
 using StoreWebApi.Models;
+using StoreWebApi.zAppContexts;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -17,11 +18,19 @@ namespace StoreWebApi.Services
         private readonly AppDbContext _context;
         private readonly Jwt _jwt;
         private readonly IMapper _mapper;
-        public UserService(AppDbContext context, Jwt jwt, IMapper mapper)
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IGenericRepo<User> _genericRepo;
+        private readonly ILogger<UserService> _logger;
+        private readonly IHttpContextAccessor _contextAccessor;
+        public UserService(AppDbContext context, Jwt jwt, IMapper mapper, IUnitOfWork unitOfWork, IGenericRepo<User> genericRepo, ILogger<UserService> logger, IHttpContextAccessor contextAccessor)
         {
             _context = context;
             _jwt = jwt;
             _mapper = mapper;
+            _unitOfWork = unitOfWork;
+            _genericRepo = genericRepo;
+            _logger = logger;
+            _contextAccessor = contextAccessor;
         }
         public async Task<SigningResponse> signUp(string userName, string email, string password, UserRole role, int? balance)
         {
@@ -37,8 +46,12 @@ namespace StoreWebApi.Services
             {
                 newUser.Balance = balance;
             }
-            await _context.Users.AddAsync(newUser);
-            await _context.SaveChangesAsync();
+            else
+            {
+                newUser.Balance = null;
+            }
+            await _genericRepo.CreateAsync(newUser);
+            await _unitOfWork.saveChangesAsync();
             return new SigningResponse
             {
                 User = _mapper.Map<UserDto>(newUser),
@@ -51,6 +64,7 @@ namespace StoreWebApi.Services
             var user = await getUserByEmail(userName);
             if (user == null || !(BCrypt.Net.BCrypt.Verify(password, user.PasswordHash)))
             {
+                _logger.LogWarning("your email or password is not found");
                 throw new ArgumentException("user is not found");
             }
             return new SigningResponse
@@ -65,6 +79,7 @@ namespace StoreWebApi.Services
             var user = await _context.Users.Where(a => a.Email == email).FirstOrDefaultAsync();
             if (user == null)
             {
+                _logger.LogWarning("user is not found with this email");
                 throw new ArgumentException("user is not found");
             }
             return user;
@@ -105,7 +120,7 @@ namespace StoreWebApi.Services
                 UserId=userId,
                 Token=generateRandomRefreshToken(),
                 CreatedAt=DateTime.Now,
-                ExpiredAt=DateTime.Now.AddSeconds(10),
+                ExpiredAt=DateTime.Now.AddSeconds(60),
             };
             await _context.RefreshTokens.AddAsync(newRefreshToken);
             await _context.SaveChangesAsync();
@@ -117,11 +132,12 @@ namespace StoreWebApi.Services
             var refreshToken=await _context.RefreshTokens.Where(a=>a.UserId==userId).OrderByDescending(a=>a.CreatedAt).FirstOrDefaultAsync();
             if(refreshToken==null || !refreshToken.isValid)
             {
+                _logger.LogInformation("your refresh token is expired");
                 throw new ArgumentException("your refresh token is expired");
             }
             refreshToken.Token=generateRandomRefreshToken();
             refreshToken.CreatedAt=DateTime.Now;
-            refreshToken.ExpiredAt=DateTime.Now.AddSeconds(10);
+            refreshToken.ExpiredAt=DateTime.Now.AddSeconds(30);
             await _context.SaveChangesAsync();
             return new SigningResponse
             {
@@ -130,15 +146,39 @@ namespace StoreWebApi.Services
                 RefreshToken=_mapper.Map<RefreshTokenDto>(refreshToken),    
             };
         }
-        public Task signOut()
+        public async Task<User> getCurrentUser()
         {
-            throw new NotImplementedException();
+            var currentUserEmail = _contextAccessor.HttpContext?.User.FindFirst(ClaimTypes.Email)?.Value;
+            if (currentUserEmail == null)
+            {
+                throw new ArgumentException("user is not found");
+            }
+            var user= await getUserByEmail(currentUserEmail);
+            var currentUSerRefreshToken = await _context.RefreshTokens.Where(a => a.UserId == user.Id).OrderByDescending(A => A.CreatedAt).FirstOrDefaultAsync();
+            if (currentUSerRefreshToken == null)
+            {
+                throw new ArgumentException("your token is not found");
+            }
+            return await getUserByEmail(currentUserEmail);
         }
+        public async Task signOut()
+        {
+            var user=await getCurrentUser();
+            var refreshToken=await _context.RefreshTokens.Where(a=>a.UserId==user.Id).OrderByDescending(A=>A.CreatedAt).FirstOrDefaultAsync();
+            if(refreshToken == null)
+            {
+                throw new ArgumentException("your token is not found");
+            }
+            refreshToken.ExpiredAt = DateTime.Now;
+            await _context.SaveChangesAsync();
+        }
+        
         private async Task<User> getUserById(int userId)
         {
             var user = await _context.Users.Where(a => a.Id == userId).FirstOrDefaultAsync();
             if(user == null)
             {
+                _logger.LogInformation("user is not found");
                 throw new ArgumentException("user is not found");
             }
             return user;

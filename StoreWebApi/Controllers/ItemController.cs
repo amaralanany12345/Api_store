@@ -10,6 +10,7 @@ namespace StoreWebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Policy = "refreshTokenIsValid")]
     public class ItemController : ControllerBase
     {
         private readonly IItem _ItemService;
@@ -18,42 +19,60 @@ namespace StoreWebApi.Controllers
         {
             _ItemService = itemService;
         }
+        /// <summary>
+        /// create item
+        /// </summary>
         [HttpPost]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ItemDto>> createItem(string name, int price, int stockQuantity, int categoryId)
+        //[Authorize(Roles = "Admin")]
+        public async Task<IActionResult> createItem([FromQuery]ItemDto itemData)
         {
-            return Ok(await _ItemService.createItem(name, price, stockQuantity, categoryId));
+            return Ok(await _ItemService.createItem(itemData.Name,itemData.Price,itemData.StockQuantity,itemData.CategoryName));
         }
+        /// <summary>
+        /// get all items
+        /// </summary>
         [HttpGet("allItems")]
-        [Authorize(Roles = "Admin,Customer")]
-        public async Task<ActionResult<List<ItemDto>>> getAllItems()
+        //[Authorize(Roles = "Admin,Customer")]
+        public async Task<IActionResult> getAllItems()
         {
             return Ok(await _ItemService.getAllItems());
         }
+        /// <summary>
+        /// get item by name
+        /// </summary>
         [HttpGet]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ItemDto>> getItemByName(string itemName)
+        //[Authorize(Roles = "Admin")]
+        public async Task<IActionResult> getItemByName(string itemName)
         {
             return Ok(await _ItemService.getITem(itemName));
         }
+        /// <summary>
+        /// get items by category name
+        /// </summary>
         [HttpGet("byCategory")]
-        [Authorize(Roles = "Admin,Customer")]
-        public async Task<ActionResult<List<ItemDto>>> getItemsByCategory(string categoryName)
+        //[Authorize(Roles = "Admin,Customer")]
+        public async Task<IActionResult> getItemsByCategory(string categoryName)
         {
             return Ok(await _ItemService.getITemByCategoryName(categoryName));
         }
+        /// <summary>
+        /// delete item by item name
+        /// </summary>
         [HttpDelete]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult> deleteItem(int itemId)
+        //[Authorize(Roles = "Admin")]
+        public async Task<IActionResult> deleteItem(string itemName)
         {
-            await _ItemService.deleteItem(itemId);
+            await _ItemService.deleteItem(itemName);
             return Ok();
         }
+        /// <summary>
+        /// update item
+        /// </summary>
         [HttpPut]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ItemDto>> updateItem(int ItemId, string newName, int newPrice, int stockQuantity)
+        //[Authorize(Roles = "Admin")]
+        public async Task<IActionResult> updateItem(string itemName, string newName, int newPrice, int stockQuantity)
         {
-            return Ok(await _ItemService.updateItem(ItemId, newName, newPrice, stockQuantity));
+            return Ok(await _ItemService.updateItem(itemName, newName, newPrice, stockQuantity));
         }
 
 

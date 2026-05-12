@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using StoreWebApi.DTO;
 using StoreWebApi.Interfaces;
 using StoreWebApi.Models;
+using StoreWebApi.zAppContexts;
 
 namespace StoreWebApi.Services
 {
@@ -10,37 +11,43 @@ namespace StoreWebApi.Services
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
-        public ItemService(AppDbContext context, IMapper mapper)
+        private readonly IGenericRepo<Item> _genericRepo;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly ILogger<ItemService> _logger;
+        public ItemService(AppDbContext context, IMapper mapper, IGenericRepo<Item> genericRepo, IUnitOfWork unitOfWork, ILogger<ItemService> logger)
         {
             _context = context;
             _mapper = mapper;
+            _genericRepo = genericRepo;
+            _unitOfWork = unitOfWork;
+            _logger = logger;
         }
-
-        public async Task<ItemDto> createItem(string name, int price, int stockQuantity, int categoryId)
+        public async Task<ItemDto> createItem(string name, int price, int stockQuantity, string categoryName)
         {
-            var category=await _context.Categories.Where(a=>a.Id == categoryId).FirstOrDefaultAsync();
+            var category=await _context.Categories.Where(a=>a.Name == categoryName).FirstOrDefaultAsync();
             if(category == null)
             {
-                throw new ArgumentException("category is not found");
+                _logger.LogWarning("category is not found so you can't create item");
+                throw new ArgumentException("category is not found so you can't create item");
             }
             var newItem=new Item
             {
                 Name = name,
                 Price = price,
                 StockQuantity = stockQuantity,
-                CategoryId = categoryId,
+                CategoryId = category.Id,
                 Category = category
-
             };
-            await _context.Items.AddAsync(newItem);
-            await _context.SaveChangesAsync();
+            await _genericRepo.CreateAsync(newItem);
+            await _unitOfWork.saveChangesAsync();
+            _logger.LogInformation($"item is created with name{newItem.Name} and it belong to category {category.Name}");
             return _mapper.Map<ItemDto>(newItem);
         }
 
-        public async Task deleteItem(int ItemId)
+        public async Task deleteItem(string ItemName)
         {
-            var item = await getItemById(ItemId);
-            _context.Items.Remove(item);
+            var item = await getITem(ItemName);
+            _context.Items.Remove(_mapper.Map<Item>(item));
             await _context.SaveChangesAsync();
 
         }
@@ -49,6 +56,7 @@ namespace StoreWebApi.Services
             var item=await _context.Items.Where(a=>a.Id==itemId).FirstOrDefaultAsync();
             if(item == null)
             {
+                _logger.LogInformation("Item is not found with this id ");
                 throw new ArgumentException("Item is not found");
             }
             return item;    
@@ -59,7 +67,8 @@ namespace StoreWebApi.Services
             var item = await _context.Items.Where(a => a.Name == name).FirstOrDefaultAsync();
             if (item == null)
             {
-                throw new ArgumentException("Item is not found");
+                _logger.LogInformation("Item is not found with this name ");
+                throw new ArgumentException("Item is not found with this name");
             }
             return _mapper.Map<ItemDto>(item);
         }
@@ -69,9 +78,9 @@ namespace StoreWebApi.Services
             return _mapper.Map<List<ItemDto>>(await _context.Items.ToListAsync());
         }
 
-        public async Task<ItemDto> updateItem(int ItemId, string newName, int newPrice, int stockQuantity)
+        public async Task<ItemDto> updateItem(string itemName, string newName, int newPrice, int stockQuantity)
         {
-            var item=await getItemById(ItemId);
+            var item=await getITem(itemName);
             item.Name = newName;
             item.Price = newPrice;
             item.StockQuantity = stockQuantity;
@@ -84,6 +93,7 @@ namespace StoreWebApi.Services
             var category=await _context.Categories.Where(a=>a.Name==categoryName).FirstOrDefaultAsync();
             if(category == null)
             {
+                _logger.LogInformation("category is not found with this name");
                 throw new ArgumentException("category is not found");
             }
             return _mapper.Map<List<ItemDto>>(await _context.Items.Where(a=>a.Category.Name==categoryName).ToListAsync());

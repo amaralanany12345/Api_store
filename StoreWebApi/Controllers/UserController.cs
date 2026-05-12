@@ -20,21 +20,50 @@ namespace StoreWebApi.Controllers
             _userService = userService;
             _mapper = mapper;
         }
+        /// <summary>
+        /// user register 
+        /// </summary>
         [HttpPost("signUp")]
-        public async Task<ActionResult<SigningResponse>> SignUp(string userName, string email, string password, UserRole role, int? balance)
+        public async Task<IActionResult> SignUp(string userName, string email, string password, UserRole role, int? balance)
         {
             return Ok(await _userService.signUp(userName,email,password,role,balance));
         }
+        /// <summary>
+        /// sign in 
+        /// </summary>
         [HttpPost("signIn")]
-        public async Task<ActionResult<SigningResponse>> SignIn(string email, string password)
+        public async Task<IActionResult> SignIn(string email, string password)
         {
             return Ok(await _userService.signIn(email, password));
         }
+        /// <summary>
+        /// refresh the token
+        /// </summary>
         [HttpPut("refreshToken")]
-        public async Task<ActionResult<SigningResponse>> refreshToken(int userId)
+        public async Task<IActionResult> refreshToken(int userId)
         {
             return Ok(await _userService.refreshToken(userId));
         }
+        /// <summary>
+        /// get the current user using the httpContext
+        /// </summary>
+        [HttpGet("currentUser")]
+        public async Task<IActionResult> getCurrentUser()
+        {
+            return Ok(await _userService.getCurrentUser());
+        }
+        /// <summary>
+        /// Sign out
+        /// </summary>
+        [HttpPut("signOut")]
+        public async Task<IActionResult> signOut()
+        {
+            await _userService.signOut();
+            return Ok();
+        }
+
+
+
 
     }
 }

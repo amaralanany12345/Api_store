@@ -8,7 +8,7 @@ namespace StoreWebApi.Interfaces
         Task<CategoryDto> createCategory(string name,string description);
         Task<List<CategoryDto>> getAllCategories();
         Task<CategoryDto> getCategory(string name);
-        Task<CategoryDto> updateCategory(int CategoryId, string newName,string newDescription);
-        Task deleteCategory(int CategoryId);
+        Task<CategoryDto> updateCategory(string CategoryName, string newName,string newDescription);
+        Task deleteCategory(string CategoryName);
     }
 }
