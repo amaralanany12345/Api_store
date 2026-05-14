@@ -7,7 +7,7 @@ using StoreWebApi.Models;
 
 namespace StoreWebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/orders")]
     [ApiController]
     [Authorize(Policy = "refreshTokenIsValid")]
     public class OrderController : ControllerBase
@@ -28,9 +28,9 @@ namespace StoreWebApi.Controllers
             return Ok(await _orderService.createOrder());
         }
         /// <summary>
-        /// get iall orders
+        /// get all orders
         /// </summary>
-        [HttpGet("allOrders")]
+        [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> getAllOrders()
         {
@@ -39,7 +39,7 @@ namespace StoreWebApi.Controllers
         /// <summary>
         /// add item to order
         /// </summary>
-        [HttpPut("addItem")]
+        [HttpPost("orderItems/{itemId}")]
         [Authorize(Roles = "Customer")]
         public async Task<IActionResult> addOrderITemToOrder(int itemId, int quantity)
         {
@@ -48,7 +48,7 @@ namespace StoreWebApi.Controllers
         /// <summary>
         /// delete item from order
         /// </summary>
-        [HttpPut("deleteItem")]
+        [HttpDelete("orderItems/{itemId}")]
         [Authorize(Roles = "Customer")]
         public async Task<IActionResult> deleteOrderItemFromOrder(int itemId)
         {
@@ -58,7 +58,7 @@ namespace StoreWebApi.Controllers
         /// <summary>
         /// cancel order
         /// </summary>
-        [HttpPut("CancelOrder")]
+        [HttpPut("cancel")]
         [Authorize(Roles ="Customer")]
         public async Task<IActionResult> cancelOrder()
         {

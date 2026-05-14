@@ -5,7 +5,7 @@ namespace StoreWebApi.Interfaces
 {
     public interface IUser
     {
-        Task<SigningResponse> signUp(string userName,string email,string password,UserRole role,int? balance);
+        Task<SigningResponse> signUp(string userName,string email,string password,UserRole role);
         Task<SigningResponse> signIn(string userName,string password);
         Task signOut();
         Task<User> getUserByEmail(string email);

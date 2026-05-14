@@ -8,7 +8,7 @@ using StoreWebApi.Models;
 
 namespace StoreWebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/auth")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -21,23 +21,23 @@ namespace StoreWebApi.Controllers
         /// <summary>
         /// user register 
         /// </summary>
-        [HttpPost("signUp")]
-        public async Task<IActionResult> SignUp(string userName, string email, string password, UserRole role, int? balance)
+        [HttpPost("register")]
+        public async Task<IActionResult> SignUp([FromBody] RegisterRequest registerRequest)
         {
-            return Ok(await _userService.signUp(userName,email,password,role,balance));
+            return Ok(await _userService.signUp(registerRequest.userName, registerRequest.Email, registerRequest.Password, registerRequest.Role));
         }
         /// <summary>
         /// sign in 
         /// </summary>
-        [HttpPost("signIn")]
-        public async Task<IActionResult> SignIn(string email,string password)
+        [HttpPost("login")]
+        public async Task<IActionResult> SignIn([FromBody] SignInRequest userRequest)
         {
-            return Ok(await _userService.signIn(email, password));
+            return Ok(await _userService.signIn(userRequest.Email, userRequest.Password));
         }
         /// <summary>
         /// refresh the token
         /// </summary>
-        [HttpPut("refreshToken")]
+        [HttpPut("refresh-token")]
         public async Task<IActionResult> refreshToken(string userEmail)
         {
             return Ok(await _userService.refreshToken(userEmail));
@@ -53,7 +53,7 @@ namespace StoreWebApi.Controllers
         /// <summary>
         /// Sign out
         /// </summary>
-        [HttpPut("signOut")]
+        [HttpPut("logout")]
         public async Task<IActionResult> signOut()
         {
             await _userService.signOut();

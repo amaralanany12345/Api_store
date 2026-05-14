@@ -9,7 +9,7 @@ using StoreWebApi.Services;
 
 namespace StoreWebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/categories")]
     [ApiController]
     [Authorize(Policy = "refreshTokenIsValid")]
     public class CategoryController : ControllerBase
@@ -24,14 +24,14 @@ namespace StoreWebApi.Controllers
         /// </summary>
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> createCategory([FromQuery] CategoryDto categoryData)
+        public async Task<IActionResult> createCategory([FromBody] CategoryDto categoryData)
         {
             return Ok(await _categoryService.createCategory(categoryData.Name,categoryData.Description));
         }
         /// <summary>
         /// get all categories
         /// </summary>
-        [HttpGet("AllCategories")]
+        [HttpGet]
         [Authorize(Roles = "Admin,Customer")]
         public async Task<IActionResult> getAllCategories()
         {
@@ -40,7 +40,7 @@ namespace StoreWebApi.Controllers
         /// <summary>
         /// get category by name
         /// </summary>
-        [HttpGet]
+        [HttpGet("{CategoryName}")]
         [Authorize(Roles = "Admin,Customer")]
         public async Task<IActionResult> getCategoryByName(string CategoryName)
         {
@@ -49,7 +49,7 @@ namespace StoreWebApi.Controllers
         /// <summary>
         /// delete category by name
         /// </summary>
-        [HttpDelete]
+        [HttpDelete("{CategoryName}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> deleteCategory(string CategoryName)
         {
@@ -59,7 +59,7 @@ namespace StoreWebApi.Controllers
         /// <summary>
         /// update category
         /// </summary>
-        [HttpPut]
+        [HttpPut("{CategoryName}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> updateCategory(string CategoryName, string newName, string newDescription)
         {

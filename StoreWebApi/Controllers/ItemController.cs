@@ -9,9 +9,9 @@ using StoreWebApi.Models;
 
 namespace StoreWebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/items")]
     [ApiController]
-    [Authorize(Policy = "refreshTokenIsValid")]
+    //[Authorize(Policy = "refreshTokenIsValid")]
     public class ItemController : ControllerBase
     {
         private readonly IItem _ItemService;
@@ -25,14 +25,14 @@ namespace StoreWebApi.Controllers
         /// </summary>
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> createItem([FromQuery]ItemDto itemData)
+        public async Task<IActionResult> createItem([FromBody]ItemDto itemData)
         {
             return Ok(await _ItemService.createItem(itemData.Name,itemData.Price,itemData.StockQuantity,itemData.CategoryName));
         }
         /// <summary>
         /// get all items
         /// </summary>
-        [HttpGet("allItems")]
+        [HttpGet]
         [Authorize(Roles = "Admin,Customer")]
         public async Task<IActionResult> getAllItems()
         {
@@ -42,7 +42,9 @@ namespace StoreWebApi.Controllers
         /// get item by name
         /// </summary>
         [HttpGet("{itemName}")]
-        [Authorize(Roles = "Admin,Customer")]
+        //[Authorize(Roles = "Admin,Customer")]
+        //[ProducesResponseType(typeof(List<ItemDto>), 200)]
+        [ProducesResponseType(typeof(ProblemDetails), 400)]
         public async Task<IActionResult> getItemByName(string itemName)
         {
             return Ok(await _ItemService.getITem(itemName));
@@ -52,7 +54,7 @@ namespace StoreWebApi.Controllers
         /// get items by category name
         /// </summary>
         
-        [HttpGet("byCategory")]
+        [HttpGet("category/{categoryName}")]
         [Authorize(Roles = "Customer")]
         public async Task<IActionResult> getItemsByCategory(string categoryName, int pageSize, int pageNumber)
         {
@@ -63,7 +65,7 @@ namespace StoreWebApi.Controllers
         /// delete item by item name
         /// </summary>
         
-        [HttpDelete]
+        [HttpDelete("{itemName}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> deleteItem(string itemName)
         {
@@ -75,7 +77,7 @@ namespace StoreWebApi.Controllers
         /// update item
         /// </summary>
         
-        [HttpPut]
+        [HttpPut("{itemName}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> updateItem(string itemName, string newName, int newPrice, int stockQuantity)
         {

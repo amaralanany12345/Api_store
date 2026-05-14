@@ -22,7 +22,8 @@ namespace StoreWebApi.Services
         private readonly IGenericRepo<User> _genericRepo;
         private readonly ILogger<UserService> _logger;
         private readonly IHttpContextAccessor _contextAccessor;
-        public UserService(AppDbContext context, Jwt jwt, IMapper mapper, IUnitOfWork unitOfWork, IGenericRepo<User> genericRepo, ILogger<UserService> logger, IHttpContextAccessor contextAccessor)
+        private readonly IWallet _walletService;
+        public UserService(AppDbContext context, Jwt jwt, IMapper mapper, IUnitOfWork unitOfWork, IGenericRepo<User> genericRepo, ILogger<UserService> logger, IHttpContextAccessor contextAccessor, IWallet walletService)
         {
             _context = context;
             _jwt = jwt;
@@ -31,8 +32,9 @@ namespace StoreWebApi.Services
             _genericRepo = genericRepo;
             _logger = logger;
             _contextAccessor = contextAccessor;
+            _walletService = walletService;
         }
-        public async Task<SigningResponse> signUp(string userName, string email, string password, UserRole role, int? balance)
+        public async Task<SigningResponse> signUp(string userName, string email, string password, UserRole role)
         {
             var newUser = new User
             {
@@ -44,7 +46,9 @@ namespace StoreWebApi.Services
             };
             if (newUser.Role == UserRole.Customer.ToString())
             {
-                newUser.Balance = balance;
+                await _walletService.createWalletToUser(email);
+                var newUserWallet=await _walletService.getWalletOfUser(email);
+                newUser.Balance = newUserWallet.Balance;
             }
             else
             {

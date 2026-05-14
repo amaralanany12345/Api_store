@@ -88,6 +88,7 @@ builder.Services.AddAuthorization(options =>
     });
 });
 
+
 builder.Services.AddScoped<IItem, ItemService>();
 builder.Services.AddScoped<ICategory, CategoryService>();
 builder.Services.AddScoped<IUser,UserService>();
@@ -98,6 +99,9 @@ builder.Services.AddScoped(typeof(IGenericRepo<>), typeof(GenericRepoService<>))
 builder.Services.AddScoped<IUnitOfWork,UnitOfWorkService>();
 builder.Services.AddScoped<IExternalLog,ExternalLogService>();
 builder.Services.AddScoped<IAuthorizationHandler, CheckRefreshTokenIsValid>();
+builder.Services.AddScoped<IWallet, WalletService>();
+
+
 // JWT Authentication setup
 var JwtOptions = builder.Configuration.GetSection("Jwt").Get<Jwt>();
 builder.Services.AddSingleton(JwtOptions);
