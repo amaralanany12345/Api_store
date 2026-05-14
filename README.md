@@ -57,8 +57,8 @@ Online store Api
   - put the Bearer then your token and the authentication process will start  
 
 ## ERD diagram for store data base
-![image_Alt]()
+![image_Alt](https://github.com/amaralanany12345/Api_store/blob/master/Screenshot%202026-05-14%20152644.png)
 
 ## ERD diagram for walletDb data base
-![image_Alt]()
+![image_Alt](https://github.com/amaralanany12345/Api_store/blob/master/Screenshot%202026-05-14%20152707.png)
   
