@@ -3,10 +3,6 @@
   "WorkspaceRootPath": "D:\\Projects\\StoreWebApi\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{E8AF71C3-2C3F-4773-B4F8-65536624C05F}|StoreWebApi\\StoreWebApi.csproj|d:\\projects\\storewebapi\\storewebapi\\controllers\\ordercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E8AF71C3-2C3F-4773-B4F8-65536624C05F}|StoreWebApi\\StoreWebApi.csproj|solutionrelative:storewebapi\\controllers\\ordercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{E8AF71C3-2C3F-4773-B4F8-65536624C05F}|StoreWebApi\\StoreWebApi.csproj|d:\\projects\\storewebapi\\storewebapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E8AF71C3-2C3F-4773-B4F8-65536624C05F}|StoreWebApi\\StoreWebApi.csproj|solutionrelative:storewebapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
@@ -39,25 +35,12 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "OrderController.cs",
-              "DocumentMoniker": "D:\\Projects\\StoreWebApi\\StoreWebApi\\Controllers\\OrderController.cs",
-              "RelativeDocumentMoniker": "StoreWebApi\\Controllers\\OrderController.cs",
-              "ToolTip": "D:\\Projects\\StoreWebApi\\StoreWebApi\\Controllers\\OrderController.cs",
-              "RelativeToolTip": "StoreWebApi\\Controllers\\OrderController.cs",
-              "ViewState": "AgIAAB8AAAAAAAAAAAAAADIAAAATAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-14T14:39:48.975Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\Projects\\StoreWebApi\\StoreWebApi\\Program.cs",
               "RelativeDocumentMoniker": "StoreWebApi\\Program.cs",
               "ToolTip": "D:\\Projects\\StoreWebApi\\StoreWebApi\\Program.cs",
               "RelativeToolTip": "StoreWebApi\\Program.cs",
-              "ViewState": "AgIAAFIAAAAAAAAAAAAAAGUAAAA1AAAAAAAAAA==",
+              "ViewState": "AgIAAFIAAAAAAAAAAAAAAGMAAAA+AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-05-08T08:26:54.341Z",
               "EditorCaption": ""
