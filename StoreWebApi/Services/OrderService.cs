@@ -90,7 +90,7 @@ namespace StoreWebApi.Services
         public async Task<Order> getOrder()
         {
             var customer = await _userService.getCurrentUser();
-            var order=await _context.Orders.Where(a=>a.CustomerId == customer.Id&& a.Status==OrderStatus.InProgress.ToString()).Include(a=>a.Customer).FirstOrDefaultAsync();
+            var order=await _context.Orders.Where(a=>a.CustomerId == customer.Id&& a.Status==OrderStatus.InProgress.ToString()).Include(a=>a.Customer).Include(a=>a.OrderItems).FirstOrDefaultAsync();
             if(order == null)
             {
                 _logger.LogWarning("order is not found");
@@ -144,6 +144,23 @@ namespace StoreWebApi.Services
                 await _context.SaveChangesAsync();
             }
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<OrderItem>> getApprovedOrderItems()
+        {
+            var customer = await _userService.getCurrentUser();
+            var order=await _context.Orders.Where(a=>a.CustomerId==customer.Id&& a.Status==OrderStatus.Approved.ToString()).Include(a=>a.OrderItems).FirstOrDefaultAsync();
+            if (order == null)
+            {
+                _logger.LogWarning("order is not found");
+                throw new ArgumentException("order is not found");
+            }
+            foreach(var item in order.OrderItems)
+            {
+                Console.WriteLine(item.Item.Name);
+                Console.WriteLine(item.Quantity);
+            }
+            return order.OrderItems;
         }
     }
 }

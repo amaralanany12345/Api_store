@@ -9,10 +9,10 @@ namespace StoreWebApi.Interfaces
         Task<SigningResponse> signIn(string userName,string password);
         Task signOut();
         Task<User> getUserByEmail(string email);
-        Task<string> generateJwtToken(int userId);
+        Task<string> generateJwtToken(string userEmail);
         string generateRandomRefreshToken();
-        Task<RefreshToken> createRefreshToken(int userId);
-        Task<SigningResponse> refreshToken(int userId);
+        Task<RefreshToken> createRefreshToken(string userEmail);
+        Task<SigningResponse> refreshToken(string userEmail);
         Task<User> getCurrentUser();
 
     }

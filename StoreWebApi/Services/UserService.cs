@@ -55,8 +55,8 @@ namespace StoreWebApi.Services
             return new SigningResponse
             {
                 User = _mapper.Map<UserDto>(newUser),
-                jwtToken = await generateJwtToken(newUser.Id),
-                RefreshToken= _mapper.Map<RefreshTokenDto>(await createRefreshToken(newUser.Id))
+                jwtToken = await generateJwtToken(newUser.Email),
+                RefreshToken= _mapper.Map<RefreshTokenDto>(await createRefreshToken(newUser.Email))
             };
         }
         public async Task<SigningResponse> signIn(string userName, string password)
@@ -70,8 +70,8 @@ namespace StoreWebApi.Services
             return new SigningResponse
             {
                 User = _mapper.Map<UserDto>(user),
-                jwtToken = await generateJwtToken(user.Id),
-                RefreshToken= _mapper.Map<RefreshTokenDto>(await createRefreshToken(user.Id))
+                jwtToken = await generateJwtToken(user.Email),
+                RefreshToken= _mapper.Map<RefreshTokenDto>(await createRefreshToken(user.Email))
             };
         }
         public async Task<User> getUserByEmail(string email)
@@ -84,20 +84,19 @@ namespace StoreWebApi.Services
             }
             return user;
         }
-        public async Task<string> generateJwtToken(int userId)
+        public async Task<string> generateJwtToken(string userEmail)
         {
-            var user = await getUserById(userId);
+            var user = await getUserByEmail(userEmail);
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Issuer = _jwt.Issuer,
                 Audience = _jwt.Audience,
+                Expires = DateTime.Now.AddMinutes(2),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwt.Signingkey)),
                 SecurityAlgorithms.HmacSha256Signature),
                 Subject = new System.Security.Claims.ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.NameIdentifier,user.Id.ToString()),
-                    new Claim(ClaimTypes.Name,user.UserName),
                     new Claim(ClaimTypes.Email,user.Email),
                     new Claim(ClaimTypes.Role,user.Role),
                 })
@@ -111,38 +110,38 @@ namespace StoreWebApi.Services
             return Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
         }
 
-        public async Task<RefreshToken> createRefreshToken(int userId)
+        public async Task<RefreshToken> createRefreshToken(string userEmail)
         {
-            var user=await getUserById(userId);
+            var user=await getUserByEmail(userEmail);
             var newRefreshToken = new RefreshToken
             {
                 User=user,
-                UserId=userId,
+                UserId=user.Id,
                 Token=generateRandomRefreshToken(),
                 CreatedAt=DateTime.Now,
-                ExpiredAt=DateTime.Now.AddSeconds(60),
+                ExpiredAt=DateTime.Now.AddMinutes(3),
             };
             await _context.RefreshTokens.AddAsync(newRefreshToken);
             await _context.SaveChangesAsync();
             return newRefreshToken;
         }
-        public async Task<SigningResponse> refreshToken(int userId)
+        public async Task<SigningResponse> refreshToken(string userEmail)
         {
-            var user=_mapper.Map<UserDto>(await getUserById(userId));
-            var refreshToken=await _context.RefreshTokens.Where(a=>a.UserId==userId).OrderByDescending(a=>a.CreatedAt).FirstOrDefaultAsync();
+            var user=await getUserByEmail(userEmail);
+            var refreshToken=await _context.RefreshTokens.Where(a=>a.UserId==user.Id).OrderByDescending(a=>a.CreatedAt).FirstOrDefaultAsync();
             if(refreshToken==null || !refreshToken.isValid)
             {
                 _logger.LogInformation("your refresh token is expired");
-                throw new ArgumentException("your refresh token is expired");
+                //throw new ArgumentException("your refresh token is expired");
             }
             refreshToken.Token=generateRandomRefreshToken();
             refreshToken.CreatedAt=DateTime.Now;
-            refreshToken.ExpiredAt=DateTime.Now.AddSeconds(30);
+            refreshToken.ExpiredAt=DateTime.Now.AddMinutes(3);
             await _context.SaveChangesAsync();
             return new SigningResponse
             {
-                User=user,
-                jwtToken= await generateJwtToken(userId),
+                User=_mapper.Map<UserDto>(user),
+                jwtToken= await generateJwtToken(userEmail),
                 RefreshToken=_mapper.Map<RefreshTokenDto>(refreshToken),    
             };
         }
@@ -152,12 +151,6 @@ namespace StoreWebApi.Services
             if (currentUserEmail == null)
             {
                 throw new ArgumentException("user is not found");
-            }
-            var user= await getUserByEmail(currentUserEmail);
-            var currentUSerRefreshToken = await _context.RefreshTokens.Where(a => a.UserId == user.Id).OrderByDescending(A => A.CreatedAt).FirstOrDefaultAsync();
-            if (currentUSerRefreshToken == null)
-            {
-                throw new ArgumentException("your token is not found");
             }
             return await getUserByEmail(currentUserEmail);
         }
@@ -173,15 +166,5 @@ namespace StoreWebApi.Services
             await _context.SaveChangesAsync();
         }
         
-        private async Task<User> getUserById(int userId)
-        {
-            var user = await _context.Users.Where(a => a.Id == userId).FirstOrDefaultAsync();
-            if(user == null)
-            {
-                _logger.LogInformation("user is not found");
-                throw new ArgumentException("user is not found");
-            }
-            return user;
-        }
     }
 }

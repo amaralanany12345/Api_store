@@ -13,12 +13,10 @@ namespace StoreWebApi.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUser _userService;
-        private readonly IMapper _mapper;
 
-        public UserController(IUser userService, IMapper mapper)
+        public UserController(IUser userService)
         {
             _userService = userService;
-            _mapper = mapper;
         }
         /// <summary>
         /// user register 
@@ -32,7 +30,7 @@ namespace StoreWebApi.Controllers
         /// sign in 
         /// </summary>
         [HttpPost("signIn")]
-        public async Task<IActionResult> SignIn(string email, string password)
+        public async Task<IActionResult> SignIn(string email,string password)
         {
             return Ok(await _userService.signIn(email, password));
         }
@@ -40,9 +38,9 @@ namespace StoreWebApi.Controllers
         /// refresh the token
         /// </summary>
         [HttpPut("refreshToken")]
-        public async Task<IActionResult> refreshToken(int userId)
+        public async Task<IActionResult> refreshToken(string userEmail)
         {
-            return Ok(await _userService.refreshToken(userId));
+            return Ok(await _userService.refreshToken(userEmail));
         }
         /// <summary>
         /// get the current user using the httpContext

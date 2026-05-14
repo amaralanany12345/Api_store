@@ -28,7 +28,9 @@ namespace StoreWebApi.Helper
                 .ForMember(dst => dst.CreatedAt, opt => opt.MapFrom(a => a.CreatedAt))
                 .ForMember(dst => dst.UpdatedAt, opt => opt.MapFrom(a => a.UpdatedAt))
                 .ForMember(dst => dst.TotalAmount, opt => opt.MapFrom(a => a.TotalAmount));
-
+            CreateMap<Receipt, ReceiptDto>()
+                .ForMember(dst => dst.CreateAt, opt => opt.MapFrom(a => a.CreatedAt))
+                .ForMember(dst => dst.TotalAmount, opt => opt.MapFrom(a => a.TotalAmount));
 
         }
     }

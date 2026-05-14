@@ -12,7 +12,7 @@ namespace StoreWebApi.Configuration
             builder.Property(A=>A.Id).IsRequired().ValueGeneratedOnAdd();
             builder.Property(a=>a.TotalAmount).IsRequired();
             builder.Property(a=>a.CreatedAt).IsRequired();
-            builder.HasOne(a=>a.Order).WithOne(a=>a.Receipt).HasForeignKey<Receipt>(a=>a.orderId);
+            builder.HasOne(a =>a.Order).WithOne(a=>a.Receipt).HasForeignKey<Receipt>(a=>a.orderId);
         }
     }
 }

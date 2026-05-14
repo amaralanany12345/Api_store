@@ -23,6 +23,7 @@ namespace StoreWebApi.Controllers
         /// create category
         /// </summary>
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> createCategory([FromQuery] CategoryDto categoryData)
         {
             return Ok(await _categoryService.createCategory(categoryData.Name,categoryData.Description));
@@ -32,7 +33,6 @@ namespace StoreWebApi.Controllers
         /// </summary>
         [HttpGet("AllCategories")]
         [Authorize(Roles = "Admin,Customer")]
-        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> getAllCategories()
         {
             return Ok(await _categoryService.getAllCategories());
@@ -41,8 +41,7 @@ namespace StoreWebApi.Controllers
         /// get category by name
         /// </summary>
         [HttpGet]
-        //[ProducesResponseType(typeof(CategoryDto), StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(Roles = "Admin,Customer")]
         public async Task<IActionResult> getCategoryByName(string CategoryName)
         {
             return Ok(await _categoryService.getCategory(CategoryName));
@@ -51,7 +50,7 @@ namespace StoreWebApi.Controllers
         /// delete category by name
         /// </summary>
         [HttpDelete]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> deleteCategory(string CategoryName)
         {
             await _categoryService.deleteCategory(CategoryName);
@@ -61,7 +60,7 @@ namespace StoreWebApi.Controllers
         /// update category
         /// </summary>
         [HttpPut]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> updateCategory(string CategoryName, string newName, string newDescription)
         {
             return Ok(await _categoryService.updateCategory(CategoryName, newName, newDescription));

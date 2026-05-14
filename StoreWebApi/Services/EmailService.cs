@@ -1,8 +1,10 @@
 ﻿using MailKit.Net.Smtp;
 using MimeKit;
+using Org.BouncyCastle.Crypto.Macs;
 using Serilog;
 using StoreWebApi.Interfaces;
 using StoreWebApi.Models;
+using System.Net;
 
 namespace StoreWebApi.Services
 {
@@ -14,12 +16,12 @@ namespace StoreWebApi.Services
             _configuration = configuration;
         }
 
-        public void sendEmail(string toName, string toEmail, string subject, string content)
+        public async Task sendEmail(string toName, string subject, string content)
         {
             var emailSender = _configuration.GetSection("SmtpSettings").Get<EmailSenderModel>();
             var message = new MimeMessage();
-            message.From.Add(new MailboxAddress("store", "storereply@domain.com"));
-            message.To.Add(new MailboxAddress(toName, toEmail));
+            message.From.Add(new MailboxAddress("store", "aalanany09@gmail.com"));
+            message.To.Add(new MailboxAddress(toName, "aalanany09@gmail.com"));
             message.Subject = subject;
 
             message.Body = new TextPart("plain")
@@ -29,14 +31,10 @@ namespace StoreWebApi.Services
 
             using (var client = new SmtpClient())
             {
-                client.Connect(emailSender.SmtpServer,emailSender.Port, false);
-
-                // Note: only needed if the SMTP server requires authentication
-                client.Authenticate(emailSender.Login,emailSender.Password);
-
-                var result = client.Send(message);
-                Console.WriteLine($"message is send {result}");
-                client.Disconnect(true);
+                await client.ConnectAsync(emailSender.SmtpServer,emailSender.Port, MailKit.Security.SecureSocketOptions.StartTls);
+                await client.AuthenticateAsync(emailSender.Login,emailSender.Password);
+                await client.SendAsync(message);
+                await client.DisconnectAsync(true);
             }
         }
     }

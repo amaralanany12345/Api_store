@@ -51,17 +51,6 @@ namespace StoreWebApi.Services
             await _context.SaveChangesAsync();
 
         }
-        private async Task<Item> getItemById(int itemId)
-        {
-            var item=await _context.Items.Where(a=>a.Id==itemId).FirstOrDefaultAsync();
-            if(item == null)
-            {
-                _logger.LogInformation("Item is not found with this id ");
-                throw new ArgumentException("Item is not found");
-            }
-            return item;    
-        }
-
         public async Task<ItemDto> getITem(string name)
         {
             var item = await _context.Items.Where(a => a.Name == name).FirstOrDefaultAsync();
@@ -88,7 +77,7 @@ namespace StoreWebApi.Services
             return _mapper.Map<ItemDto>(item);
         }
 
-        public async Task<List<ItemDto>> getITemByCategoryName(string categoryName)
+        public async Task<List<ItemDto>> getITemByCategoryName(string categoryName,int pageSize,int pageNumber)
         {
             var category=await _context.Categories.Where(a=>a.Name==categoryName).FirstOrDefaultAsync();
             if(category == null)
@@ -96,7 +85,9 @@ namespace StoreWebApi.Services
                 _logger.LogInformation("category is not found with this name");
                 throw new ArgumentException("category is not found");
             }
-            return _mapper.Map<List<ItemDto>>(await _context.Items.Where(a=>a.Category.Name==categoryName).ToListAsync());
+
+            return _mapper.Map<List<ItemDto>>(await _context.Items.Where(a=>a.Category.Name==categoryName)
+                .Skip((pageNumber-1)*pageSize).Take(pageSize).ToListAsync());
             
         }
     }

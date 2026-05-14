@@ -12,6 +12,7 @@ namespace StoreWebApi.Configuration
             builder.Property(a=>a.Id).IsRequired().ValueGeneratedOnAdd();
             builder.Property(a=>a.UserEmail).IsRequired();
             builder.Property(a=>a.Balance).IsRequired();
+            builder.Property(a=>a.Currency).IsRequired();
             builder.HasData(uploadData());
         }
 
@@ -19,8 +20,8 @@ namespace StoreWebApi.Configuration
         {
             var walletData = new Wallet[]
             {
-                new Wallet { Id = 1, UserEmail = "saad@gmail.com", Balance = 5000 },
-                new Wallet { Id = 2, UserEmail = "ahmed@gmail.com", Balance = 4000 },
+                new Wallet { Id = 1, UserEmail = "saad@gmail.com", Balance = 5000 ,Currency="USD $"},
+                new Wallet { Id = 2, UserEmail = "ahmed@gmail.com", Balance = 5000 , Currency="USD $"},
             };
             return walletData;
         }

@@ -1,5 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
+using StoreWebApi.DTO;
 using StoreWebApi.Enums;
 using StoreWebApi.Interfaces;
 using StoreWebApi.Models;
@@ -15,7 +17,11 @@ namespace StoreWebApi.Services
         private readonly IGenericRepo<Receipt> _genericRepo;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<PaymentGateWayService> _logger;
-        public PaymentGateWayService(AppDbContext appDbContext, WalletAppDbContext walletAppDbContext, IEmail emailService, IGenericRepo<Receipt> genericRepo, IUnitOfWork unitOfWork, ILogger<PaymentGateWayService> logger)
+        private readonly IMapper _mapper;
+        private readonly IOrder _orderService;
+        private readonly IExternalLog _externalLogService;
+        public PaymentGateWayService(AppDbContext appDbContext, WalletAppDbContext walletAppDbContext, IEmail emailService,
+            IGenericRepo<Receipt> genericRepo, IUnitOfWork unitOfWork, ILogger<PaymentGateWayService> logger, IMapper mapper, IOrder orderService, IExternalLog externalLogService)
         {
             _appDbContext = appDbContext;
             _walletAppDbContext = walletAppDbContext;
@@ -23,29 +29,29 @@ namespace StoreWebApi.Services
             _genericRepo = genericRepo;
             _unitOfWork = unitOfWork;
             _logger = logger;
+            _mapper = mapper;
+            _orderService = orderService;
+            _externalLogService = externalLogService;
         }
 
-        public async Task<Receipt> payForOrder(int orderId)
+        public async Task<ReceiptDto> payForOrder()
         {
-            var order=await _appDbContext.Orders.Where(a=>a.Id==orderId).Include(a=>a.Customer).Include(A=>A.OrderItems).FirstOrDefaultAsync();
-            if (order==null)
-            {
-                _logger.LogWarning("order is not found ");
-                throw new ArgumentException("order is not found");
-            }
+            var order=await _orderService.getOrder();
             var userWallet = await _walletAppDbContext.Wallets.Where(a => a.UserEmail == order.Customer.Email).FirstOrDefaultAsync();
             if (userWallet == null)
             {
                 _logger.LogWarning("user wallet is not found");
                 throw new ArgumentException("user wallet is not found");
             }
+            await _externalLogService.addLog(SystemProvider.walletDbCall, order.Customer.Email,"call the wallet data base",
+                "success call the wallet database","ok 200","success");
 
             if (userWallet.Balance < order.TotalAmount)
             {
 
                 order.Status=OrderStatus.Cancelled.ToString();
                 order.TotalAmount = 0;
-                var orderItems = await _appDbContext.OrderItem.Where(a => a.OrderId == orderId).Include(a => a.Item).ToListAsync();
+                var orderItems = await _appDbContext.OrderItem.Where(a => a.OrderId == order.Id).Include(a => a.Item).ToListAsync();
                 foreach(var orderItem in orderItems)
                 {
                     orderItem.Item.StockQuantity += orderItem.Quantity;
@@ -59,20 +65,29 @@ namespace StoreWebApi.Services
             order.Status=OrderStatus.Approved.ToString();
             userWallet.Balance -= order.TotalAmount;
             order.Customer.Balance =userWallet.Balance;
+            await _externalLogService.addLog(SystemProvider.paymentGateWay, order.Customer.Email, "payment success",
+                "approved the payment process", "ok 200", "success");
             await _appDbContext.SaveChangesAsync();
             await _walletAppDbContext.SaveChangesAsync();
             var newReceipt=new Receipt
             {
-                orderId = orderId,
+                orderId = order.Id,
                 Order=order,
                 CreatedAt = DateTime.Now,
                 TotalAmount=order.TotalAmount,
             };
-            _emailService.sendEmail(order.Customer.UserName,order.Customer.Email
-                ,"success payment",$"your payment is approved and your balance is reduced by {order.TotalAmount} and your current balance is {userWallet.Balance}");
+
+            var orderItemsInText = string.Join(" ", _appDbContext.OrderItem.Where(a=>a.OrderId==order.Id)
+                .Select(a =>$" item name is {a.Item.Name} and quantity needed is {a.Quantity} -"));
+
+            var emailBody =$"your payment is approved and your order id is {order.Id},{orderItemsInText}," +
+                $" total amount is {order.TotalAmount}, date is {newReceipt.CreatedAt}";
+            await _externalLogService.addLog(SystemProvider.emailService, order.Customer.Email, "send email",
+                "confirm that the email is send and the payment method is approved", "ok 200", "success");
+            await _emailService.sendEmail(order.Customer.UserName,"success payment",emailBody);
             await _genericRepo.CreateAsync(newReceipt);
             await _unitOfWork.saveChangesAsync();
-            return newReceipt;
+            return _mapper.Map<ReceiptDto>(newReceipt);
 
         }
     }

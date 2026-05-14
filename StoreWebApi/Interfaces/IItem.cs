@@ -10,6 +10,6 @@ namespace StoreWebApi.Interfaces
         Task<ItemDto> getITem(string name);
         Task<ItemDto> updateItem(string itemName, string newName, int newPrice,int stockQuantity);
         Task deleteItem(string itemName);
-        Task<List<ItemDto>> getITemByCategoryName(string categoryName);
+        Task<List<ItemDto>> getITemByCategoryName(string categoryName,int pageSize, int pageNumber);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace StoreWebApi.ExceptionHandler
@@ -17,6 +18,7 @@ namespace StoreWebApi.ExceptionHandler
                 _logger.LogError(exception, "unHandled exception");
                 context.Response.StatusCode = exception switch
                 {
+                    ArgumentException=>StatusCodes.Status404NotFound,
                     ApplicationException => StatusCodes.Status400BadRequest,
                     _ => StatusCodes.Status500InternalServerError,
                 };
@@ -29,8 +31,10 @@ namespace StoreWebApi.ExceptionHandler
                             Type=exception.GetType().Name,
                             Title="error occured",
                             Detail=exception.Message,
+                            Status = context.Response.StatusCode
+
                     }
-            });
+                });
         }
     }
 }

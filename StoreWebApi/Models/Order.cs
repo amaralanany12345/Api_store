@@ -10,7 +10,7 @@
         public User Customer { get; set; }
         public int CustomerId { get; set; }
         public List<OrderItem> OrderItems { get; set; }
-        public int ReceiptId { get; set; }
         public Receipt Receipt { get; set; }
+        public int ReceiptId { get; set; }
     }
 }

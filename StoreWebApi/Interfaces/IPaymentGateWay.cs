@@ -1,9 +1,10 @@
-﻿using StoreWebApi.Models;
+﻿using StoreWebApi.DTO;
+using StoreWebApi.Models;
 
 namespace StoreWebApi.Interfaces
 {
     public interface IPaymentGateWay
     {
-        Task<Receipt> payForOrder(int orderId);
+        Task<ReceiptDto> payForOrder();
     }
 }

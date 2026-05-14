@@ -13,13 +13,14 @@ using Microsoft.OpenApi.Models;
 using Serilog.Sinks.MSSqlServer;
 using StoreWebApi.zAppContexts;
 using StoreWebApi.ExceptionHandler;
-using StoreWebApi.Actions;
 using Microsoft.AspNetCore.Authorization;
+using StoreWebApi.bolicesis;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+
 //builder.Services.AddProblemDetails(configure =>
 //{
 //    configure.CustomizeProblemDetails = context =>
@@ -27,17 +28,13 @@ builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 //        context.ProblemDetails.Extensions.TryAdd("requestId", context.HttpContext.TraceIdentifier);
 //    };
 //});
-builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddDistributedMemoryCache();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
+
 builder.Services.AddControllers().AddNewtonsoftJson(x =>
     x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
-
-builder.Services.AddControllers().AddJsonOptions(options =>
-{
-    options.JsonSerializerOptions.ReferenceHandler =
-        System.Text.Json.Serialization.ReferenceHandler.Preserve;
-});
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
@@ -57,7 +54,6 @@ Log.Logger = new LoggerConfiguration()
 builder.Host.UseSerilog();
 
 
-builder.Services.AddControllers();
 // CORS policy for your Angular app
 builder.Services.AddCors(options =>
 {
@@ -100,6 +96,7 @@ builder.Services.AddScoped<IEmail,EmailService>();
 builder.Services.AddScoped<IPaymentGateWay, PaymentGateWayService>();
 builder.Services.AddScoped(typeof(IGenericRepo<>), typeof(GenericRepoService<>));
 builder.Services.AddScoped<IUnitOfWork,UnitOfWorkService>();
+builder.Services.AddScoped<IExternalLog,ExternalLogService>();
 builder.Services.AddScoped<IAuthorizationHandler, CheckRefreshTokenIsValid>();
 // JWT Authentication setup
 var JwtOptions = builder.Configuration.GetSection("Jwt").Get<Jwt>();
@@ -118,16 +115,17 @@ builder.Services.AddAuthentication(options =>
         ValidIssuer = JwtOptions.Issuer,
         ValidateAudience = true,
         ValidAudience = JwtOptions.Audience,
-        ValidateLifetime = false,
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtOptions.Signingkey)),
+        ValidateLifetime = true,
+        ClockSkew = TimeSpan.Zero
     };
 });
 
 
 // Add Swagger support
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+//builder.Services.AddSwaggerGen();
 builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
@@ -169,7 +167,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("AllowSpecificOrigin");
 app.UseExceptionHandler();
-//app.UseMiddleware<GlobalExceptionHandler>();
 
 app.UseAuthentication();
 app.UseAuthorization();

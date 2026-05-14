@@ -8,7 +8,6 @@ namespace StoreWebApi.Actions
     public class IdempotentAttribute: ActionFilterAttribute
     {
             private const string idempotentAttribute = "X-IdempotentAttribute-Key";
-            private const string inProgressStatus = "inProgress";
             public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
             {
                 if (!context.HttpContext.Request.Headers.TryGetValue(idempotentAttribute, out var header) || string.IsNullOrEmpty(idempotentAttribute))
@@ -21,10 +20,7 @@ namespace StoreWebApi.Actions
                 var cachedResponseJson = await cache.GetStringAsync(cacheKey);
                 if (!string.IsNullOrEmpty(cachedResponseJson))
                 {
-                    if (cachedResponseJson == inProgressStatus)
-                    {
-                        context.Result = new StatusCodeResult(StatusCodes.Status409Conflict);
-                    }
+                    Console.WriteLine("there is cached response in the header");
                     var cachedResponse = System.Text.Json.JsonSerializer.Deserialize<CacheResponse>(cachedResponseJson);
                     if (cachedResponse != null)
                     {
@@ -37,15 +33,12 @@ namespace StoreWebApi.Actions
                 }
                 else
                 {
-                    await cache.SetStringAsync(cacheKey, "inProgressStatus", new DistributedCacheEntryOptions
+                Console.WriteLine("cached response is not found");
+                var executedContext = await next();
+                    if (executedContext.Result is ObjectResult objectResult &&
+                    objectResult.StatusCode >= 200 && 
+                    objectResult.StatusCode < 300)
                     {
-                        AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(2)
-                    });
-                    var executedContext = await next();
-                    if (executedContext.Result is ObjectResult objectResult)
-                    {
-                        if (objectResult.StatusCode >= 200 && objectResult.StatusCode < 300)
-                        {
                             var cacheResponse = new CacheResponse
                             {
                                 StatusCode = objectResult.StatusCode ?? 200,
@@ -54,14 +47,9 @@ namespace StoreWebApi.Actions
                             var cacheResponseJson = System.Text.Json.JsonSerializer.Serialize(cacheResponse);
                             await cache.SetStringAsync(cacheKey, cacheResponseJson, new DistributedCacheEntryOptions
                             {
-                                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(2),
+                                AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(20),
                             });
                         }
-                        else
-                        {
-                            await cache.RemoveAsync(cacheKey);
-                        }
-                    }
                 }
             }
         }

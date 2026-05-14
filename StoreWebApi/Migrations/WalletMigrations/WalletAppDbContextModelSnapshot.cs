@@ -32,6 +32,10 @@ namespace StoreWebApi.Migrations.WalletMigrations
                     b.Property<int>("Balance")
                         .HasColumnType("int");
 
+                    b.Property<string>("Currency")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("UserEmail")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -45,12 +49,14 @@ namespace StoreWebApi.Migrations.WalletMigrations
                         {
                             Id = 1,
                             Balance = 5000,
+                            Currency = "USD $",
                             UserEmail = "saad@gmail.com"
                         },
                         new
                         {
                             Id = 2,
                             Balance = 4000,
+                            Currency = "USD $",
                             UserEmail = "ahmed@gmail.com"
                         });
                 });

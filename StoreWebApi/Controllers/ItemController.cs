@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StoreWebApi.DTO;
+using StoreWebApi.ExceptionHandler;
 using StoreWebApi.Interfaces;
 using StoreWebApi.Models;
 
@@ -23,7 +24,7 @@ namespace StoreWebApi.Controllers
         /// create item
         /// </summary>
         [HttpPost]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> createItem([FromQuery]ItemDto itemData)
         {
             return Ok(await _ItemService.createItem(itemData.Name,itemData.Price,itemData.StockQuantity,itemData.CategoryName));
@@ -32,7 +33,7 @@ namespace StoreWebApi.Controllers
         /// get all items
         /// </summary>
         [HttpGet("allItems")]
-        //[Authorize(Roles = "Admin,Customer")]
+        [Authorize(Roles = "Admin,Customer")]
         public async Task<IActionResult> getAllItems()
         {
             return Ok(await _ItemService.getAllItems());
@@ -40,36 +41,42 @@ namespace StoreWebApi.Controllers
         /// <summary>
         /// get item by name
         /// </summary>
-        [HttpGet]
-        //[Authorize(Roles = "Admin")]
+        [HttpGet("{itemName}")]
+        [Authorize(Roles = "Admin,Customer")]
         public async Task<IActionResult> getItemByName(string itemName)
         {
             return Ok(await _ItemService.getITem(itemName));
         }
+        
         /// <summary>
         /// get items by category name
         /// </summary>
+        
         [HttpGet("byCategory")]
-        //[Authorize(Roles = "Admin,Customer")]
-        public async Task<IActionResult> getItemsByCategory(string categoryName)
+        [Authorize(Roles = "Customer")]
+        public async Task<IActionResult> getItemsByCategory(string categoryName, int pageSize, int pageNumber)
         {
-            return Ok(await _ItemService.getITemByCategoryName(categoryName));
+            return Ok(await _ItemService.getITemByCategoryName(categoryName,pageSize,pageNumber));
         }
+
         /// <summary>
         /// delete item by item name
         /// </summary>
+        
         [HttpDelete]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> deleteItem(string itemName)
         {
             await _ItemService.deleteItem(itemName);
             return Ok();
         }
+
         /// <summary>
         /// update item
         /// </summary>
+        
         [HttpPut]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> updateItem(string itemName, string newName, int newPrice, int stockQuantity)
         {
             return Ok(await _ItemService.updateItem(itemName, newName, newPrice, stockQuantity));

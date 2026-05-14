@@ -13,6 +13,7 @@ namespace StoreWebApi.zAppContexts
         public DbSet<User> Users { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<Receipt> Receipts { get; set; }
+        public DbSet<ExternalLog> ExternalLogs { get; set; }
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -24,6 +25,7 @@ namespace StoreWebApi.zAppContexts
             modelBuilder.ApplyConfiguration(new RefreshTokenConfiguration());
             modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new ReceiptConfiguration());
+            modelBuilder.ApplyConfiguration(new ExternalLogConfiguration());
         }
     }
 }

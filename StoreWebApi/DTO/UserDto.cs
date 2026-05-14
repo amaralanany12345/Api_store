@@ -1,4 +1,6 @@
-﻿namespace StoreWebApi.DTO
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace StoreWebApi.DTO
 {
     public class UserDto
     {
