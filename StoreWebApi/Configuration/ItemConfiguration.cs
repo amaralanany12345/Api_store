@@ -16,7 +16,7 @@ namespace StoreWebApi.Configuration
             builder.Property(a=>a.Price).IsRequired();
             builder.Property(a=>a.StockQuantity).IsRequired();
             builder.HasOne(a=>a.Category).WithMany(a=>a.Items).HasForeignKey(a=>a.CategoryId).OnDelete(DeleteBehavior.Restrict);
-            //builder.HasData(uploadData());
+            builder.HasData(uploadData());
         }
 
         private Item[] uploadData()

@@ -12,7 +12,7 @@ namespace StoreWebApi.Configuration
             builder.Property(a => a.Id).IsRequired().ValueGeneratedOnAdd();
             builder.Property(a => a.Name).IsRequired();
             builder.Property(a => a.Description).IsRequired();
-            //builder.HasData(uploadData());
+            builder.HasData(uploadData());
         }
 
         private Category[] uploadData()
