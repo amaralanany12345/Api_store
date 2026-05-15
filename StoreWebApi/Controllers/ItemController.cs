@@ -11,7 +11,7 @@ namespace StoreWebApi.Controllers
 {
     [Route("api/items")]
     [ApiController]
-    //[Authorize(Policy = "refreshTokenIsValid")]
+    [Authorize(Policy = "refreshTokenIsValid")]
     public class ItemController : ControllerBase
     {
         private readonly IItem _ItemService;
@@ -24,7 +24,7 @@ namespace StoreWebApi.Controllers
         /// create item
         /// </summary>
         [HttpPost]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> createItem([FromBody]ItemDto itemData)
         {
             return Ok(await _ItemService.createItem(itemData.Name,itemData.Price,itemData.StockQuantity,itemData.CategoryName));
@@ -42,7 +42,7 @@ namespace StoreWebApi.Controllers
         /// get item by name
         /// </summary>
         [HttpGet("{itemName}")]
-        //[Authorize(Roles = "Admin,Customer")]
+        [Authorize(Roles = "Admin,Customer")]
         public async Task<IActionResult> getItemByName(string itemName)
         {
             return Ok(await _ItemService.getITem(itemName));
@@ -53,7 +53,7 @@ namespace StoreWebApi.Controllers
         /// </summary>
         
         [HttpGet("category/{categoryName}")]
-        //[Authorize(Roles = "Customer")]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> getItemsByCategory(string categoryName, int pageSize, int pageNumber)
         {
             return Ok(await _ItemService.getITemByCategoryName(categoryName,pageSize,pageNumber));
@@ -76,7 +76,7 @@ namespace StoreWebApi.Controllers
         /// </summary>
         
         [HttpPut("{itemName}")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> updateItem(string itemName, string newName, int newPrice, int stockQuantity)
         {
             return Ok(await _ItemService.updateItem(itemName, newName, newPrice, stockQuantity));
