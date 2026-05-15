@@ -1,19 +1,14 @@
-﻿using StoreWebApi.Enums;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace StoreWebApi.Models
 {
-    public class RegisterRequest
+    public class LoginRequest
     {
-        [Required]
-        public string userName { get; set; }
         [EmailAddress]
         [Required]
         public string Email { get; set; }
         [Required]
         public string Password { get; set; }
-        [Required]
-        public UserRole Role { get; set; }
     }
 }

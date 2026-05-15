@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 
-namespace StoreWebApi.bolicesis
+namespace StoreWebApi.Policies
 {
     public class ValidRefreshToken : IAuthorizationRequirement
     {

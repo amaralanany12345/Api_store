@@ -2,16 +2,20 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using StoreWebApi.Actions;
 using StoreWebApi.DTO;
 using StoreWebApi.Interfaces;
 using StoreWebApi.Models;
 using StoreWebApi.Services;
+using StoreWebApi.zAppContexts;
 
 namespace StoreWebApi.Controllers
 {
     [Route("api/categories")]
     [ApiController]
-    [Authorize(Policy = "refreshTokenIsValid")]
+    //[Authorize(Policy = "refreshTokenIsValid")]
+    [ServiceFilter(typeof(ValidateRefreshTokenAttribute))]
+
     public class CategoryController : ControllerBase
     {
         private readonly ICategory _categoryService;

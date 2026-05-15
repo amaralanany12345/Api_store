@@ -1,24 +1,25 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
-using StoreWebApi.Models;
 using StoreWebApi.zAppContexts;
 using System.Security.Claims;
 
-namespace StoreWebApi.Policies
+namespace StoreWebApi.Actions
 {
-    public class CheckRefreshTokenIsValid : AuthorizationHandler<ValidRefreshToken>
+    public class ValidateRefreshTokenAttribute:ActionFilterAttribute
     {
         private readonly AppDbContext _context;
         private readonly IHttpContextAccessor _contextAccessor;
-        private readonly ILogger<CheckRefreshTokenIsValid> _logger;
-        public CheckRefreshTokenIsValid(AppDbContext context, IHttpContextAccessor contextAccessor, ILogger<CheckRefreshTokenIsValid> logger)
+        private readonly ILogger<ValidateRefreshTokenAttribute> _logger;
+
+        public ValidateRefreshTokenAttribute(AppDbContext context, IHttpContextAccessor contextAccessor, ILogger<ValidateRefreshTokenAttribute> logger)
         {
             _context = context;
             _contextAccessor = contextAccessor;
             _logger = logger;
         }
 
-        protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, ValidRefreshToken requirement)
+        public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             var currentUserEmail = _contextAccessor.HttpContext?.User.FindFirst(ClaimTypes.Email)?.Value;
             if (currentUserEmail == null)
@@ -40,11 +41,13 @@ namespace StoreWebApi.Policies
             }
             if (currentUserRefreshToken.isValid)
             {
-                context.Succeed(requirement);
+                await next();
             }
             else
             {
-                throw new ArgumentException("your token is expired");
+                _logger.LogWarning("your token is expired an not valid please refresh you token");
+                context.Result = new UnauthorizedObjectResult("your token is expired");
+                return;
             }
         }
     }

@@ -123,7 +123,7 @@ namespace StoreWebApi.Services
                 UserId=user.Id,
                 Token=generateRandomRefreshToken(),
                 CreatedAt=DateTime.Now,
-                ExpiredAt=DateTime.Now.AddMinutes(3),
+                ExpiredAt=DateTime.Now.AddSeconds(20),
             };
             await _context.RefreshTokens.AddAsync(newRefreshToken);
             await _context.SaveChangesAsync();

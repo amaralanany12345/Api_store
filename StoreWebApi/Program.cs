@@ -15,6 +15,7 @@ using StoreWebApi.zAppContexts;
 using StoreWebApi.ExceptionHandler;
 using Microsoft.AspNetCore.Authorization;
 using StoreWebApi.bolicesis;
+using StoreWebApi.Actions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -100,6 +101,7 @@ builder.Services.AddScoped<IUnitOfWork,UnitOfWorkService>();
 builder.Services.AddScoped<IExternalLog,ExternalLogService>();
 builder.Services.AddScoped<IAuthorizationHandler, CheckRefreshTokenIsValid>();
 builder.Services.AddScoped<IWallet, WalletService>();
+builder.Services.AddScoped<ValidateRefreshTokenAttribute>();
 
 
 // JWT Authentication setup

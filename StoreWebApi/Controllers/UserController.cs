@@ -30,7 +30,7 @@ namespace StoreWebApi.Controllers
         /// sign in 
         /// </summary>
         [HttpPost("login")]
-        public async Task<IActionResult> SignIn([FromBody] SignInRequest userRequest)
+        public async Task<IActionResult> SignIn([FromBody] LoginRequest userRequest)
         {
             return Ok(await _userService.signIn(userRequest.Email, userRequest.Password));
         }
