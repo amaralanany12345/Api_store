@@ -334,6 +334,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "StoreWebApi.Controllers.OrderController",
+    "Method": "getOrderItemsById",
+    "RelativePath": "api/orders/orderItems/{orderId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "orderId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "StoreWebApi.Controllers.PaymentController",
     "Method": "ApplyPayment",
     "RelativePath": "api/Payment",

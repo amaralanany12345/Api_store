@@ -126,7 +126,6 @@ namespace StoreWebApi.Services
         {
             var order = await getOrder();
             var orderItems=await _context.OrderItem.Where(a=>a.OrderId==order.Id).Include(a=>a.Item).ToListAsync();
-            Console.WriteLine(orderItems.Count);
             return orderItems;
         }
 
@@ -146,21 +145,9 @@ namespace StoreWebApi.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<OrderItem>> getApprovedOrderItems()
+        public async Task<List<OrderItemDto>> getOrderItemsById(int orderId)
         {
-            var customer = await _userService.getCurrentUser();
-            var order=await _context.Orders.Where(a=>a.CustomerId==customer.Id&& a.Status==OrderStatus.Approved.ToString()).Include(a=>a.OrderItems).FirstOrDefaultAsync();
-            if (order == null)
-            {
-                _logger.LogWarning("order is not found");
-                throw new ArgumentException("order is not found");
-            }
-            foreach(var item in order.OrderItems)
-            {
-                Console.WriteLine(item.Item.Name);
-                Console.WriteLine(item.Quantity);
-            }
-            return order.OrderItems;
+            return _mapper.Map<List<OrderItemDto>>(await _context.OrderItem.Where(a=>a.OrderId==orderId).Include(a=>a.Item).ToListAsync());
         }
     }
 }

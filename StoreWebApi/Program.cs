@@ -14,8 +14,8 @@ using Serilog.Sinks.MSSqlServer;
 using StoreWebApi.zAppContexts;
 using StoreWebApi.ExceptionHandler;
 using Microsoft.AspNetCore.Authorization;
-using StoreWebApi.bolicesis;
 using StoreWebApi.Actions;
+using StoreWebApi.Policies;
 
 var builder = WebApplication.CreateBuilder(args);
 

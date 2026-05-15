@@ -65,5 +65,15 @@ namespace StoreWebApi.Controllers
             await _orderService.CancelOrder();
             return Ok();
         }
+        /// <summary>
+        /// get the order Items
+        /// </summary>
+        [HttpGet("orderItems/{orderId}")]
+        [Authorize(Roles = "Customer")]
+        public async Task<IActionResult> getOrderItemsById(int orderId)
+        {
+            return Ok(await _orderService.getOrderItemsById(orderId));
+        }
+
     }
 }

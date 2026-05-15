@@ -11,6 +11,7 @@ namespace StoreWebApi.Interfaces
         Task deleteOrderItemFromOrder(int itemId);
         Task<Order> getOrder();
         Task<List<OrderItem>> getOrderItems();
+        Task<List<OrderItemDto>> getOrderItemsById(int orderId);
         Task CancelOrder();
     }
 }
