@@ -46,14 +46,14 @@ namespace StoreWebApi.Services
 
         public async Task deleteItem(string ItemName)
         {
-            var item = await getITem(ItemName);
-            _context.Items.Remove(_mapper.Map<Item>(item));
+            var item= await getExistItemByName(ItemName);
+            _context.Items.Remove(item);
             await _context.SaveChangesAsync();
 
         }
         public async Task<ItemDto> getITem(string name)
         {
-            var item = await _context.Items.Where(a => a.Name == name).FirstOrDefaultAsync();
+            var item = await _context.Items.Where(a => a.Name == name).Include(a=>a.Category).FirstOrDefaultAsync();
             if (item == null)
             {
                 _logger.LogInformation("Item is not found with this name ");
@@ -64,12 +64,12 @@ namespace StoreWebApi.Services
 
         public async Task<List<ItemDto>> getAllItems()
         {
-            return _mapper.Map<List<ItemDto>>(await _context.Items.ToListAsync());
+            return _mapper.Map<List<ItemDto>>(await _context.Items.Include(a=>a.Category).ToListAsync());
         }
 
         public async Task<ItemDto> updateItem(string itemName, string newName, int newPrice, int stockQuantity)
         {
-            var item=await getITem(itemName);
+            var item= await getExistItemByName(itemName);
             item.Name = newName;
             item.Price = newPrice;
             item.StockQuantity = stockQuantity;
@@ -89,6 +89,15 @@ namespace StoreWebApi.Services
             return _mapper.Map<List<ItemDto>>(await _context.Items.Where(a=>a.Category.Name==categoryName)
                 .Skip((pageNumber-1)*pageSize).Take(pageSize).ToListAsync());
             
+        }
+        private async Task<Item> getExistItemByName(string itemName)
+        {
+            var item = await _context.Items.Where(a => a.Name == itemName).FirstOrDefaultAsync();
+            if (item == null)
+            {
+                throw new ArgumentException("item is not found");
+            }
+            return item;
         }
     }
 }

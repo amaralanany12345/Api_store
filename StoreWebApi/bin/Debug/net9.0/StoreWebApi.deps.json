@@ -10,14 +10,17 @@
         "dependencies": {
           "AutoMapper": "16.1.1",
           "BCrypt.Net-Next": "4.1.0",
+          "FluentAssertions": "8.10.0",
           "MailKit": "4.16.0",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "9.0.15",
           "Microsoft.AspNetCore.Mvc.NewtonsoftJson": "9.0.15",
           "Microsoft.AspNetCore.OpenApi": "9.0.0-rc.1.24452.1",
           "Microsoft.EntityFrameworkCore": "9.0.15",
           "Microsoft.EntityFrameworkCore.Design": "9.0.15",
+          "Microsoft.EntityFrameworkCore.InMemory": "9.0.15",
           "Microsoft.EntityFrameworkCore.SqlServer": "9.0.15",
           "Microsoft.EntityFrameworkCore.Tools": "9.0.15",
+          "Moq": "4.20.72",
           "Serilog.AspNetCore": "9.0.0",
           "Serilog.Extensions.Hosting": "9.0.0",
           "Serilog.Settings.Configuration": "9.0.0",
@@ -84,6 +87,25 @@
           "lib/net6.0/BouncyCastle.Cryptography.dll": {
             "assemblyVersion": "2.0.0.0",
             "fileVersion": "2.6.2.46322"
+          }
+        }
+      },
+      "Castle.Core/5.1.1": {
+        "dependencies": {
+          "System.Diagnostics.EventLog": "9.0.10"
+        },
+        "runtime": {
+          "lib/net6.0/Castle.Core.dll": {
+            "assemblyVersion": "5.0.0.0",
+            "fileVersion": "5.1.1.0"
+          }
+        }
+      },
+      "FluentAssertions/8.10.0": {
+        "runtime": {
+          "lib/net6.0/FluentAssertions.dll": {
+            "assemblyVersion": "8.10.0.0",
+            "fileVersion": "8.10.0.0"
           }
         }
       },
@@ -611,6 +633,19 @@
           }
         }
       },
+      "Microsoft.EntityFrameworkCore.InMemory/9.0.15": {
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore": "9.0.15",
+          "Microsoft.Extensions.Caching.Memory": "9.0.15",
+          "Microsoft.Extensions.Logging": "9.0.15"
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.EntityFrameworkCore.InMemory.dll": {
+            "assemblyVersion": "9.0.15.0",
+            "fileVersion": "9.0.1526.17602"
+          }
+        }
+      },
       "Microsoft.EntityFrameworkCore.Relational/9.0.15": {
         "dependencies": {
           "Microsoft.EntityFrameworkCore": "9.0.15",
@@ -946,6 +981,17 @@
           "lib/net6.0/Mono.TextTemplating.dll": {
             "assemblyVersion": "3.0.0.0",
             "fileVersion": "3.0.0.1"
+          }
+        }
+      },
+      "Moq/4.20.72": {
+        "dependencies": {
+          "Castle.Core": "5.1.1"
+        },
+        "runtime": {
+          "lib/net6.0/Moq.dll": {
+            "assemblyVersion": "4.20.72.0",
+            "fileVersion": "4.20.72.0"
           }
         }
       },
@@ -1445,6 +1491,20 @@
       "path": "bouncycastle.cryptography/2.6.2",
       "hashPath": "bouncycastle.cryptography.2.6.2.nupkg.sha512"
     },
+    "Castle.Core/5.1.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-rpYtIczkzGpf+EkZgDr9CClTdemhsrwA/W5hMoPjLkRFnXzH44zDLoovXeKtmxb1ykXK9aJVODSpiJml8CTw2g==",
+      "path": "castle.core/5.1.1",
+      "hashPath": "castle.core.5.1.1.nupkg.sha512"
+    },
+    "FluentAssertions/8.10.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-yGvv+xp0gHFgGwhQcGoDdKIrhLhPi3zYYWWLLHPMctr+G6PWD7QH8L4wqoa5WRZquPbfSV/cP1MraI7ppAHrWw==",
+      "path": "fluentassertions/8.10.0",
+      "hashPath": "fluentassertions.8.10.0.nupkg.sha512"
+    },
     "Humanizer.Core/2.14.1": {
       "type": "package",
       "serviceable": true,
@@ -1612,6 +1672,13 @@
       "sha512": "sha512-Q38R8kv3kScn8m02SSD3Clj4iD9ys+qtEm3BhM6VQUPeqkwwF26I4i9DQtouqmK8nzeL51409cEdDfmpo22NsA==",
       "path": "microsoft.entityframeworkcore.design/9.0.15",
       "hashPath": "microsoft.entityframeworkcore.design.9.0.15.nupkg.sha512"
+    },
+    "Microsoft.EntityFrameworkCore.InMemory/9.0.15": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-li6r5o6lArbZaQXqDPVVqoeJpkZW3rx/YBF96Tonbk2hLoFot1OyCJq/zOvf82wJ2B6aSmMjGf8UdpcmIC1dRg==",
+      "path": "microsoft.entityframeworkcore.inmemory/9.0.15",
+      "hashPath": "microsoft.entityframeworkcore.inmemory.9.0.15.nupkg.sha512"
     },
     "Microsoft.EntityFrameworkCore.Relational/9.0.15": {
       "type": "package",
@@ -1836,6 +1903,13 @@
       "sha512": "sha512-YqueG52R/Xej4VVbKuRIodjiAhV0HR/XVbLbNrJhCZnzjnSjgMJ/dCdV0akQQxavX6hp/LC6rqLGLcXeQYU7XA==",
       "path": "mono.texttemplating/3.0.0",
       "hashPath": "mono.texttemplating.3.0.0.nupkg.sha512"
+    },
+    "Moq/4.20.72": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-EA55cjyNn8eTNWrgrdZJH5QLFp2L43oxl1tlkoYUKIE9pRwL784OWiTXeCV5ApS+AMYEAlt7Fo03A2XfouvHmQ==",
+      "path": "moq/4.20.72",
+      "hashPath": "moq.4.20.72.nupkg.sha512"
     },
     "Newtonsoft.Json/13.0.3": {
       "type": "package",

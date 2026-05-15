@@ -35,14 +35,14 @@ namespace StoreWebApi.Services
 
         public async Task deleteCategory(string CategoryName)
         {
-            var category = await getCategory(CategoryName);
-            _context.Categories.Remove(_mapper.Map<Category>(category));
+            var category = await getExistCategoryByName(CategoryName);
+            _context.Categories.Remove(category);
             _logger.LogInformation($"{category.Name} is deleted");
             await _context.SaveChangesAsync();
         }
-        private async Task<Category> getCategoryById(int categoryId)
+        private async Task<Category> getExistCategoryByName(string CategoryName)
         {
-            var category = await _context.Categories.Where(a => a.Id == categoryId).FirstOrDefaultAsync();
+            var category = await _context.Categories.Where(a => a.Name == CategoryName).FirstOrDefaultAsync();
             if (category == null)
             {
                 _logger.LogWarning("category is not found with this id");
@@ -72,7 +72,7 @@ namespace StoreWebApi.Services
 
         public async Task<CategoryDto> updateCategory(string CategoryName, string newName, string newDescription)
         {
-            var category=await getCategory(CategoryName);
+            var category=await getExistCategoryByName(CategoryName);
             category.Name = newName;
             category.Description = newDescription;
             await _context.SaveChangesAsync();
