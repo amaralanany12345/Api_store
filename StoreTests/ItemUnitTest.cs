@@ -36,6 +36,106 @@ namespace StoreTests
             _itemService = new ItemService(_context,_mapperMock.Object,_genericRepoMock.Object,_unitOfWorkMock.Object,_loggerMock.Object);
         }
         [Fact]
+        public async Task UpdateITem_ByName_ReturnNewUpdatedItem()
+        {
+            var category = new Category
+            {
+                Id = 1,
+                Name = "books",
+                Description = "books category",
+            };
+            var newItem = new Item
+            {
+                Id = 1,
+                Name = "item 1",
+                Price = 100,
+                StockQuantity = 20,
+                Category = category,
+                CategoryId = category.Id,
+            };
+            await _context.Categories.AddAsync(category);
+            await _context.Items.AddAsync(newItem);
+            await _context.SaveChangesAsync();
+            var newItemDto = new ItemDto
+            {
+                Name = "item 2",
+                Price = 200,
+                StockQuantity = 30,
+                CategoryName = category.Name
+            };
+            _mapperMock.Setup(a => a.Map<ItemDto>(It.IsAny<Item>())).Returns(newItemDto);
+            var result = await _itemService.updateItem(newItem.Name,newItemDto.Name,newItemDto.Price,newItemDto.StockQuantity);
+            Assert.NotNull(result);
+            Assert.Equal(newItemDto.Name,result.Name);
+            Assert.Equal(newItemDto.Price,result.Price);
+        }
+        [Fact]
+        public async Task DeleteItem_byItemName_ReturnNull()
+        {
+            var category = new Category
+            {
+                Id = 1,
+                Name = "books",
+                Description = "books category",
+            };
+            var newItem = new Item
+            {
+                Id = 1,
+                Name = "item 1",
+                Price = 100,
+                StockQuantity = 20,
+                Category = category,
+                CategoryId = category.Id,
+            };
+            await _context.Categories.AddAsync(category);
+            await _context.Items.AddAsync(newItem);
+            await _context.SaveChangesAsync();
+            var itemDto = new ItemDto
+            {
+                Name = "item 1",
+                Price = 100,
+                StockQuantity = 20,
+                CategoryName = category.Name
+            };
+            _mapperMock.Setup(a=>a.Map<ItemDto>(It.IsAny<Item>())).Returns(itemDto);
+
+            await _itemService.deleteItem(itemDto.Name);
+            var deletedITem=await _context.Items.FirstOrDefaultAsync(a=>a.Name=="itemDto.Name");
+            Assert.Null(deletedITem);
+        }
+        [Fact]
+        public async Task CreateItem_withCategoryName_ReturnItem()
+        {
+            var category = new Category
+            {
+                Id=1,
+                Name="books",
+                Description="books category",
+            };
+            var newItem = new Item
+            {
+                Id=1,
+                Name="item 1",
+                Price=100,
+                StockQuantity=20,
+                Category=category,
+                CategoryId=category.Id,
+            };
+            await _context.Categories.AddAsync(category);
+            await _context.SaveChangesAsync();
+            var newITemDto = new ItemDto
+            {
+                Name = "item 1",
+                Price = 100,
+                StockQuantity = 20,
+                CategoryName=category.Name,
+            };
+            _mapperMock.Setup(a => a.Map<ItemDto>(It.IsAny<Item>())).Returns(newITemDto);
+            var result = await _itemService.createItem(newITemDto.Name,newITemDto.Price,newITemDto.StockQuantity,newITemDto.CategoryName);
+            Assert.NotNull(newItem);
+            Assert.Equal(newItem.Name,result.Name);
+        }
+        [Fact]
         public async Task GetAllItems_ReturnAllItems()
         {
             var bookCategory = new Category

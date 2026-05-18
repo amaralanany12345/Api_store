@@ -63,9 +63,9 @@ namespace StoreWebApi.Services
                 RefreshToken= _mapper.Map<RefreshTokenDto>(await createRefreshToken(newUser.Email))
             };
         }
-        public async Task<SigningResponse> signIn(string userName, string password)
+        public async Task<SigningResponse> signIn(string userEmail, string password)
         {
-            var user = await getUserByEmail(userName);
+            var user = await getUserByEmail(userEmail);
             if (user == null || !(BCrypt.Net.BCrypt.Verify(password, user.PasswordHash)))
             {
                 _logger.LogWarning("your email or password is not found");
@@ -123,7 +123,7 @@ namespace StoreWebApi.Services
                 UserId=user.Id,
                 Token=generateRandomRefreshToken(),
                 CreatedAt=DateTime.Now,
-                ExpiredAt=DateTime.Now.AddSeconds(20),
+                ExpiredAt=DateTime.Now.AddMinutes(3),
             };
             await _context.RefreshTokens.AddAsync(newRefreshToken);
             await _context.SaveChangesAsync();

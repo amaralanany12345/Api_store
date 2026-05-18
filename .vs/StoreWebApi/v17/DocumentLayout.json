@@ -3,12 +3,24 @@
   "WorkspaceRootPath": "D:\\Projects\\StoreWebApi\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{CB2C01D8-DC55-46C1-A3B2-7B7EAE60CE30}|StoreTests\\StoreTests.csproj|d:\\projects\\storewebapi\\storetests\\itemunittest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CB2C01D8-DC55-46C1-A3B2-7B7EAE60CE30}|StoreTests\\StoreTests.csproj|solutionrelative:storetests\\itemunittest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{CB2C01D8-DC55-46C1-A3B2-7B7EAE60CE30}|StoreTests\\StoreTests.csproj|d:\\projects\\storewebapi\\storetests\\userunittest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB2C01D8-DC55-46C1-A3B2-7B7EAE60CE30}|StoreTests\\StoreTests.csproj|solutionrelative:storetests\\userunittest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E8AF71C3-2C3F-4773-B4F8-65536624C05F}|StoreWebApi\\StoreWebApi.csproj|d:\\projects\\storewebapi\\storewebapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E8AF71C3-2C3F-4773-B4F8-65536624C05F}|StoreWebApi\\StoreWebApi.csproj|solutionrelative:storewebapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{E8AF71C3-2C3F-4773-B4F8-65536624C05F}|StoreWebApi\\StoreWebApi.csproj|d:\\projects\\storewebapi\\storewebapi\\interfaces\\iuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E8AF71C3-2C3F-4773-B4F8-65536624C05F}|StoreWebApi\\StoreWebApi.csproj|solutionrelative:storewebapi\\interfaces\\iuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E8AF71C3-2C3F-4773-B4F8-65536624C05F}|StoreWebApi\\StoreWebApi.csproj|d:\\projects\\storewebapi\\storewebapi\\services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E8AF71C3-2C3F-4773-B4F8-65536624C05F}|StoreWebApi\\StoreWebApi.csproj|solutionrelative:storewebapi\\services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB2C01D8-DC55-46C1-A3B2-7B7EAE60CE30}|StoreTests\\StoreTests.csproj|d:\\projects\\storewebapi\\storetests\\paymentunittest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB2C01D8-DC55-46C1-A3B2-7B7EAE60CE30}|StoreTests\\StoreTests.csproj|solutionrelative:storetests\\paymentunittest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB2C01D8-DC55-46C1-A3B2-7B7EAE60CE30}|StoreTests\\StoreTests.csproj|d:\\projects\\storewebapi\\storetests\\itemunittest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB2C01D8-DC55-46C1-A3B2-7B7EAE60CE30}|StoreTests\\StoreTests.csproj|solutionrelative:storetests\\itemunittest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -18,7 +30,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 361,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Bookmark",
@@ -38,28 +50,67 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "IUser.cs",
+              "DocumentMoniker": "D:\\Projects\\StoreWebApi\\StoreWebApi\\Interfaces\\IUser.cs",
+              "RelativeDocumentMoniker": "StoreWebApi\\Interfaces\\IUser.cs",
+              "ToolTip": "D:\\Projects\\StoreWebApi\\StoreWebApi\\Interfaces\\IUser.cs",
+              "RelativeToolTip": "StoreWebApi\\Interfaces\\IUser.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-18T14:41:40.484Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "PaymentUnitTest.cs",
+              "DocumentMoniker": "D:\\Projects\\StoreWebApi\\StoreTests\\PaymentUnitTest.cs",
+              "RelativeDocumentMoniker": "StoreTests\\PaymentUnitTest.cs",
+              "ToolTip": "D:\\Projects\\StoreWebApi\\StoreTests\\PaymentUnitTest.cs",
+              "RelativeToolTip": "StoreTests\\PaymentUnitTest.cs",
+              "ViewState": "AgIAAFkAAAAAAAAAAAAAwGUAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-18T13:40:00.854Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "UserService.cs",
+              "DocumentMoniker": "D:\\Projects\\StoreWebApi\\StoreWebApi\\Services\\UserService.cs",
+              "RelativeDocumentMoniker": "StoreWebApi\\Services\\UserService.cs",
+              "ToolTip": "D:\\Projects\\StoreWebApi\\StoreWebApi\\Services\\UserService.cs",
+              "RelativeToolTip": "StoreWebApi\\Services\\UserService.cs",
+              "ViewState": "AgIAAFcAAAAAAAAAAAAuwJ4AAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-18T13:14:12.253Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "UserUnitTest.cs",
+              "DocumentMoniker": "D:\\Projects\\StoreWebApi\\StoreTests\\UserUnitTest.cs",
+              "RelativeDocumentMoniker": "StoreTests\\UserUnitTest.cs",
+              "ToolTip": "D:\\Projects\\StoreWebApi\\StoreTests\\UserUnitTest.cs",
+              "RelativeToolTip": "StoreTests\\UserUnitTest.cs",
+              "ViewState": "AgIAACMBAAAAAAAAAAAAAC0BAAA6AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-18T13:02:17.143Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": "ItemUnitTest.cs",
               "DocumentMoniker": "D:\\Projects\\StoreWebApi\\StoreTests\\ItemUnitTest.cs",
               "RelativeDocumentMoniker": "StoreTests\\ItemUnitTest.cs",
               "ToolTip": "D:\\Projects\\StoreWebApi\\StoreTests\\ItemUnitTest.cs",
               "RelativeToolTip": "StoreTests\\ItemUnitTest.cs",
-              "ViewState": "AgIAAH8AAAAAAAAAAAAAAIkAAAA6AAAAAAAAAA==",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAAACIAAAA7AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-05-15T14:20:29.314Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Program.cs",
-              "DocumentMoniker": "D:\\Projects\\StoreWebApi\\StoreWebApi\\Program.cs",
-              "RelativeDocumentMoniker": "StoreWebApi\\Program.cs",
-              "ToolTip": "D:\\Projects\\StoreWebApi\\StoreWebApi\\Program.cs",
-              "RelativeToolTip": "StoreWebApi\\Program.cs",
-              "ViewState": "AgIAAEsAAAAAAAAAAAAAAFYAAAAqAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-08T08:26:54.341Z",
               "EditorCaption": ""
             }
           ]
