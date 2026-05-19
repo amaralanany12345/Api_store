@@ -296,10 +296,8 @@ namespace StoreTests
             };
 
             var identity = new ClaimsIdentity(claims);
-            Console.WriteLine(identity.Name);
 
             var claimsPrincipal = new ClaimsPrincipal(identity);
-            Console.WriteLine(claimsPrincipal.Identities);
 
             var context = new DefaultHttpContext
             {
@@ -310,6 +308,64 @@ namespace StoreTests
             var result = await _userService.getCurrentUser();
             Assert.NotNull(result);
             Assert.Equal(newUserDto.Email, result.Email);
+        }
+        [Fact]
+        public async Task SignOut_ExpireRefreshToken()
+        {
+            var newUser = new User
+            {
+                Id = 1,
+                UserName = "ammar",
+                Email = "ammar@gmail.com",
+                Role = UserRole.Admin.ToString(),
+                CreatedAt = DateTime.Now,
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword("ammar123")
+            };
+            var newRefreshToken = new RefreshToken
+            {
+                Id = 1,
+                User = newUser,
+                UserId = newUser.Id,
+                Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
+                CreatedAt = DateTime.Now,
+                ExpiredAt = DateTime.Now.AddSeconds(30),
+            };
+            await _appDbContext.Users.AddAsync(newUser);
+            await _appDbContext.RefreshTokens.AddAsync(newRefreshToken);
+            await _appDbContext.SaveChangesAsync();
+            var newUserDto = new UserDto
+            {
+                UserName = newUser.UserName,
+                Email = newUser.Email,
+                Role = UserRole.Admin.ToString(),
+                CreatedAt = DateTime.Now,
+            };
+            var newRefreshTokenDto = new RefreshTokenDto
+            {
+                RefreshToken = newRefreshToken.Token,
+            };
+            var newSigningResponse = new SigningResponse
+            {
+                User = newUserDto,
+                RefreshToken = newRefreshTokenDto
+            };
+            _mapperMock.Setup(a => a.Map<UserDto>(It.IsAny<User>())).Returns(newUserDto);
+            _mapperMock.Setup(a => a.Map<RefreshTokenDto>(It.IsAny<RefreshToken>())).Returns(newRefreshTokenDto);
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Email, newUser.Email)
+            };
+            var identity=new ClaimsIdentity(claims);    
+            var claimsPrincipal=new ClaimsPrincipal(identity);
+            var context = new DefaultHttpContext
+            {
+                User = claimsPrincipal
+            };
+            _contextAccessorMock.Setup(a => a.HttpContext).Returns(context);
+            await _userService.signOut();
+            var expiredToken=await _appDbContext.RefreshTokens.OrderByDescending(a=>a.CreatedAt).FirstOrDefaultAsync(a=>a.Token==newRefreshTokenDto.RefreshToken);
+            Assert.NotNull(expiredToken);
+            Assert.Equal(false,expiredToken.isValid);
         }
     }
 }
