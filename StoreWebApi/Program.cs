@@ -3,32 +3,25 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using StoreWebApi.Models;
+using StoreDomain.Models;
 using AutoMapper;
-using StoreWebApi.Helper;
-using StoreWebApi.Interfaces;
-using StoreWebApi.Services;
 using Serilog;
 using Microsoft.OpenApi.Models;
 using Serilog.Sinks.MSSqlServer;
-using StoreWebApi.zAppContexts;
+using StoreDataBase.AppContexts;
 using StoreWebApi.ExceptionHandler;
 using Microsoft.AspNetCore.Authorization;
-using StoreWebApi.Actions;
 using StoreWebApi.Policies;
+using StoreService.Interfaces;
+using StoreService.Services;
+using StoreWebApi.Actions;
+using StoreService.Helper;
+using StoreDataBase.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
-
-//builder.Services.AddProblemDetails(configure =>
-//{
-//    configure.CustomizeProblemDetails = context =>
-//    {
-//        context.ProblemDetails.Extensions.TryAdd("requestId", context.HttpContext.TraceIdentifier);
-//    };
-//});
 
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddHttpContextAccessor();
@@ -90,17 +83,19 @@ builder.Services.AddAuthorization(options =>
 });
 
 
-builder.Services.AddScoped<IItem, ItemService>();
-builder.Services.AddScoped<ICategory, CategoryService>();
-builder.Services.AddScoped<IUser,UserService>();
-builder.Services.AddScoped<IOrder,OrderService>();
-builder.Services.AddScoped<IEmail,EmailService>();
-builder.Services.AddScoped<IPaymentGateWay, PaymentGateWayService>();
-builder.Services.AddScoped(typeof(IGenericRepo<>), typeof(GenericRepoService<>));
-builder.Services.AddScoped<IUnitOfWork,UnitOfWorkService>();
-builder.Services.AddScoped<IExternalLog,ExternalLogService>();
+builder.Services.AddScoped<IItemService, ItemService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IUserService,UserService>();
+builder.Services.AddScoped<IOrderService,OrderService>();
+builder.Services.AddScoped<IEmailService,EmailService>();
+builder.Services.AddScoped<IPaymentGateWayService, PaymentGateWayService>();
+builder.Services.AddScoped(typeof(IGenericRepoService<>), typeof(GenericRepoServiceForStoreDb<>));
+builder.Services.AddScoped(typeof(IGenericRepoService<>), typeof(GenericRepoServiceForWalletDb<>));
+builder.Services.AddScoped<IUnitOfWorkServiceForStoreDb,UnitOfWorkServiceOfStoreDb>();
+builder.Services.AddScoped<IUnitOfWorkForWalletDb,UnitOfWorkOfWalletDb>();
+builder.Services.AddScoped<IExternalLogService,ExternalLogService>();
 builder.Services.AddScoped<IAuthorizationHandler, CheckRefreshTokenIsValid>();
-builder.Services.AddScoped<IWallet, WalletService>();
+builder.Services.AddScoped<IWalletService, WalletService>();
 builder.Services.AddScoped<ValidateRefreshTokenAttribute>();
 
 

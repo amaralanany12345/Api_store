@@ -1,0 +1,31 @@
+﻿using Microsoft.EntityFrameworkCore;
+using StoreDataBase.Configuration;
+using StoreDomain.Models;
+
+namespace StoreDataBase.AppContexts
+{
+    public class AppDbContext : DbContext
+    {
+        public DbSet<Item> Items { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItem { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
+        public DbSet<Receipt> Receipts { get; set; }
+        public DbSet<ExternalLog> ExternalLogs { get; set; }
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfiguration(new OrderItemConfiguration());
+            modelBuilder.ApplyConfiguration(new CategoryConfiguration());
+            modelBuilder.ApplyConfiguration(new OrderConfiguration());
+            modelBuilder.ApplyConfiguration(new OrderItemConfiguration());
+            modelBuilder.ApplyConfiguration(new RefreshTokenConfiguration());
+            modelBuilder.ApplyConfiguration(new UserConfiguration());
+            modelBuilder.ApplyConfiguration(new ReceiptConfiguration());
+            modelBuilder.ApplyConfiguration(new ExternalLogConfiguration());
+        }
+    }
+}

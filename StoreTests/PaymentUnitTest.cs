@@ -2,12 +2,12 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
-using StoreWebApi.DTO;
-using StoreWebApi.Enums;
-using StoreWebApi.Interfaces;
-using StoreWebApi.Models;
-using StoreWebApi.Services;
-using StoreWebApi.zAppContexts;
+using StoreService.DTO;
+using StoreService.Interfaces;
+using StoreDomain.Models;
+using StoreService.Services;
+using StoreDataBase.AppContexts;
+using StoreDomain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,31 +18,33 @@ namespace StoreTests
 {
     public class PaymentServiceTest
     {
-        private readonly IPaymentGateWay _paymentService;
+        private readonly IPaymentGateWayService _paymentService;
         private readonly Mock<ILogger<PaymentGateWayService>> _loggerMock;
         private readonly AppDbContext _appDbContext;
         private readonly WalletAppDbContext _walletAppDbContext;
-        private readonly Mock<IGenericRepo<Receipt>> _genericRepoMock;
-        private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+        private readonly Mock<IGenericRepoService<Receipt>> _genericRepoMock;
+        private readonly Mock<IUnitOfWorkServiceForStoreDb> _unitOfWorkMock;
+        private readonly Mock<IUnitOfWorkForWalletDb> _unitOfWorkForWalletDbMock;
         private readonly Mock<IMapper> _mapperMock;
-        private readonly Mock<IEmail> _emailServiceMock;
-        private readonly Mock<IOrder> _orderServiceMock;
-        private readonly Mock<IExternalLog> _externalLogServiceMock;
-        public PaymentServiceTest()
+        private readonly Mock<IEmailService> _emailServiceMock;
+        private readonly Mock<IOrderService> _orderServiceMock;
+        private readonly Mock<IExternalLogService> _externalLogServiceMock;
+        public PaymentServiceTest(Mock<IUnitOfWorkForWalletDb> unitOfWorkForWalletDbMock)
         {
-            _externalLogServiceMock = new Mock<IExternalLog>();
-            _emailServiceMock= new Mock<IEmail>();
-            _orderServiceMock = new Mock<IOrder>();
+            _externalLogServiceMock = new Mock<IExternalLogService>();
+            _emailServiceMock = new Mock<IEmailService>();
+            _orderServiceMock = new Mock<IOrderService>();
             var appDbContextOptions = new DbContextOptionsBuilder<AppDbContext>().UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
             var WalletAppDbContextOptions = new DbContextOptionsBuilder<WalletAppDbContext>().UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
-            _appDbContext=new AppDbContext(appDbContextOptions);
+            _appDbContext = new AppDbContext(appDbContextOptions);
             _walletAppDbContext = new WalletAppDbContext(WalletAppDbContextOptions);
-            _genericRepoMock = new Mock<IGenericRepo<Receipt>>();
-            _unitOfWorkMock = new Mock<IUnitOfWork>();
+            _genericRepoMock = new Mock<IGenericRepoService<Receipt>>();
+            _unitOfWorkMock = new Mock<IUnitOfWorkServiceForStoreDb>();
             _mapperMock = new Mock<IMapper>();
             _loggerMock = new Mock<ILogger<PaymentGateWayService>>();
-            _paymentService = new PaymentGateWayService(_appDbContext, _walletAppDbContext,_emailServiceMock.Object,_genericRepoMock.Object,
-                _unitOfWorkMock.Object,_loggerMock.Object,_mapperMock.Object,_orderServiceMock.Object,_externalLogServiceMock.Object);
+            _unitOfWorkForWalletDbMock = unitOfWorkForWalletDbMock;
+            _paymentService = new PaymentGateWayService(_emailServiceMock.Object, _unitOfWorkMock.Object, _loggerMock.Object,
+                _mapperMock.Object, _orderServiceMock.Object, _externalLogServiceMock.Object, _unitOfWorkForWalletDbMock.Object);
         }
         [Fact]
         public async Task PayForOrder_ReturnReceipt()
@@ -53,7 +55,7 @@ namespace StoreTests
                 UserName="saad",
                 Email="saad@gmail.com",
                 PasswordHash=BCrypt.Net.BCrypt.HashPassword("saad123"),
-                Balance=3000,
+                //Balance=3000,
                 Role=UserRole.Customer.ToString(),
                 CreatedAt=DateTime.Now,
             };
@@ -93,9 +95,9 @@ namespace StoreTests
                 TotalAmount=newOrder.TotalAmount,
                 CreateAt=DateTime.Now,
             };
-            _orderServiceMock.Setup(x => x.getOrder()).ReturnsAsync(newOrder);
+            _orderServiceMock.Setup(x => x.GetOrder()).ReturnsAsync(newOrder);
             _mapperMock.Setup(a => a.Map<ReceiptDto>(It.IsAny<Receipt>())).Returns(newReceiptDto);
-            var result = await _paymentService.payForOrder();
+            var result = await _paymentService.PayForOrder();
             Assert.Equal(newReceiptDto.TotalAmount, result.TotalAmount);
             Assert.NotNull(result);
 

@@ -18,7 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\StoreWebApi\StoreWebApi.csproj" />
+    <ProjectReference Include="..\StoreDataBase\StoreDataBase.csproj" />
+    <ProjectReference Include="..\StoreDomain\StoreDomain.csproj" />
+    <ProjectReference Include="..\StoreService\StoreService.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -2,11 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
-using StoreWebApi.DTO;
-using StoreWebApi.Interfaces;
-using StoreWebApi.Models;
-using StoreWebApi.Services;
-using StoreWebApi.zAppContexts;
+using StoreService.DTO;
+using StoreService.Interfaces;
+using StoreDomain.Models;
+using StoreService.Services;
+using StoreDataBase.AppContexts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,8 +17,7 @@ namespace StoreTests
 {
     public class CategoryServiceTests
     {
-        private readonly Mock<IGenericRepo<Category>> _genericRepoMock;
-        private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+        private readonly Mock<IUnitOfWorkServiceForStoreDb> _unitOfWorkMock;
         private readonly Mock<IMapper> _mapperMock;
         private readonly Mock<ILogger<CategoryService>> _loggerMock;
         private readonly AppDbContext _context;
@@ -27,11 +26,10 @@ namespace StoreTests
         {
             var options = new DbContextOptionsBuilder<AppDbContext>().UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
             _context = new AppDbContext(options);
-            _genericRepoMock = new Mock<IGenericRepo<Category>>();
-            _unitOfWorkMock = new Mock<IUnitOfWork>();
+            _unitOfWorkMock = new Mock<IUnitOfWorkServiceForStoreDb>();
             _mapperMock = new Mock<IMapper>();
             _loggerMock = new Mock<ILogger<CategoryService>>();
-            _categoryService = new CategoryService(_context, _mapperMock.Object, _loggerMock.Object, _unitOfWorkMock.Object, _genericRepoMock.Object);
+            _categoryService = new CategoryService(_mapperMock.Object, _loggerMock.Object, _unitOfWorkMock.Object);
         }
 
         [Fact]
@@ -48,13 +46,14 @@ namespace StoreTests
                 Name = "books",
                 Description = "books category"
             };
+            _unitOfWorkMock.Setup(a => a.Categories.CreateAsync(newCategory)).Returns(Task.CompletedTask);
             _mapperMock.Setup(a=>a.Map<CategoryDto>(It.IsAny<Category>())).Returns(newCategoryDto);
-            var result = await _categoryService.createCategory(newCategory.Name, newCategory.Description);
+            var result = await _categoryService.CreateCategory(newCategory.Name, newCategory.Description);
             Assert.NotNull(result);
             Assert.Equal(newCategory.Name,result.Name);
         }
         [Fact]
-        public async Task DeleteCategory_ByCategoryName_Deleted()
+        public async Task DeleteCategory_ByCategoryId_Deleted()
         {
             var newCategory = new Category
             {
@@ -69,8 +68,9 @@ namespace StoreTests
                 Name = "books",
                 Description = "books category"
             };
+            _unitOfWorkMock.Setup(a=>a.Categories.DeleteAsync(newCategory)).Returns(Task.CompletedTask);
             _mapperMock.Setup(a=>a.Map<CategoryDto>(It.IsAny<CategoryDto>())).Returns(newCategoryDto);
-            await _categoryService.deleteCategory(newCategory.Name);
+            await _categoryService.DeleteCategory(newCategory.Id);
             var deletedCategory=await _context.Categories.FirstOrDefaultAsync(a=>a.Name==newCategoryDto.Name);
             Assert.Null(deletedCategory);
         }
@@ -89,12 +89,13 @@ namespace StoreTests
                 new CategoryDto{Name = "books",Description = "books category" },
                 new CategoryDto{Name="electronics",Description="electronics category"},
             };
+            _unitOfWorkMock.Setup(a => a.Categories.GetAllAsync()).ReturnsAsync(newCategories);
             _mapperMock.Setup(a=>a.Map<List<CategoryDto>>(It.IsAny<List<Category>>())).Returns(newCategoriesDto);
-            var result = await _categoryService.getAllCategories();
+            var result = await _categoryService.GetAllCategories();
             Assert.Equal(2, result.Count);
         }
         [Fact]
-        public async Task getCategory_ByName_ReturnCategory()
+        public async Task getCategory_ById_ReturnCategory()
         {
             var newCategory = new Category
             {
@@ -109,14 +110,15 @@ namespace StoreTests
                 Name = "books",
                 Description = "books category"
             };
+            _unitOfWorkMock.Setup(a => a.Categories.GetAsync(newCategory.Id)).ReturnsAsync(newCategory);
             _mapperMock.Setup(a=>a.Map<CategoryDto>(It.IsAny<Category>())).Returns(newCategoryDto);
-            var result= await _categoryService.getCategory(newCategoryDto.Name);
+            var result= await _categoryService.GetCategory(newCategory.Id);
             Assert.NotNull(result);
             Assert.Equal("books category",result.Description);
             Assert.Equal("books",result.Name);
         }
         [Fact]
-        public async Task UpdateCategory_ByName_ReturnUpdatedCategory()
+        public async Task UpdateCategory_ById_ReturnUpdatedCategory()
         {
             var newCategory = new Category
             {
@@ -132,7 +134,7 @@ namespace StoreTests
                 Description = "cars category"
             };
             _mapperMock.Setup(a=>a.Map<CategoryDto>(It.IsAny<Category>())).Returns(newUpdatedCategoryDto);
-            var result=await _categoryService.updateCategory(newCategory.Name,newUpdatedCategoryDto.Name
+            var result=await _categoryService.UpdateCategory(newCategory.Id,newUpdatedCategoryDto.Name
                 ,newUpdatedCategoryDto.Description);
             Assert.NotNull(result);
             Assert.Equal("cars", result.Name);

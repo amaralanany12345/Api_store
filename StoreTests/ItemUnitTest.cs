@@ -5,35 +5,36 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
-using StoreWebApi.Interfaces;
-using StoreWebApi.Models;
-using StoreWebApi.Services;
-using StoreWebApi.zAppContexts;
+using StoreService.DTO;
+using StoreService.Interfaces;
+using StoreDomain.Models;
+using StoreService.Services;
+using StoreDataBase.AppContexts;
 using System;
 using System.Net.Http;
 using System.Net;
-using StoreWebApi.DTO;
+using StoreService.RepositoriesInterfaces;
 
 namespace StoreTests
 {
     public class ItemServiceTests
     {
-        private readonly Mock<IGenericRepo<Item>> _genericRepoMock;
-        private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+        private readonly Mock<IUnitOfWorkServiceForStoreDb> _unitOfWorkMock;
+        private readonly Mock<IITemRepository> _itemRepositoryMock;
         private readonly Mock<IMapper> _mapperMock;
         private readonly Mock<ILogger<ItemService>> _loggerMock;
         private readonly AppDbContext _context;
-        private readonly ItemService _itemService;
+        private readonly IItemService _itemService;
 
         public ItemServiceTests()
         {
             var options = new DbContextOptionsBuilder<AppDbContext>().UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
             _context = new AppDbContext(options);
-            _genericRepoMock = new Mock<IGenericRepo<Item>>();
-            _unitOfWorkMock = new Mock<IUnitOfWork>();
+            _unitOfWorkMock = new Mock<IUnitOfWorkServiceForStoreDb>();
             _mapperMock = new Mock<IMapper>();
             _loggerMock = new Mock<ILogger<ItemService>>();
-            _itemService = new ItemService(_context,_mapperMock.Object,_genericRepoMock.Object,_unitOfWorkMock.Object,_loggerMock.Object);
+            _itemRepositoryMock = new Mock<IITemRepository>();
+            _itemService = new ItemService(_mapperMock.Object,_unitOfWorkMock.Object,_loggerMock.Object);
         }
         [Fact]
         public async Task UpdateITem_ByName_ReturnNewUpdatedItem()
@@ -64,7 +65,7 @@ namespace StoreTests
                 CategoryName = category.Name
             };
             _mapperMock.Setup(a => a.Map<ItemDto>(It.IsAny<Item>())).Returns(newItemDto);
-            var result = await _itemService.updateItem(newItem.Name,newItemDto.Name,newItemDto.Price,newItemDto.StockQuantity);
+            var result = await _itemService.UpdateItem(newItem.Id,newItemDto.Name,newItemDto.Price,newItemDto.StockQuantity);
             Assert.NotNull(result);
             Assert.Equal(newItemDto.Name,result.Name);
             Assert.Equal(newItemDto.Price,result.Price);
@@ -97,9 +98,10 @@ namespace StoreTests
                 StockQuantity = 20,
                 CategoryName = category.Name
             };
+            _unitOfWorkMock.Setup(a => a.Items.DeleteAsync(newItem)).Returns(Task.CompletedTask);
             _mapperMock.Setup(a=>a.Map<ItemDto>(It.IsAny<Item>())).Returns(itemDto);
 
-            await _itemService.deleteItem(itemDto.Name);
+            await _itemService.DeleteItem(newItem.Id);
             var deletedITem=await _context.Items.FirstOrDefaultAsync(a=>a.Name=="itemDto.Name");
             Assert.Null(deletedITem);
         }
@@ -123,6 +125,7 @@ namespace StoreTests
             };
             await _context.Categories.AddAsync(category);
             await _context.SaveChangesAsync();
+            _unitOfWorkMock.Setup(a => a.Categories.CreateAsync(category)).Returns(Task.CompletedTask);
             var newITemDto = new ItemDto
             {
                 Name = "item 1",
@@ -130,8 +133,9 @@ namespace StoreTests
                 StockQuantity = 20,
                 CategoryName=category.Name,
             };
+            _unitOfWorkMock.Setup(a => a.Items.CreateAsync(newItem)).Returns(Task.CompletedTask);
             _mapperMock.Setup(a => a.Map<ItemDto>(It.IsAny<Item>())).Returns(newITemDto);
-            var result = await _itemService.createItem(newITemDto.Name,newITemDto.Price,newITemDto.StockQuantity,newITemDto.CategoryName);
+            var result = await _itemService.CreateItem(newITemDto.Name,newITemDto.Price,newITemDto.StockQuantity,newITemDto.CategoryName);
             Assert.NotNull(newItem);
             Assert.Equal(newItem.Name,result.Name);
         }
@@ -157,13 +161,14 @@ namespace StoreTests
                 new ItemDto{Name="book 1",Price=100,StockQuantity=10,CategoryName=bookCategory.Name},
                 new ItemDto{Name="book 2",Price=200,StockQuantity=20,CategoryName=bookCategory.Name},
             };
+            _unitOfWorkMock.Setup(a => a.Items.GetAllAsync()).ReturnsAsync(newItems);
             _mapperMock.Setup(a => a.Map<List<ItemDto>>(It.IsAny<List<Item>>())).Returns(newItemsDto);
-            var result = await _itemService.getAllItems();
+            var result = await _itemService.GetAllItems();
             Assert.NotNull(result);
             Assert.Equal(2, result.Count);
         }
         [Fact]
-        public async Task GetItem_WithName_ReturnItem()
+        public async Task GetItem_WithId_ReturnItem()
         {
             var category = new Category
             {
@@ -192,11 +197,11 @@ namespace StoreTests
                 Price = 5000,
                 StockQuantity = 10
             };
-
+            _unitOfWorkMock.Setup(a => a.Items.GetAsync(item.Id)).ReturnsAsync(item);
             _mapperMock.Setup(x => x.Map<ItemDto>(It.IsAny<Item>())).Returns(itemDto);
 
             // Act
-            var result = await _itemService.getITem("Laptop");
+            var result = await _itemService.GetITem(1);
 
             // Assert
             Assert.NotNull(result);
@@ -237,10 +242,10 @@ namespace StoreTests
                 new ItemDto{Name="book 2",Price=200,StockQuantity=20,CategoryName=bookCategory.Name},
                 //new ItemDto{Name="car 1",Price=5000,StockQuantity=30,CategoryName=carCategory.Name},
             };
-
+            _itemRepositoryMock.Setup(a=>a.GetITemByCategory(bookCategory.Id,2,1)).ReturnsAsync(newItems);
             _mapperMock.Setup(a => a.Map<List<ItemDto>>(It.IsAny<List<Item>>())).Returns(newItemsDto);
 
-            var result = await _itemService.getITemByCategoryName("books",2,1);
+            var result = await _itemService.GetITemByCategory(bookCategory.Id,2,1);
             Assert.NotNull(result);
             Assert.All(result,a=> Assert.Equal("books",a.CategoryName)); 
 

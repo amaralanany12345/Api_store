@@ -4,14 +4,116 @@
     "D:\\Projects\\StoreWebApi\\StoreWebApi\\StoreWebApi.csproj": {}
   },
   "projects": {
-    "D:\\Projects\\StoreWebApi\\StoreWebApi\\StoreWebApi.csproj": {
+    "D:\\Projects\\StoreWebApi\\StoreDataBase\\StoreDataBase.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Projects\\StoreWebApi\\StoreWebApi\\StoreWebApi.csproj",
-        "projectName": "StoreWebApi",
-        "projectPath": "D:\\Projects\\StoreWebApi\\StoreWebApi\\StoreWebApi.csproj",
+        "projectUniqueName": "D:\\Projects\\StoreWebApi\\StoreDataBase\\StoreDataBase.csproj",
+        "projectName": "StoreDataBase",
+        "projectPath": "D:\\Projects\\StoreWebApi\\StoreDataBase\\StoreDataBase.csproj",
         "packagesPath": "C:\\Users\\Aalan\\.nuget\\packages\\",
-        "outputPath": "D:\\Projects\\StoreWebApi\\StoreWebApi\\obj\\",
+        "outputPath": "D:\\Projects\\StoreWebApi\\StoreDataBase\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "D:\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Aalan\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "D:\\Projects\\StoreWebApi\\StoreDomain\\StoreDomain.csproj": {
+                "projectPath": "D:\\Projects\\StoreWebApi\\StoreDomain\\StoreDomain.csproj"
+              },
+              "D:\\Projects\\StoreWebApi\\StoreService\\StoreService.csproj": {
+                "projectPath": "D:\\Projects\\StoreWebApi\\StoreService\\StoreService.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "all"
+        },
+        "SdkAnalysisLevel": "9.0.100"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "AutoMapper": {
+              "target": "Package",
+              "version": "[16.1.1, )"
+            },
+            "BCrypt.Net-Next": {
+              "target": "Package",
+              "version": "[4.2.0, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.0.16, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.16, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[9.0.16, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.16, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.100-rc.1.24452.12/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\Projects\\StoreWebApi\\StoreDomain\\StoreDomain.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Projects\\StoreWebApi\\StoreDomain\\StoreDomain.csproj",
+        "projectName": "StoreDomain",
+        "projectPath": "D:\\Projects\\StoreWebApi\\StoreDomain\\StoreDomain.csproj",
+        "packagesPath": "C:\\Users\\Aalan\\.nuget\\packages\\",
+        "outputPath": "D:\\Projects\\StoreWebApi\\StoreDomain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "D:\\NuGetPackages"
@@ -49,6 +151,75 @@
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.100-rc.1.24452.12/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\Projects\\StoreWebApi\\StoreService\\StoreService.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Projects\\StoreWebApi\\StoreService\\StoreService.csproj",
+        "projectName": "StoreService",
+        "projectPath": "D:\\Projects\\StoreWebApi\\StoreService\\StoreService.csproj",
+        "packagesPath": "C:\\Users\\Aalan\\.nuget\\packages\\",
+        "outputPath": "D:\\Projects\\StoreWebApi\\StoreService\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "D:\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Aalan\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "D:\\Projects\\StoreWebApi\\StoreDomain\\StoreDomain.csproj": {
+                "projectPath": "D:\\Projects\\StoreWebApi\\StoreDomain\\StoreDomain.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "all"
+        },
+        "SdkAnalysisLevel": "9.0.100"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
           "dependencies": {
             "AutoMapper": {
               "target": "Package",
@@ -56,7 +227,112 @@
             },
             "BCrypt.Net-Next": {
               "target": "Package",
-              "version": "[4.1.0, )"
+              "version": "[4.2.0, )"
+            },
+            "MailKit": {
+              "target": "Package",
+              "version": "[4.16.0, )"
+            },
+            "Microsoft.AspNetCore.Http.Abstractions": {
+              "target": "Package",
+              "version": "[2.3.10, )"
+            },
+            "Serilog.Settings.Configuration": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "Serilog.Sinks.Console": {
+              "target": "Package",
+              "version": "[6.1.1, )"
+            },
+            "Serilog.Sinks.File": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[8.18.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.100-rc.1.24452.12/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\Projects\\StoreWebApi\\StoreWebApi\\StoreWebApi.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Projects\\StoreWebApi\\StoreWebApi\\StoreWebApi.csproj",
+        "projectName": "StoreWebApi",
+        "projectPath": "D:\\Projects\\StoreWebApi\\StoreWebApi\\StoreWebApi.csproj",
+        "packagesPath": "C:\\Users\\Aalan\\.nuget\\packages\\",
+        "outputPath": "D:\\Projects\\StoreWebApi\\StoreWebApi\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "D:\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Aalan\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "D:\\Projects\\StoreWebApi\\StoreDataBase\\StoreDataBase.csproj": {
+                "projectPath": "D:\\Projects\\StoreWebApi\\StoreDataBase\\StoreDataBase.csproj"
+              },
+              "D:\\Projects\\StoreWebApi\\StoreDomain\\StoreDomain.csproj": {
+                "projectPath": "D:\\Projects\\StoreWebApi\\StoreDomain\\StoreDomain.csproj"
+              },
+              "D:\\Projects\\StoreWebApi\\StoreService\\StoreService.csproj": {
+                "projectPath": "D:\\Projects\\StoreWebApi\\StoreService\\StoreService.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "all"
+        },
+        "SdkAnalysisLevel": "9.0.100"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "AutoMapper": {
+              "target": "Package",
+              "version": "[16.1.1, )"
             },
             "FluentAssertions": {
               "target": "Package",
@@ -78,10 +354,6 @@
               "target": "Package",
               "version": "[9.0.0-rc.1.24452.1, )"
             },
-            "Microsoft.EntityFrameworkCore": {
-              "target": "Package",
-              "version": "[9.0.15, )"
-            },
             "Microsoft.EntityFrameworkCore.Design": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
@@ -89,10 +361,6 @@
               "version": "[9.0.15, )"
             },
             "Microsoft.EntityFrameworkCore.InMemory": {
-              "target": "Package",
-              "version": "[9.0.15, )"
-            },
-            "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
               "version": "[9.0.15, )"
             },

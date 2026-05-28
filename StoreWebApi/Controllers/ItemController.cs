@@ -2,10 +2,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using StoreWebApi.DTO;
+using StoreService.DTO;
 using StoreWebApi.ExceptionHandler;
-using StoreWebApi.Interfaces;
-using StoreWebApi.Models;
+using StoreService.Interfaces;
+using StoreDomain.Models;
 
 namespace StoreWebApi.Controllers
 {
@@ -14,9 +14,9 @@ namespace StoreWebApi.Controllers
     [Authorize(Policy = "refreshTokenIsValid")]
     public class ItemController : ControllerBase
     {
-        private readonly IItem _ItemService;
+        private readonly IItemService _ItemService;
         
-        public ItemController(IItem itemService)
+        public ItemController(IItemService itemService)
         {
             _ItemService = itemService;
         }
@@ -25,27 +25,27 @@ namespace StoreWebApi.Controllers
         /// </summary>
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> createItem([FromBody]ItemDto itemData)
+        public async Task<IActionResult> CreateItem([FromBody]ItemDto itemData)
         {
-            return Ok(await _ItemService.createItem(itemData.Name,itemData.Price,itemData.StockQuantity,itemData.CategoryName));
+            return Ok(await _ItemService.CreateItem(itemData.Name,itemData.Price,itemData.StockQuantity,itemData.CategoryName));
         }
         /// <summary>
         /// get all items
         /// </summary>
         [HttpGet]
         [Authorize(Roles = "Admin,Customer")]
-        public async Task<IActionResult> getAllItems()
+        public async Task<IActionResult> GetAllItems()
         {
-            return Ok(await _ItemService.getAllItems());
+            return Ok(await _ItemService.GetAllItems());
         }
         /// <summary>
         /// get item by name
         /// </summary>
-        [HttpGet("{itemName}")]
+        [HttpGet("{ITemId}")]
         [Authorize(Roles = "Admin,Customer")]
-        public async Task<IActionResult> getItemByName(string itemName)
+        public async Task<IActionResult> GetItem(int ITemId)
         {
-            return Ok(await _ItemService.getITem(itemName));
+            return Ok(await _ItemService.GetITem(ITemId));
         }
         
         /// <summary>
@@ -54,20 +54,20 @@ namespace StoreWebApi.Controllers
         
         [HttpGet("category/{categoryName}")]
         [Authorize(Roles = "Customer")]
-        public async Task<IActionResult> getItemsByCategory(string categoryName, int pageSize, int pageNumber)
+        public async Task<IActionResult> GetItemsByCategory(int ITemId, int pageSize, int pageNumber)
         {
-            return Ok(await _ItemService.getITemByCategoryName(categoryName,pageSize,pageNumber));
+            return Ok(await _ItemService.GetITemByCategory(ITemId, pageSize,pageNumber));
         }
 
         /// <summary>
         /// delete item by item name
         /// </summary>
         
-        [HttpDelete("{itemName}")]
+        [HttpDelete("{itemId}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> deleteItem(string itemName)
+        public async Task<IActionResult> DeleteItem(int itemId)
         {
-            await _ItemService.deleteItem(itemName);
+            await _ItemService.DeleteItem(itemId);
             return Ok();
         }
 
@@ -77,9 +77,9 @@ namespace StoreWebApi.Controllers
         
         [HttpPut("{itemName}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> updateItem(string itemName, string newName, int newPrice, int stockQuantity)
+        public async Task<IActionResult> UpdateItem(int itemId, string newName, int newPrice, int stockQuantity)
         {
-            return Ok(await _ItemService.updateItem(itemName, newName, newPrice, stockQuantity));
+            return Ok(await _ItemService.UpdateItem(itemId, newName, newPrice, stockQuantity));
         }
 
 

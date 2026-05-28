@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
-using StoreWebApi.Models;
+using StoreService.ResponseModel;
 
 namespace StoreWebApi.Actions
 {

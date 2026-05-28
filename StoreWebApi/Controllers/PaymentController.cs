@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StoreWebApi.Actions;
-using StoreWebApi.DTO;
-using StoreWebApi.Interfaces;
-using StoreWebApi.Models;
+using StoreDomain.Models;
+using StoreService.Interfaces;
+using StoreService.DTO;
 
 namespace StoreWebApi.Controllers
 {
@@ -13,9 +13,9 @@ namespace StoreWebApi.Controllers
     [Authorize(Policy = "refreshTokenIsValid")]
     public class PaymentController : ControllerBase
     {
-        private readonly IPaymentGateWay _paymentService;
+        private readonly IPaymentGateWayService _paymentService;
 
-        public PaymentController(IPaymentGateWay paymentService)
+        public PaymentController(IPaymentGateWayService paymentService)
         {
             _paymentService = paymentService;
         }
@@ -25,11 +25,11 @@ namespace StoreWebApi.Controllers
         /// </summary>
 
         [HttpPost]
-        [Idempotent]
+        //[Idempotent]
         [Authorize(Roles ="Customer")]
         public async Task<IActionResult> ApplyPayment()
         {
-            return Ok(await _paymentService.payForOrder());
+            return Ok(await _paymentService.PayForOrder());
         }
 
     }

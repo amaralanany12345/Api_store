@@ -1,7 +1,7 @@
 [
   {
     "ContainingType": "StoreWebApi.Controllers.UserController",
-    "Method": "getCurrentUser",
+    "Method": "GetCurrentUser",
     "RelativePath": "api/auth/currentUser",
     "HttpMethod": "GET",
     "IsController": true,
@@ -19,7 +19,7 @@
     "Parameters": [
       {
         "Name": "userRequest",
-        "Type": "StoreWebApi.Models.LoginRequest",
+        "Type": "StoreService.RequestModels.LoginRequest",
         "IsRequired": true
       }
     ],
@@ -27,7 +27,7 @@
   },
   {
     "ContainingType": "StoreWebApi.Controllers.UserController",
-    "Method": "signOut",
+    "Method": "SignOut",
     "RelativePath": "api/auth/logout",
     "HttpMethod": "PUT",
     "IsController": true,
@@ -37,7 +37,7 @@
   },
   {
     "ContainingType": "StoreWebApi.Controllers.UserController",
-    "Method": "refreshToken",
+    "Method": "RefreshToken",
     "RelativePath": "api/auth/refresh-token",
     "HttpMethod": "PUT",
     "IsController": true,
@@ -61,7 +61,7 @@
     "Parameters": [
       {
         "Name": "registerRequest",
-        "Type": "StoreWebApi.Models.RegisterRequest",
+        "Type": "StoreService.RequestModels.RegisterRequest",
         "IsRequired": true
       }
     ],
@@ -69,7 +69,7 @@
   },
   {
     "ContainingType": "StoreWebApi.Controllers.CategoryController",
-    "Method": "createCategory",
+    "Method": "CreateCategory",
     "RelativePath": "api/categories",
     "HttpMethod": "POST",
     "IsController": true,
@@ -77,7 +77,7 @@
     "Parameters": [
       {
         "Name": "categoryData",
-        "Type": "StoreWebApi.DTO.CategoryDto",
+        "Type": "StoreService.DTO.CategoryDto",
         "IsRequired": true
       }
     ],
@@ -85,7 +85,7 @@
   },
   {
     "ContainingType": "StoreWebApi.Controllers.CategoryController",
-    "Method": "getAllCategories",
+    "Method": "GetAllCategories",
     "RelativePath": "api/categories",
     "HttpMethod": "GET",
     "IsController": true,
@@ -95,15 +95,15 @@
   },
   {
     "ContainingType": "StoreWebApi.Controllers.CategoryController",
-    "Method": "getCategoryByName",
-    "RelativePath": "api/categories/{CategoryName}",
+    "Method": "GetCategory",
+    "RelativePath": "api/categories/{categoryId}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "CategoryName",
-        "Type": "System.String",
+        "Name": "categoryId",
+        "Type": "System.Int32",
         "IsRequired": true
       }
     ],
@@ -111,15 +111,15 @@
   },
   {
     "ContainingType": "StoreWebApi.Controllers.CategoryController",
-    "Method": "deleteCategory",
-    "RelativePath": "api/categories/{CategoryName}",
+    "Method": "DeleteCategory",
+    "RelativePath": "api/categories/{CategoryId}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "CategoryName",
-        "Type": "System.String",
+        "Name": "CategoryId",
+        "Type": "System.Int32",
         "IsRequired": true
       }
     ],
@@ -127,15 +127,15 @@
   },
   {
     "ContainingType": "StoreWebApi.Controllers.CategoryController",
-    "Method": "updateCategory",
-    "RelativePath": "api/categories/{CategoryName}",
+    "Method": "UpdateCategory",
+    "RelativePath": "api/categories/{CategoryId}",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "CategoryName",
-        "Type": "System.String",
+        "Name": "CategoryId",
+        "Type": "System.Int32",
         "IsRequired": true
       },
       {
@@ -153,7 +153,7 @@
   },
   {
     "ContainingType": "StoreWebApi.Controllers.ItemController",
-    "Method": "createItem",
+    "Method": "CreateItem",
     "RelativePath": "api/items",
     "HttpMethod": "POST",
     "IsController": true,
@@ -161,7 +161,7 @@
     "Parameters": [
       {
         "Name": "itemData",
-        "Type": "StoreWebApi.DTO.ItemDto",
+        "Type": "StoreService.DTO.ItemDto",
         "IsRequired": true
       }
     ],
@@ -169,7 +169,7 @@
   },
   {
     "ContainingType": "StoreWebApi.Controllers.ItemController",
-    "Method": "getAllItems",
+    "Method": "GetAllItems",
     "RelativePath": "api/items",
     "HttpMethod": "GET",
     "IsController": true,
@@ -179,31 +179,15 @@
   },
   {
     "ContainingType": "StoreWebApi.Controllers.ItemController",
-    "Method": "getItemByName",
-    "RelativePath": "api/items/{itemName}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "itemName",
-        "Type": "System.String",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "StoreWebApi.Controllers.ItemController",
-    "Method": "deleteItem",
-    "RelativePath": "api/items/{itemName}",
+    "Method": "DeleteItem",
+    "RelativePath": "api/items/{itemId}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "itemName",
-        "Type": "System.String",
+        "Name": "itemId",
+        "Type": "System.Int32",
         "IsRequired": true
       }
     ],
@@ -211,16 +195,32 @@
   },
   {
     "ContainingType": "StoreWebApi.Controllers.ItemController",
-    "Method": "updateItem",
+    "Method": "GetItem",
+    "RelativePath": "api/items/{ITemId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "ITemId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "StoreWebApi.Controllers.ItemController",
+    "Method": "UpdateItem",
     "RelativePath": "api/items/{itemName}",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "itemName",
-        "Type": "System.String",
-        "IsRequired": true
+        "Name": "itemId",
+        "Type": "System.Int32",
+        "IsRequired": false
       },
       {
         "Name": "newName",
@@ -236,22 +236,27 @@
         "Name": "stockQuantity",
         "Type": "System.Int32",
         "IsRequired": false
+      },
+      {
+        "Name": "itemName",
+        "Type": "",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
     "ContainingType": "StoreWebApi.Controllers.ItemController",
-    "Method": "getItemsByCategory",
+    "Method": "GetItemsByCategory",
     "RelativePath": "api/items/category/{categoryName}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "categoryName",
-        "Type": "System.String",
-        "IsRequired": true
+        "Name": "ITemId",
+        "Type": "System.Int32",
+        "IsRequired": false
       },
       {
         "Name": "pageSize",
@@ -262,13 +267,18 @@
         "Name": "pageNumber",
         "Type": "System.Int32",
         "IsRequired": false
+      },
+      {
+        "Name": "categoryName",
+        "Type": "",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
     "ContainingType": "StoreWebApi.Controllers.OrderController",
-    "Method": "createOrder",
+    "Method": "CreateOrder",
     "RelativePath": "api/orders",
     "HttpMethod": "POST",
     "IsController": true,
@@ -278,7 +288,7 @@
   },
   {
     "ContainingType": "StoreWebApi.Controllers.OrderController",
-    "Method": "getAllOrders",
+    "Method": "GetAllOrders",
     "RelativePath": "api/orders",
     "HttpMethod": "GET",
     "IsController": true,
@@ -288,7 +298,7 @@
   },
   {
     "ContainingType": "StoreWebApi.Controllers.OrderController",
-    "Method": "cancelOrder",
+    "Method": "CancelOrder",
     "RelativePath": "api/orders/cancel",
     "HttpMethod": "PUT",
     "IsController": true,
@@ -298,7 +308,7 @@
   },
   {
     "ContainingType": "StoreWebApi.Controllers.OrderController",
-    "Method": "addOrderITemToOrder",
+    "Method": "AddOrderITemToOrder",
     "RelativePath": "api/orders/orderItems/{itemId}",
     "HttpMethod": "POST",
     "IsController": true,
@@ -319,7 +329,7 @@
   },
   {
     "ContainingType": "StoreWebApi.Controllers.OrderController",
-    "Method": "deleteOrderItemFromOrder",
+    "Method": "DeleteOrderItemFromOrder",
     "RelativePath": "api/orders/orderItems/{itemId}",
     "HttpMethod": "DELETE",
     "IsController": true,
@@ -335,7 +345,7 @@
   },
   {
     "ContainingType": "StoreWebApi.Controllers.OrderController",
-    "Method": "getOrderItemsById",
+    "Method": "GetOrderItemsById",
     "RelativePath": "api/orders/orderItems/{orderId}",
     "HttpMethod": "GET",
     "IsController": true,

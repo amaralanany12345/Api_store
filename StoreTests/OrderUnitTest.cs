@@ -3,17 +3,17 @@ using Castle.Core.Resource;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
-using StoreWebApi.DTO;
-using StoreWebApi.Enums;
-using StoreWebApi.Interfaces;
-using StoreWebApi.Models;
-using StoreWebApi.Services;
-using StoreWebApi.zAppContexts;
+using StoreService.DTO;
+using StoreService.Interfaces;
+using StoreDomain.Models;
+using StoreService.Services;
+using StoreDataBase.AppContexts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using StoreDomain.Enums;
 
 namespace StoreTests
 {
@@ -21,21 +21,21 @@ namespace StoreTests
     {
         private readonly AppDbContext _context;
         private readonly Mock<IMapper>_mapperMock;
-        private readonly Mock<IGenericRepo<Order>> _genericRepoMock;
-        private readonly Mock<IUnitOfWork>_unitOfWorkMock;
+        private readonly Mock<IGenericRepoService<Order>> _genericRepoMock;
+        private readonly Mock<IUnitOfWorkServiceForStoreDb>_unitOfWorkMock;
         private readonly Mock<ILogger<OrderService>> _loggerMock;
-        private readonly Mock<IUser>_userServiceMock;
-        private readonly OrderService _orderService;
+        private readonly Mock<IUserService>_userServiceMock;
+        private readonly IOrderService _orderService;
         public OrderServiceTest()
         {
             var appDbContextOptions = new DbContextOptionsBuilder<AppDbContext>().UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
             _context = new AppDbContext(appDbContextOptions);
             _mapperMock= new Mock<IMapper>();
-            _genericRepoMock=new Mock<IGenericRepo<Order>>();
-            _unitOfWorkMock=new Mock<IUnitOfWork>();
+            _genericRepoMock=new Mock<IGenericRepoService<Order>>();
+            _unitOfWorkMock=new Mock<IUnitOfWorkServiceForStoreDb>();
             _loggerMock=new Mock<ILogger<OrderService>>();
-            _userServiceMock=new Mock<IUser>();
-            _orderService = new OrderService(_context,_mapperMock.Object,_genericRepoMock.Object,_unitOfWorkMock.Object,
+            _userServiceMock=new Mock<IUserService>();
+            _orderService = new OrderService(_mapperMock.Object,_unitOfWorkMock.Object,
                 _loggerMock.Object,_userServiceMock.Object);
 
         }
@@ -49,7 +49,6 @@ namespace StoreTests
                 Email="ammar@gmail.com",
                 PasswordHash=BCrypt.Net.BCrypt.HashPassword("ammar123"),
                 CreatedAt=DateTime.Now,
-                Balance=3000,
                 Role=UserRole.Customer.ToString(),
             };
             var newOrder = new Order
@@ -71,9 +70,9 @@ namespace StoreTests
                 Status=OrderStatus.InProgress.ToString(),
                 
             };
-            _userServiceMock.Setup(a => a.getCurrentUser()).ReturnsAsync(customer);
+            _userServiceMock.Setup(a => a.GetCurrentUser()).ReturnsAsync(customer);
             _mapperMock.Setup(a => a.Map<OrderDto>(It.IsAny<Order>())).Returns(newOrderDto);
-            var result = await _orderService.createOrder();
+            var result = await _orderService.CreateOrder();
             Assert.NotNull(result);
             Assert.Equal(newOrderDto.TotalAmount, result.TotalAmount);
         }
@@ -96,7 +95,7 @@ namespace StoreTests
 
             };
             _mapperMock.Setup(a => a.Map<List<OrderDto>>(It.IsAny<List<Order>>())).Returns(listOfOrdersDto);
-            var result = await _orderService.getAllOrders();
+            var result = await _orderService.GetAllOrders();
             Assert.NotNull(result);
             Assert.Equal(3, result.Count);
             Assert.Equal(listOfOrders[2].TotalAmount, result[2].TotalAmount);
@@ -111,7 +110,6 @@ namespace StoreTests
                 Email = "ammar@gmail.com",
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("ammar123"),
                 CreatedAt = DateTime.Now,
-                Balance = 3000,
                 Role = UserRole.Customer.ToString(),
             };
             var newOrder = new Order
@@ -142,7 +140,7 @@ namespace StoreTests
             await _context.Orders.AddAsync(newOrder);
             await _context.Items.AddAsync(newITem);
             await _context.SaveChangesAsync();
-            _userServiceMock.Setup(a => a.getCurrentUser()).ReturnsAsync(customer);
+            _userServiceMock.Setup(a => a.GetCurrentUser()).ReturnsAsync(customer);
             var result = await _orderService.AddOrderItemToOrder(newITem.Id,2);
             Assert.NotNull(result);
             Assert.Equal(newOrderItem.Quantity,result.Quantity);
@@ -157,7 +155,7 @@ namespace StoreTests
                 Email = "ammar@gmail.com",
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("ammar123"),
                 CreatedAt = DateTime.Now,
-                Balance = 3000,
+                //Balance = 3000,
                 Role = UserRole.Customer.ToString(),
             };
             var newOrder = new Order
@@ -189,8 +187,8 @@ namespace StoreTests
             await _context.Items.AddAsync(newITem);
             await _context.OrderItem.AddAsync(newOrderItem);
             await _context.SaveChangesAsync();
-            _userServiceMock.Setup(a => a.getCurrentUser()).ReturnsAsync(customer);
-            await _orderService.deleteOrderItemFromOrder(newITem.Id);
+            _userServiceMock.Setup(a => a.GetCurrentUser()).ReturnsAsync(customer);
+            await _orderService.DeleteOrderItemFromOrder(newITem.Id);
             var deletedOrderItem=await _context.OrderItem.FirstOrDefaultAsync(a=>a.OrderId == newOrder.Id && a.ItemId==newITem.Id);
             Assert.Null(deletedOrderItem);
         }
@@ -204,7 +202,6 @@ namespace StoreTests
                 Email = "ammar@gmail.com",
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("ammar123"),
                 CreatedAt = DateTime.Now,
-                Balance = 3000,
                 Role = UserRole.Customer.ToString(),
             };
             var newOrder = new Order
@@ -242,8 +239,8 @@ namespace StoreTests
             await _context.Items.AddAsync(newITem2);
             await _context.OrderItem.AddRangeAsync(ListOfOrderItem);
             await _context.SaveChangesAsync();
-            _userServiceMock.Setup(a => a.getCurrentUser()).ReturnsAsync(customer);
-            var result = await _orderService.getOrderItems();
+            _userServiceMock.Setup(a => a.GetCurrentUser()).ReturnsAsync(customer);
+            var result = await _orderService.GetOrderItems();
             Assert.NotNull(result);
             Assert.Equal(2, result.Count);
         }
@@ -257,7 +254,6 @@ namespace StoreTests
                 Email = "ammar@gmail.com",
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("ammar123"),
                 CreatedAt = DateTime.Now,
-                Balance = 3000,
                 Role = UserRole.Customer.ToString(),
             };
             var newOrder = new Order
@@ -295,14 +291,14 @@ namespace StoreTests
             await _context.Items.AddAsync(englishItem);
             await _context.OrderItem.AddRangeAsync(ListOfOrderItem);
             await _context.SaveChangesAsync();
-            _userServiceMock.Setup(a => a.getCurrentUser()).ReturnsAsync(customer);
+            _userServiceMock.Setup(a => a.GetCurrentUser()).ReturnsAsync(customer);
             var listOrderITemDto = new List<OrderItemDto>
             {
                 new OrderItemDto{Price=mathItem.Price,Quantity=2,ItemName=mathItem.Name},
                 new OrderItemDto{Price=englishItem.Price,Quantity=4,ItemName=englishItem.Name},
             };
             _mapperMock.Setup(a=>a.Map<List<OrderItemDto>>(It.IsAny<List<OrderItem>>())).Returns(listOrderITemDto);
-            var result = await _orderService.getOrderItemsById(newOrder.Id);
+            var result = await _orderService.GetOrderItemsById(newOrder.Id);
             Assert.NotNull(result);
             Assert.Equal(ListOfOrderItem[0].Quantity, result[0].Quantity);
         }
@@ -316,7 +312,6 @@ namespace StoreTests
                 Email = "ammar@gmail.com",
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("ammar123"),
                 CreatedAt = DateTime.Now,
-                Balance = 3000,
                 Role = UserRole.Customer.ToString(),
             };
             var newOrder = new Order
@@ -354,7 +349,7 @@ namespace StoreTests
             await _context.Items.AddAsync(englishItem);
             await _context.OrderItem.AddRangeAsync(ListOfOrderItem);
             await _context.SaveChangesAsync();
-            _userServiceMock.Setup(a => a.getCurrentUser()).ReturnsAsync(customer);
+            _userServiceMock.Setup(a => a.GetCurrentUser()).ReturnsAsync(customer);
             await _orderService.CancelOrder();
             Assert.Equal(0,newOrder.TotalAmount);
             Assert.Equal(OrderStatus.Cancelled.ToString(),newOrder.Status);

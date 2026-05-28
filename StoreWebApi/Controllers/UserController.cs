@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using StoreWebApi.DTO;
-using StoreWebApi.Enums;
-using StoreWebApi.Interfaces;
-using StoreWebApi.Models;
+using StoreService.DTO;
+using StoreDomain.Enums;
+using StoreService.Interfaces;
+using StoreDomain.Models;
+using StoreService.RequestModels;
 
 namespace StoreWebApi.Controllers
 {
@@ -12,9 +13,9 @@ namespace StoreWebApi.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly IUser _userService;
+        private readonly IUserService _userService;
 
-        public UserController(IUser userService)
+        public UserController(IUserService userService)
         {
             _userService = userService;
         }
@@ -24,7 +25,7 @@ namespace StoreWebApi.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> SignUp([FromBody] RegisterRequest registerRequest)
         {
-            return Ok(await _userService.signUp(registerRequest.userName, registerRequest.Email, registerRequest.Password, registerRequest.Role));
+            return Ok(await _userService.SignUp(registerRequest.userName, registerRequest.Email, registerRequest.Password, registerRequest.Role));
         }
         /// <summary>
         /// sign in 
@@ -32,31 +33,31 @@ namespace StoreWebApi.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> SignIn([FromBody] LoginRequest userRequest)
         {
-            return Ok(await _userService.signIn(userRequest.Email, userRequest.Password));
+            return Ok(await _userService.SignIn(userRequest.Email, userRequest.Password));
         }
         /// <summary>
         /// refresh the token
         /// </summary>
         [HttpPut("refresh-token")]
-        public async Task<IActionResult> refreshToken(string userEmail)
+        public async Task<IActionResult> RefreshToken(string userEmail)
         {
-            return Ok(await _userService.refreshToken(userEmail));
+            return Ok(await _userService.RefreshToken(userEmail));
         }
         /// <summary>
         /// get the current user using the httpContext
         /// </summary>
         [HttpGet("currentUser")]
-        public async Task<IActionResult> getCurrentUser()
+        public async Task<IActionResult> GetCurrentUser()
         {
-            return Ok(await _userService.getCurrentUser());
+            return Ok(await _userService.GetCurrentUser());
         }
         /// <summary>
         /// Sign out
         /// </summary>
         [HttpPut("logout")]
-        public async Task<IActionResult> signOut()
+        public async Task<IActionResult> SignOut()
         {
-            await _userService.signOut();
+            await _userService.SignOut();
             return Ok();
         }
 

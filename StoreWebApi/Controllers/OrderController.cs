@@ -1,20 +1,20 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using StoreWebApi.DTO;
-using StoreWebApi.Interfaces;
-using StoreWebApi.Models;
+using StoreService.DTO;
+using StoreService.Interfaces;
+using StoreDomain.Models;
 
 namespace StoreWebApi.Controllers
 {
     [Route("api/orders")]
     [ApiController]
-    [Authorize(Policy = "refreshTokenIsValid")]
+    //[Authorize(Policy = "refreshTokenIsValid")]
     public class OrderController : ControllerBase
     {
-        private readonly IOrder _orderService;
+        private readonly IOrderService _orderService;
 
-        public OrderController(IOrder orderService)
+        public OrderController(IOrderService orderService)
         {
             _orderService = orderService;
         }
@@ -23,25 +23,25 @@ namespace StoreWebApi.Controllers
         /// </summary>
         [HttpPost]
         [Authorize(Roles = "Customer")]
-        public async Task<IActionResult> createOrder()
+        public async Task<IActionResult> CreateOrder()
         {
-            return Ok(await _orderService.createOrder());
+            return Ok(await _orderService.CreateOrder());
         }
         /// <summary>
         /// get all orders
         /// </summary>
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> getAllOrders()
+        public async Task<IActionResult> GetAllOrders()
         {
-            return Ok(await _orderService.getAllOrders());
+            return Ok(await _orderService.GetAllOrders());
         }
         /// <summary>
         /// add item to order
         /// </summary>
         [HttpPost("orderItems/{itemId}")]
         [Authorize(Roles = "Customer")]
-        public async Task<IActionResult> addOrderITemToOrder(int itemId, int quantity)
+        public async Task<IActionResult> AddOrderITemToOrder(int itemId, int quantity)
         {
             return Ok(await _orderService.AddOrderItemToOrder(itemId, quantity));
         }
@@ -50,9 +50,9 @@ namespace StoreWebApi.Controllers
         /// </summary>
         [HttpDelete("orderItems/{itemId}")]
         [Authorize(Roles = "Customer")]
-        public async Task<IActionResult> deleteOrderItemFromOrder(int itemId)
+        public async Task<IActionResult> DeleteOrderItemFromOrder(int itemId)
         {
-            await _orderService.deleteOrderItemFromOrder(itemId);
+            await _orderService.DeleteOrderItemFromOrder(itemId);
             return Ok();
         }
         /// <summary>
@@ -60,7 +60,7 @@ namespace StoreWebApi.Controllers
         /// </summary>
         [HttpPut("cancel")]
         [Authorize(Roles ="Customer")]
-        public async Task<IActionResult> cancelOrder()
+        public async Task<IActionResult> CancelOrder()
         {
             await _orderService.CancelOrder();
             return Ok();
@@ -70,9 +70,9 @@ namespace StoreWebApi.Controllers
         /// </summary>
         [HttpGet("orderItems/{orderId}")]
         [Authorize(Roles = "Customer")]
-        public async Task<IActionResult> getOrderItemsById(int orderId)
+        public async Task<IActionResult> GetOrderItemsById(int orderId)
         {
-            return Ok(await _orderService.getOrderItemsById(orderId));
+            return Ok(await _orderService.GetOrderItemsById(orderId));
         }
 
     }

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
-using StoreWebApi.Models;
-using StoreWebApi.zAppContexts;
+using StoreDomain.Models;
+using StoreDataBase.AppContexts;
 using System.Security.Claims;
 
 namespace StoreWebApi.Policies
