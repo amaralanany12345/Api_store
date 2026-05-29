@@ -1,14 +1,15 @@
 ﻿using StoreService.DTO;
+using StoreService.ResponseModel;
 
 namespace StoreService.Interfaces
 {
     public interface IItemService
     {
-        Task<ItemDto> CreateItem(string name, int price, int stockQuantity,string categoryName);
-        Task<List<ItemDto>> GetAllItems();
-        Task<ItemDto> GetITem(int itemId);
-        Task<ItemDto> UpdateItem(int itemId, string newName, int newPrice,int stockQuantity);
+        Task<ResultResponse<ItemDto>> CreateItem(string name, int price, int stockQuantity,string categoryName);
+        Task<ResultResponse<List<ItemDto>>> GetAllItems();
+        Task<ResultResponse<ItemDto>> GetITem(int itemId);
+        Task<ResultResponse<ItemDto>> UpdateItem(int itemId, string newName, int newPrice,int stockQuantity);
         Task DeleteItem(int itemId);
-        Task<List<ItemDto>> GetITemByCategory(int categoryId, int pageSize, int pageNumber);
+        Task<ResultResponse<List<ItemDto>>> GetITemByCategory(int categoryId, int pageSize, int pageNumber);
     }
 }

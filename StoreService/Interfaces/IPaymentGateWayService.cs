@@ -1,10 +1,11 @@
 ﻿using StoreService.DTO;
 using StoreDomain.Models;
+using StoreService.ResponseModel;
 
 namespace StoreService.Interfaces
 {
     public interface IPaymentGateWayService
     {
-        Task<ReceiptDto> PayForOrder();
+        Task<ResultResponse<ReceiptDto>> PayForOrder();
     }
 }

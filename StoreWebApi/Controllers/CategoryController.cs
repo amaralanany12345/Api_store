@@ -28,7 +28,12 @@ namespace StoreWebApi.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateCategory([FromBody] CategoryDto categoryData)
         {
-            return Ok(await _categoryService.CreateCategory(categoryData.Name,categoryData.Description));
+            var result=await _categoryService.CreateCategory(categoryData.Name,categoryData.Description);
+            if (!result.Success)
+            {
+                return StatusCode(result.StatusCode, result.Error);
+            }
+            return StatusCode(result.StatusCode, result.Result);
         }
         /// <summary>
         /// get all categories
@@ -37,7 +42,12 @@ namespace StoreWebApi.Controllers
         [Authorize(Roles = "Admin,Customer")]
         public async Task<IActionResult> GetAllCategories()
         {
-            return Ok(await _categoryService.GetAllCategories());
+            var result=await _categoryService.GetAllCategories();
+            if (!result.Success)
+            {
+                return StatusCode(result.StatusCode, result.Error);
+            }
+            return StatusCode(result.StatusCode,result.Result);
         }
         /// <summary>
         /// get category by name
@@ -47,7 +57,11 @@ namespace StoreWebApi.Controllers
         public async Task<IActionResult> GetCategory(int categoryId)
         {
             var result=await _categoryService.GetCategory(categoryId);
-            return result.ToActionResult(this);
+            if (!result.Success)
+            {
+                return StatusCode(result.StatusCode, result.Error);
+            }
+            return StatusCode(result.StatusCode, result.Result);
         }
         /// <summary>
         /// delete category by name
@@ -66,7 +80,12 @@ namespace StoreWebApi.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateCategory(int CategoryId, string newName, string newDescription)
         {
-            return Ok(await _categoryService.UpdateCategory(CategoryId, newName, newDescription));
+            var result = await _categoryService.UpdateCategory(CategoryId, newName, newDescription);
+            if (!result.Success)
+            {
+                return StatusCode(result.StatusCode, result.Error);
+            }
+            return StatusCode(result.StatusCode, result.Result);
         }
 
     }

@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using StoreService.DTO;
 using StoreService.Interfaces;
 using StoreDomain.Models;
+using Microsoft.AspNetCore.Http.HttpResults;
+using System.Net.WebSockets;
 
 namespace StoreWebApi.Controllers
 {
@@ -25,7 +27,12 @@ namespace StoreWebApi.Controllers
         [Authorize(Roles = "Customer")]
         public async Task<IActionResult> CreateOrder()
         {
-            return Ok(await _orderService.CreateOrder());
+            var result=await _orderService.CreateOrder();
+            if (!result.Success)
+            {
+                return StatusCode(result.StatusCode, result.Error);
+            }
+            return StatusCode(result.StatusCode, result.Result);
         }
         /// <summary>
         /// get all orders
@@ -34,7 +41,12 @@ namespace StoreWebApi.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllOrders()
         {
-            return Ok(await _orderService.GetAllOrders());
+            var result=await _orderService.GetAllOrders();
+            if (!result.Success)
+            {
+                return StatusCode(result.StatusCode, result.Error);
+            }
+            return StatusCode(result.StatusCode, result.Result);
         }
         /// <summary>
         /// add item to order
@@ -43,7 +55,12 @@ namespace StoreWebApi.Controllers
         [Authorize(Roles = "Customer")]
         public async Task<IActionResult> AddOrderITemToOrder(int itemId, int quantity)
         {
-            return Ok(await _orderService.AddOrderItemToOrder(itemId, quantity));
+            var result=await _orderService.AddOrderItemToOrder(itemId, quantity);
+            if (!result.Success)
+            {
+                return StatusCode(result.StatusCode, result.Error);
+            }
+            return StatusCode(result.StatusCode, result.Result);
         }
         /// <summary>
         /// delete item from order
@@ -72,7 +89,12 @@ namespace StoreWebApi.Controllers
         [Authorize(Roles = "Customer")]
         public async Task<IActionResult> GetOrderItemsById(int orderId)
         {
-            return Ok(await _orderService.GetOrderItemsById(orderId));
+            var result=await _orderService.GetOrderItemsById(orderId);
+            if (!result.Success)
+            {
+                return StatusCode(result.StatusCode, result.Error);
+            }
+            return StatusCode(result.StatusCode, result.Result);
         }
 
     }

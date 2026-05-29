@@ -1,5 +1,6 @@
 ﻿using StoreService.DTO;
-using StoreService.ResultPattern;
+using StoreService.ResponseModel;
+
 namespace StoreService.Interfaces
 {
     public interface ICategoryService

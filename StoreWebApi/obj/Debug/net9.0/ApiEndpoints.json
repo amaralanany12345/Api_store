@@ -195,6 +195,37 @@
   },
   {
     "ContainingType": "StoreWebApi.Controllers.ItemController",
+    "Method": "UpdateItem",
+    "RelativePath": "api/items/{itemId}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "itemId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "newName",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "newPrice",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "stockQuantity",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "StoreWebApi.Controllers.ItemController",
     "Method": "GetItem",
     "RelativePath": "api/items/{ITemId}",
     "HttpMethod": "GET",
@@ -211,52 +242,16 @@
   },
   {
     "ContainingType": "StoreWebApi.Controllers.ItemController",
-    "Method": "UpdateItem",
-    "RelativePath": "api/items/{itemName}",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "itemId",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "newName",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "newPrice",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "stockQuantity",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "itemName",
-        "Type": "",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "StoreWebApi.Controllers.ItemController",
     "Method": "GetItemsByCategory",
-    "RelativePath": "api/items/category/{categoryName}",
+    "RelativePath": "api/items/category/{categoryId}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "ITemId",
+        "Name": "categoryId",
         "Type": "System.Int32",
-        "IsRequired": false
+        "IsRequired": true
       },
       {
         "Name": "pageSize",
@@ -267,11 +262,6 @@
         "Name": "pageNumber",
         "Type": "System.Int32",
         "IsRequired": false
-      },
-      {
-        "Name": "categoryName",
-        "Type": "",
-        "IsRequired": true
       }
     ],
     "ReturnTypes": []

@@ -1,5 +1,4 @@
-﻿using StoreService.ResultPattern;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 
 namespace StoreService.Interfaces
 {
@@ -8,7 +7,7 @@ namespace StoreService.Interfaces
         Task CreateAsync(T entity);
         Task<T> GetAsync(int id);
         Task<List<T>> GetAllAsync();
-        void DeleteAsync(T entity);
+        Task DeleteAsync(int entityId);
         Task<T> GetFirstOrDefault(Expression<Func<T,bool>> del);
     }
 }

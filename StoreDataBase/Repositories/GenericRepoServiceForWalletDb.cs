@@ -24,8 +24,10 @@ namespace StoreDataBase.Repositories
             await _context.Set<T>().AddAsync(entity);
         }
 
-        public void DeleteAsync(T entity)
+        public async Task DeleteAsync(int entityId)
         {
+
+            var entity = await GetAsync(entityId);
             _context.Remove(entity);
         }
 
@@ -36,22 +38,12 @@ namespace StoreDataBase.Repositories
 
         public async Task<T> GetAsync(int id)
         {
-            var entity = await _context.Set<T>().FindAsync(id);
-            if (entity == null)
-            {
-                throw new ArgumentException("entity is not found");
-            }
-            return entity;
+            return await _context.Set<T>().FindAsync(id);
         }
 
         public async Task<T> GetFirstOrDefault(Expression<Func<T, bool>> del)
         {
-            var entity = await _context.Set<T>().FirstOrDefaultAsync(del);
-            if (entity == null)
-            {
-                throw new ArgumentException("entity is not found");
-            }
-            return entity;
+            return await _context.Set<T>().FirstOrDefaultAsync(del);
         }
     }
 }

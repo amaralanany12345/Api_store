@@ -29,7 +29,12 @@ namespace StoreWebApi.Controllers
         [Authorize(Roles ="Customer")]
         public async Task<IActionResult> ApplyPayment()
         {
-            return Ok(await _paymentService.PayForOrder());
+            var result=await _paymentService.PayForOrder();
+            if (!result.Success)
+            {
+                return StatusCode(result.StatusCode, result.Error);
+            }
+            return StatusCode(result.StatusCode,result.Result);
         }
 
     }

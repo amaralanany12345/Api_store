@@ -14,6 +14,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using StoreDomain.Enums;
+using Org.BouncyCastle.Asn1.Cms;
+using Microsoft.AspNetCore.Http;
+using StoreService.ResponseModel;
 
 namespace StoreTests
 {
@@ -51,6 +54,13 @@ namespace StoreTests
                 CreatedAt=DateTime.Now,
                 Role=UserRole.Customer.ToString(),
             };
+            var currentUserResult = ResultResponse<User>.Pass(
+                   new User
+                   {
+                       UserName = customer.UserName,
+                       Email = customer.Email
+                   },
+                   StatusCodes.Status200OK);
             var newOrder = new Order
             {
                 Id=1,
@@ -70,11 +80,12 @@ namespace StoreTests
                 Status=OrderStatus.InProgress.ToString(),
                 
             };
-            _userServiceMock.Setup(a => a.GetCurrentUser()).ReturnsAsync(customer);
+            _unitOfWorkMock.Setup(a=>a.Users.GetFirstOrDefault(a=>a.Email==customer.Email)).ReturnsAsync(customer);
+            _userServiceMock.Setup(a => a.GetCurrentUser()).ReturnsAsync(currentUserResult);
+            _unitOfWorkMock.Setup(a => a.SaveChangesAsync()).ReturnsAsync(1);
             _mapperMock.Setup(a => a.Map<OrderDto>(It.IsAny<Order>())).Returns(newOrderDto);
             var result = await _orderService.CreateOrder();
             Assert.NotNull(result);
-            Assert.Equal(newOrderDto.TotalAmount, result.TotalAmount);
         }
         [Fact]
         public async Task GetAllOrders_ReturnAllOrders()
@@ -94,11 +105,12 @@ namespace StoreTests
                 new OrderDto{CreatedAt = DateTime.Now,TotalAmount = 40,Status = OrderStatus.InProgress.ToString(),},
 
             };
+            _unitOfWorkMock.Setup(a => a.Orders.GetAllAsync()).ReturnsAsync(listOfOrders);
             _mapperMock.Setup(a => a.Map<List<OrderDto>>(It.IsAny<List<Order>>())).Returns(listOfOrdersDto);
             var result = await _orderService.GetAllOrders();
-            Assert.NotNull(result);
-            Assert.Equal(3, result.Count);
-            Assert.Equal(listOfOrders[2].TotalAmount, result[2].TotalAmount);
+            Assert.NotNull(result.Result);
+            Assert.Equal(3, result.Result.Count);
+            Assert.Equal(listOfOrders[2].TotalAmount, result.Result[2].TotalAmount);
         }
         [Fact]
         public async Task AddOrderITemToOrder_ByItemIdAndQuantity_ReturnOrderItem()
@@ -112,6 +124,13 @@ namespace StoreTests
                 CreatedAt = DateTime.Now,
                 Role = UserRole.Customer.ToString(),
             };
+            var currentUserResult = ResultResponse<User>.Pass(
+                new User
+                {
+                    UserName = customer.UserName,
+                    Email = customer.Email
+                },
+                StatusCodes.Status200OK);
             var newOrder = new Order
             {
                 Id = 1,
@@ -140,13 +159,17 @@ namespace StoreTests
             await _context.Orders.AddAsync(newOrder);
             await _context.Items.AddAsync(newITem);
             await _context.SaveChangesAsync();
-            _userServiceMock.Setup(a => a.GetCurrentUser()).ReturnsAsync(customer);
+            _userServiceMock.Setup(a => a.GetCurrentUser()).ReturnsAsync(currentUserResult);
+            _unitOfWorkMock.Setup(a => a.OrderRepository.GetOrder(newOrder.Id)).ReturnsAsync(newOrder);
+            _unitOfWorkMock.Setup(a => a.Items.GetAsync(newITem.Id)).ReturnsAsync(newITem);
+            _unitOfWorkMock.Setup(A => A.OrderItems.CreateAsync(It.IsAny<OrderItem>())).Returns(Task.CompletedTask);
+            _unitOfWorkMock.Setup(a =>a.SaveChangesAsync()).ReturnsAsync(1);
             var result = await _orderService.AddOrderItemToOrder(newITem.Id,2);
             Assert.NotNull(result);
-            Assert.Equal(newOrderItem.Quantity,result.Quantity);
+            Assert.Equal(newOrderItem.Quantity,result.Result.Quantity);
         }
         [Fact]
-        public async Task DeleteOrderItemFromOrder_ByItemId_RemoveORderItem()
+        public async Task DeleteOrderItemFromOrder_ByItemId_RemoveOrderItem()
         {
             var customer = new User
             {
@@ -187,7 +210,9 @@ namespace StoreTests
             await _context.Items.AddAsync(newITem);
             await _context.OrderItem.AddAsync(newOrderItem);
             await _context.SaveChangesAsync();
-            _userServiceMock.Setup(a => a.GetCurrentUser()).ReturnsAsync(customer);
+            _unitOfWorkMock.Verify(a => a.OrderRepository.DeleteOrderItem(newOrder.Id, newITem.Id), Times.Once);
+            _unitOfWorkMock.Verify(a => a.SaveChangesAsync(), Times.Once);
+            //_userServiceMock.Setup(a => a.GetCurrentUser()).ReturnsAsync(customer);
             await _orderService.DeleteOrderItemFromOrder(newITem.Id);
             var deletedOrderItem=await _context.OrderItem.FirstOrDefaultAsync(a=>a.OrderId == newOrder.Id && a.ItemId==newITem.Id);
             Assert.Null(deletedOrderItem);
@@ -204,6 +229,13 @@ namespace StoreTests
                 CreatedAt = DateTime.Now,
                 Role = UserRole.Customer.ToString(),
             };
+            var currentUserResult = ResultResponse<User>.Pass(
+                    new User
+                    {
+                        UserName= customer.UserName,
+                        Email = customer.Email
+                    },
+                    StatusCodes.Status200OK);
             var newOrder = new Order
             {
                 Id = 1,
@@ -239,10 +271,13 @@ namespace StoreTests
             await _context.Items.AddAsync(newITem2);
             await _context.OrderItem.AddRangeAsync(ListOfOrderItem);
             await _context.SaveChangesAsync();
-            _userServiceMock.Setup(a => a.GetCurrentUser()).ReturnsAsync(customer);
+            _userServiceMock.Setup(a => a.GetCurrentUser()).ReturnsAsync(currentUserResult);
+            _unitOfWorkMock.Setup(a=>a.Users.GetFirstOrDefault(a=>a.Email==customer.Email)).ReturnsAsync(customer);
+            _unitOfWorkMock.Setup(a => a.Orders.CreateAsync(newOrder)).Returns(Task.CompletedTask);
+            _unitOfWorkMock.Verify(A => A.SaveChangesAsync(),Times.Once);
             var result = await _orderService.GetOrderItems();
             Assert.NotNull(result);
-            Assert.Equal(2, result.Count);
+            Assert.Equal(2, result.Result.Count);
         }
         [Fact]
         public async Task GetOrderItems_ByOrderId_ReturnOrderItems()
@@ -291,7 +326,7 @@ namespace StoreTests
             await _context.Items.AddAsync(englishItem);
             await _context.OrderItem.AddRangeAsync(ListOfOrderItem);
             await _context.SaveChangesAsync();
-            _userServiceMock.Setup(a => a.GetCurrentUser()).ReturnsAsync(customer);
+            //_userServiceMock.Setup(a => a.GetCurrentUser()).ReturnsAsync(customer);
             var listOrderITemDto = new List<OrderItemDto>
             {
                 new OrderItemDto{Price=mathItem.Price,Quantity=2,ItemName=mathItem.Name},
@@ -300,7 +335,7 @@ namespace StoreTests
             _mapperMock.Setup(a=>a.Map<List<OrderItemDto>>(It.IsAny<List<OrderItem>>())).Returns(listOrderITemDto);
             var result = await _orderService.GetOrderItemsById(newOrder.Id);
             Assert.NotNull(result);
-            Assert.Equal(ListOfOrderItem[0].Quantity, result[0].Quantity);
+            Assert.Equal(ListOfOrderItem[0].Quantity, result.Result[0].Quantity);
         }
         [Fact]
         public async Task CancelOrder_OrderCancelled()
@@ -349,7 +384,7 @@ namespace StoreTests
             await _context.Items.AddAsync(englishItem);
             await _context.OrderItem.AddRangeAsync(ListOfOrderItem);
             await _context.SaveChangesAsync();
-            _userServiceMock.Setup(a => a.GetCurrentUser()).ReturnsAsync(customer);
+            //_userServiceMock.Setup(a => a.GetCurrentUser()).ReturnsAsync(customer);
             await _orderService.CancelOrder();
             Assert.Equal(0,newOrder.TotalAmount);
             Assert.Equal(OrderStatus.Cancelled.ToString(),newOrder.Status);

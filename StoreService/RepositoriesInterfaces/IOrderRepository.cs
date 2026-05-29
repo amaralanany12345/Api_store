@@ -13,6 +13,8 @@ namespace StoreService.RepositoriesInterfaces
         Task<Order> GetOrder(int customerId);
         Task<List<OrderItem>> GetOrderItems(int orderId);
         Task<List<OrderItem>> GetOrderItemsById(int orderId);
+        Task DeleteOrderItems(int orderId);
+        Task DeleteOrderItem(int orderId, int itemId);
 
 
     }

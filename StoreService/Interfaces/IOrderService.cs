@@ -1,17 +1,18 @@
 ﻿using StoreService.DTO;
 using StoreDomain.Models;
+using StoreService.ResponseModel;
 
 namespace StoreService.Interfaces
 {
     public interface IOrderService
     {
-        Task<OrderDto> CreateOrder();
-        Task<List<OrderDto>> GetAllOrders();
-        Task<OrderItem> AddOrderItemToOrder(int itemId,int quantity);
+        Task<ResultResponse<OrderDto>> CreateOrder();
+        Task<ResultResponse<List<OrderDto>>> GetAllOrders();
+        Task<ResultResponse<OrderItem>> AddOrderItemToOrder(int itemId,int quantity);
         Task DeleteOrderItemFromOrder(int itemId);
-        Task<Order> GetOrder();
-        Task<List<OrderItem>> GetOrderItems();
-        Task<List<OrderItemDto>> GetOrderItemsById(int orderId);
+        Task<ResultResponse<Order>> GetOrder();
+        Task<ResultResponse<List<OrderItem>>> GetOrderItems();
+        Task<ResultResponse<List<OrderItemDto>>> GetOrderItemsById(int orderId);
         Task CancelOrder();
     }
 }

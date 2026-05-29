@@ -31,7 +31,7 @@ namespace StoreService.Services
             _walletService = walletService;
             _contextAccessor = contextAccessor;
         }
-        public async Task<SigningResponse> SignUp(string userName, string email, string password, UserRole role)
+        public async Task<ResultResponse<SigningResponse>> SignUp(string userName, string email, string password, UserRole role)
         {
             var newUser = new User
             {
@@ -49,47 +49,48 @@ namespace StoreService.Services
             }
             await _unitOfWork.Users.CreateAsync(newUser);
             await _unitOfWork.SaveChangesAsync();
-            return new SigningResponse
+            return ResultResponse<SigningResponse>.Pass(new SigningResponse
             {
                 User = _mapper.Map<UserDto>(newUser),
                 jwtToken = await GenerateJwtToken(newUser.Email),
                 RefreshToken= _mapper.Map<RefreshTokenDto>(await CreateRefreshToken(newUser.Email))
-            };
+            },StatusCodes.Status201Created);
         }
-        public async Task<SigningResponse> SignIn(string userEmail, string password)
+        public async Task<ResultResponse<SigningResponse>> SignIn(string userEmail, string password)
         {
-            var user = await GetUserByEmail(userEmail);
+            var user = await _unitOfWork.Users.GetFirstOrDefault(a=>a.Email==userEmail);
             if (user == null || !(BCrypt.Net.BCrypt.Verify(password, user.PasswordHash)))
             {
-                _logger.LogWarning("your email or password is not found");
-                throw new ArgumentException("user is not found");
+                _logger.LogWarning("your email or password is not correct");
+                return ResultResponse<SigningResponse>.Fail("your email or password is not correct",ErrorTypes.BadRequest,StatusCodes.Status400BadRequest);
             }
-            return new SigningResponse
+            return ResultResponse<SigningResponse>.Pass(new SigningResponse
             {
                 User = _mapper.Map<UserDto>(user),
                 jwtToken = await GenerateJwtToken(user.Email),
                 RefreshToken= _mapper.Map<RefreshTokenDto>(await CreateRefreshToken(user.Email))
-            };
+            },StatusCodes.Status200OK);
         }
-        public async Task<User> GetUserByEmail(string email)
+        public async Task<ResultResponse<User>> GetUserByEmail(string email)
         {
             var user = await _unitOfWork.Users.GetFirstOrDefault(a=>a.Email==email);
             if (user == null)
             {
                 _logger.LogWarning("user is not found with this email");
-                throw new ArgumentException("user is not found");
+                return ResultResponse<User>.Fail("user is not found with this email", ErrorTypes.NotFound, StatusCodes.Status404NotFound);
+
             }
-            return user;
+            return ResultResponse<User>.Pass(user,StatusCodes.Status200OK);
         }
         public async Task<string> GenerateJwtToken(string userEmail)
         {
-            var user = await GetUserByEmail(userEmail);
+            var user = await _unitOfWork.Users.GetFirstOrDefault(a => a.Email == userEmail);
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Issuer = _jwt.Issuer,
                 Audience = _jwt.Audience,
-                Expires = DateTime.Now.AddMinutes(2),
+                Expires = DateTime.Now.AddMinutes(30),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwt.Signingkey)),
                 SecurityAlgorithms.HmacSha256Signature),
                 Subject = new System.Security.Claims.ClaimsIdentity(new Claim[]
@@ -109,52 +110,56 @@ namespace StoreService.Services
 
         public async Task<RefreshToken> CreateRefreshToken(string userEmail)
         {
-            var user=await GetUserByEmail(userEmail);
+            var user=await _unitOfWork.Users.GetFirstOrDefault(a => a.Email == userEmail);
             var newRefreshToken = new RefreshToken
             {
                 User=user,
                 UserId=user.Id,
                 Token=GenerateRandomRefreshToken(),
                 CreatedAt=DateTime.Now,
-                ExpiredAt=DateTime.Now.AddMinutes(3),
+                ExpiredAt=DateTime.Now.AddMinutes(50),
             };
             await _unitOfWork.RefreshTokens.CreateAsync(newRefreshToken);
             await _unitOfWork.SaveChangesAsync();
             return newRefreshToken;
         }
-        public async Task<SigningResponse> RefreshToken(string userEmail)
+        public async Task<ResultResponse<SigningResponse>> RefreshToken(string userEmail)
         {
-            var user=await GetUserByEmail(userEmail);
+            var user=await _unitOfWork.Users.GetFirstOrDefault(a=>a.Email==userEmail);
+            if (user == null)
+            {
+                return ResultResponse<SigningResponse>.Fail("user is not found with this email", ErrorTypes.NotFound, StatusCodes.Status404NotFound);
+            }
             var refreshToken = await _unitOfWork.UserRepository.GetLastRefreshToken(user.Id);
-            if(refreshToken==null || !refreshToken.isValid)
+            if(refreshToken == null)
             {
                 _logger.LogInformation("your refresh token is expired");
-                //throw new ArgumentException("your refresh token is expired");
+                return ResultResponse<SigningResponse>.Fail("refresh token is not found", ErrorTypes.NotFound, StatusCodes.Status404NotFound);
             }
             refreshToken.Token=GenerateRandomRefreshToken();
             refreshToken.CreatedAt=DateTime.Now;
-            refreshToken.ExpiredAt=DateTime.Now.AddMinutes(3);
+            refreshToken.ExpiredAt=DateTime.Now.AddMinutes(50);
             await _unitOfWork.SaveChangesAsync();
-            return new SigningResponse
+            return ResultResponse<SigningResponse>.Pass(new SigningResponse
             {
                 User=_mapper.Map<UserDto>(user),
                 jwtToken= await GenerateJwtToken(userEmail),
                 RefreshToken=_mapper.Map<RefreshTokenDto>(refreshToken),    
-            };
+            },StatusCodes.Status200OK);
         }
-        public async Task<User> GetCurrentUser()
+        public async Task<ResultResponse<User>> GetCurrentUser()
         {
             var currentUserEmail = _contextAccessor.HttpContext?.User.FindFirst(ClaimTypes.Email)?.Value;
             if (currentUserEmail == null)
             {
-                throw new ArgumentException("user is not found");
+                return ResultResponse<User>.Fail("user is not found",ErrorTypes.NotFound,StatusCodes.Status404NotFound);
             }
             return await GetUserByEmail(currentUserEmail);
         }
         public async Task SignOut()
         {
             var user=await GetCurrentUser();
-            var refreshToken = await _unitOfWork.UserRepository.GetLastRefreshToken(user.Id);
+            var refreshToken = await _unitOfWork.UserRepository.GetLastRefreshToken(user.Result.Id);
             if(refreshToken == null)
             {
                 throw new ArgumentException("your token is not found");

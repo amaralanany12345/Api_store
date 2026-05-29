@@ -92,8 +92,8 @@ namespace StoreTests
             _mapperMock.Setup(a=>a.Map<UserDto>(It.IsAny<User>())).Returns(newUserDto);
             var result=await _userService.SignUp(newUser.UserName,newUser.Email,newUser.PasswordHash,UserRole.Admin);
             Assert.NotNull(result);
-            Assert.Equal(newUserDto.UserName,result.User.UserName);
-            Assert.Equal(newRefreshTokenDto.RefreshToken,result.RefreshToken.RefreshToken);
+            Assert.Equal(newUserDto.UserName,result.Result.User.UserName);
+            Assert.Equal(newRefreshTokenDto.RefreshToken,result.Result.RefreshToken.RefreshToken);
 
         }
         [Fact]
@@ -120,7 +120,7 @@ namespace StoreTests
             _mapperMock.Setup(a=>a.Map<UserDto>(It.IsAny<User>())).Returns(newUserDto);
             var result = await _userService.GetUserByEmail(newUser.Email);
             Assert.NotNull(result);
-            Assert.Equal(newUserDto.UserName,result.UserName);
+            Assert.Equal(newUserDto.UserName,result.Result.UserName);
         }
         [Fact]
         public async Task SignIn_ByLoginRequest_ReturnUser()
@@ -161,8 +161,8 @@ namespace StoreTests
             _mapperMock.Setup(a => a.Map<RefreshTokenDto>(It.IsAny<RefreshToken>())).Returns(newRefreshTokenDto);
             var result = await _userService.SignIn(newUser.Email,"ammar123");
             Assert.NotNull(result);
-            Assert.Equal(newUserDto.UserName,result.User.UserName);
-            Assert.Equal(newRefreshTokenDto.RefreshToken,result.RefreshToken.RefreshToken);
+            Assert.Equal(newUserDto.UserName,result.Result.User.UserName);
+            Assert.Equal(newRefreshTokenDto.RefreshToken,result.Result.RefreshToken.RefreshToken);
         }
         [Fact]
         public async Task GenerateJwtToken_ByUserEmail_ReturnJwtToken()
@@ -266,8 +266,8 @@ namespace StoreTests
             _mapperMock.Setup(a => a.Map<RefreshTokenDto>(It.IsAny<RefreshToken>())).Returns(newRefreshTokenDto);
             var result = await _userService.RefreshToken(newUser.Email);
             Assert.NotNull(result);
-            Assert.Equal(newSigningResponse.User.Email, result.User.Email);
-            Assert.Equal(newSigningResponse.RefreshToken.RefreshToken, result.RefreshToken.RefreshToken);
+            Assert.Equal(newSigningResponse.User.Email, result.Result.User.Email);
+            Assert.Equal(newSigningResponse.RefreshToken.RefreshToken, result.Result.RefreshToken.RefreshToken);
         }
         //[Fact]
         //public async Task GetCurrentUser_returnUser()

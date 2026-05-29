@@ -3,6 +3,9 @@ using StoreService.DTO;
 using StoreService.Interfaces;
 using StoreDomain.Models;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Http;
+using StoreService.ResponseModel;
+using StoreDomain.Enums;
 
 namespace StoreService.Services
 {
@@ -17,9 +20,13 @@ namespace StoreService.Services
             _unitOfWork = unitOfWork;
             _logger = logger;
         }
-        public async Task<ItemDto> CreateItem(string name, int price, int stockQuantity, string categoryName)
+        public async Task<ResultResponse<ItemDto>> CreateItem(string name, int price, int stockQuantity, string categoryName)
         {
             var category = await _unitOfWork.Categories.GetFirstOrDefault(a=>a.Name==categoryName);
+            if (category == null)
+            {
+                return ResultResponse<ItemDto>.Fail("category is not found",ErrorTypes.NotFound,StatusCodes.Status404NotFound);
+            }
             var newItem=new Item
             {
                 Name = name,
@@ -28,43 +35,60 @@ namespace StoreService.Services
                 CategoryId = category.Id,
                 Category = category
             };
+            var existITem=await _unitOfWork.Items.GetFirstOrDefault(a=>a.Name == newItem.Name);
+            if (existITem != null)
+            {
+                return ResultResponse<ItemDto>.Fail("item is already found", ErrorTypes.Conflict, StatusCodes.Status409Conflict);
+            }
             await _unitOfWork.Items.CreateAsync(newItem);
             await _unitOfWork.SaveChangesAsync();
             _logger.LogInformation($"item is created with name{newItem.Name} and it belong to category {category.Name}");
-            return _mapper.Map<ItemDto>(newItem);
+            return ResultResponse<ItemDto>.Pass(_mapper.Map<ItemDto>(newItem),StatusCodes.Status201Created);
         }
 
         public async Task DeleteItem(int itemId)
         {
-            _unitOfWork.Items.DeleteAsync(await _unitOfWork.Items.GetAsync(itemId));
+            await _unitOfWork.Items.DeleteAsync(itemId);
             await _unitOfWork.SaveChangesAsync();
 
         }
-        public async Task<ItemDto> GetITem(int itemId)
+        public async Task<ResultResponse<ItemDto>> GetITem(int itemId)
         {
             var item=await _unitOfWork.Items.GetAsync(itemId);
-            return _mapper.Map<ItemDto>(item);
+            if (item == null)
+            {
+                return ResultResponse<ItemDto>.Fail("item is not found",ErrorTypes.NotFound,StatusCodes.Status404NotFound);
+            }
+            return ResultResponse<ItemDto>.Pass(_mapper.Map<ItemDto>(item),StatusCodes.Status200OK);
         }
 
-        public async Task<List<ItemDto>> GetAllItems()
+        public async Task<ResultResponse<List<ItemDto>>> GetAllItems()
         {
-            return _mapper.Map<List<ItemDto>>(await _unitOfWork.Items.GetAllAsync());
+            return ResultResponse<List<ItemDto>>.Pass(_mapper.Map<List<ItemDto>>(await _unitOfWork.Items.GetAllAsync()),StatusCodes.Status200OK);
         }
 
-        public async Task<ItemDto> UpdateItem(int itemId, string newName, int newPrice, int stockQuantity)
+        public async Task<ResultResponse<ItemDto>> UpdateItem(int itemId, string newName, int newPrice, int stockQuantity)
         {
-            var item= await GetITem(itemId);
+            var item= await _unitOfWork.Items.GetAsync(itemId);
+            if (item == null)
+            {
+                return ResultResponse<ItemDto>.Fail("item is not found", ErrorTypes.NotFound, StatusCodes.Status404NotFound);
+            }
             item.Name = newName;
             item.Price = newPrice;
             item.StockQuantity = stockQuantity;
             await _unitOfWork.SaveChangesAsync();
-            return _mapper.Map<ItemDto>(item);
+            return ResultResponse<ItemDto>.Pass(_mapper.Map<ItemDto>(item), StatusCodes.Status200OK);
         }
 
-        public async Task<List<ItemDto>> GetITemByCategory(int categoryId, int pageSize, int pageNumber)
+        public async Task<ResultResponse<List<ItemDto>>> GetITemByCategory(int categoryId, int pageSize, int pageNumber)
         {
-        return _mapper.Map<List<ItemDto>>(await _unitOfWork.ITemRepository.GetITemByCategory(categoryId,pageSize,pageNumber));
-
+            var category=await _unitOfWork.Categories.GetAsync(categoryId);
+            if (category==null)
+            {
+                return ResultResponse<List<ItemDto>>.Fail("category is not found", ErrorTypes.NotFound, StatusCodes.Status404NotFound);
+            }
+            return ResultResponse<List<ItemDto>>.Pass(_mapper.Map<List<ItemDto>>(await _unitOfWork.ITemRepository.GetITemByCategory(categoryId, pageSize, pageNumber)),StatusCodes.Status200OK);
         }
 
     }

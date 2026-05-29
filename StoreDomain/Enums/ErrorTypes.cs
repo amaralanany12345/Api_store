@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StoreService.ResultPattern
+namespace StoreDomain.Enums
 {
     public enum ErrorTypes
     {
         NotFound,
         BadRequest,
+        Conflict,
     }
 }

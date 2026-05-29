@@ -23,13 +23,7 @@ namespace StoreDataBase.Repositories
 
         public async Task<RefreshToken> GetLastRefreshToken(int userId)
         {
-            var refreshToken = await _context.RefreshTokens.Where(a => a.UserId == userId).OrderByDescending(a => a.CreatedAt).FirstOrDefaultAsync();
-            if (refreshToken == null || !refreshToken.isValid)
-            {
-                //return null;
-                //throw new ArgumentException("your refresh token is expired");
-            }
-            return refreshToken;
+            return await _context.RefreshTokens.Where(a => a.UserId == userId).OrderByDescending(a => a.CreatedAt).FirstOrDefaultAsync();
         }
     }
 }

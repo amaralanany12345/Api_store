@@ -6,6 +6,7 @@ using StoreDomain.Enums;
 using StoreService.Interfaces;
 using StoreDomain.Models;
 using StoreService.RequestModels;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace StoreWebApi.Controllers
 {
@@ -25,7 +26,12 @@ namespace StoreWebApi.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> SignUp([FromBody] RegisterRequest registerRequest)
         {
-            return Ok(await _userService.SignUp(registerRequest.userName, registerRequest.Email, registerRequest.Password, registerRequest.Role));
+            var result=await _userService.SignUp(registerRequest.userName, registerRequest.Email, registerRequest.Password, registerRequest.Role);
+            if (!result.Success)
+            {
+                return StatusCode(result.StatusCode, result.Error);
+            }
+            return StatusCode(result.StatusCode, result.Result);
         }
         /// <summary>
         /// sign in 
@@ -33,7 +39,12 @@ namespace StoreWebApi.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> SignIn([FromBody] LoginRequest userRequest)
         {
-            return Ok(await _userService.SignIn(userRequest.Email, userRequest.Password));
+            var result=await _userService.SignIn(userRequest.Email, userRequest.Password);
+            if (!result.Success)
+            {
+                return StatusCode(result.StatusCode, result.Error);
+            }
+            return StatusCode(result.StatusCode, result.Result);
         }
         /// <summary>
         /// refresh the token
@@ -41,7 +52,12 @@ namespace StoreWebApi.Controllers
         [HttpPut("refresh-token")]
         public async Task<IActionResult> RefreshToken(string userEmail)
         {
-            return Ok(await _userService.RefreshToken(userEmail));
+            var result=await _userService.RefreshToken(userEmail);
+            if (!result.Success)
+            {
+                return StatusCode(result.StatusCode, result.Error);
+            }
+            return StatusCode(result.StatusCode, result.Result);
         }
         /// <summary>
         /// get the current user using the httpContext
@@ -49,7 +65,12 @@ namespace StoreWebApi.Controllers
         [HttpGet("currentUser")]
         public async Task<IActionResult> GetCurrentUser()
         {
-            return Ok(await _userService.GetCurrentUser());
+            var result=await _userService.GetCurrentUser();
+            if (!result.Success)
+            {
+                return StatusCode(result.StatusCode, result.Error);
+            }
+            return StatusCode(result.StatusCode, result.Result);
         }
         /// <summary>
         /// Sign out

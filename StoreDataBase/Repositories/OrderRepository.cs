@@ -19,20 +19,37 @@ namespace StoreDataBase.Repositories
             _context = context;
         }
 
+        public async Task DeleteOrderItem(int orderId, int itemId)
+        {
+            var orderItem=await _context.OrderItem.Where(a=>a.OrderId==orderId && a.ItemId==itemId).FirstOrDefaultAsync();
+            if(orderItem == null)
+            {
+                throw new ArgumentException("order item is not found");
+            }
+            _context.OrderItem.Remove(orderItem);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteOrderItems(int orderId)
+        {
+            var orderItems=await GetOrderItems(orderId);
+            foreach (var orderItem in orderItems)
+            {
+                orderItem.Item.StockQuantity += orderItem.Quantity;
+                _context.OrderItem.Remove(orderItem);
+                await _context.SaveChangesAsync();
+            }
+        }
+
         public async Task<Order> GetOrder(int customerId)
         {
-            //var orders = await _context.Orders.Where();
-            var order = await _context.Orders.Where(a => a.CustomerId == customerId && a.Status == OrderStatus.InProgress.ToString()).Include(a => a.Customer).Include(a => a.OrderItems).FirstOrDefaultAsync();
-            if (order == null)
-            {
-                throw new ArgumentException("order is not found");
-            }
+            var order = await _context.Orders.Where(a => a.CustomerId == customerId && a.Status == OrderStatus.InProgress.ToString())
+                .Include(a => a.Customer).Include(a => a.OrderItems).FirstOrDefaultAsync();
             return order;
         }
 
         public async Task<List<OrderItem>> GetOrderItems(int orderId)
         {
-            var order = await GetOrder(orderId);
             var orderItems = await _context.OrderItem.Where(a => a.OrderId == orderId).Include(a => a.Item).ToListAsync();
             return orderItems;
         }

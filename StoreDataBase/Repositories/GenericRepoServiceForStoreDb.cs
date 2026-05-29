@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StoreDataBase.AppContexts;
 using StoreService.Interfaces;
-using StoreService.ResultPattern;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,8 +24,9 @@ namespace StoreDataBase.Repositories
             await _context.Set<T>().AddAsync(entity);
         }
 
-        public void DeleteAsync(T entity)
+        public async Task DeleteAsync(int entityId)
         {
+            var entity=await GetAsync(entityId);
             _context.Remove(entity);
         }
 

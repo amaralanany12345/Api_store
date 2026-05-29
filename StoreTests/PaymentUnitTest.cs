@@ -95,10 +95,10 @@ namespace StoreTests
                 TotalAmount=newOrder.TotalAmount,
                 CreateAt=DateTime.Now,
             };
-            _orderServiceMock.Setup(x => x.GetOrder()).ReturnsAsync(newOrder);
+            //_orderServiceMock.Setup(x => x.GetOrder()).ReturnsAsync(newOrder);
             _mapperMock.Setup(a => a.Map<ReceiptDto>(It.IsAny<Receipt>())).Returns(newReceiptDto);
             var result = await _paymentService.PayForOrder();
-            Assert.Equal(newReceiptDto.TotalAmount, result.TotalAmount);
+            Assert.Equal(newReceiptDto.TotalAmount, result.Result.TotalAmount);
             Assert.NotNull(result);
 
         }
