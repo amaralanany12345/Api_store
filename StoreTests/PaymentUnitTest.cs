@@ -13,6 +13,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using StoreService.ResponseModel;
+using System.Linq.Expressions;
+using Microsoft.AspNetCore.Http;
 
 namespace StoreTests
 {
@@ -29,7 +32,7 @@ namespace StoreTests
         private readonly Mock<IEmailService> _emailServiceMock;
         private readonly Mock<IOrderService> _orderServiceMock;
         private readonly Mock<IExternalLogService> _externalLogServiceMock;
-        public PaymentServiceTest(Mock<IUnitOfWorkForWalletDb> unitOfWorkForWalletDbMock)
+        public PaymentServiceTest()
         {
             _externalLogServiceMock = new Mock<IExternalLogService>();
             _emailServiceMock = new Mock<IEmailService>();
@@ -39,10 +42,10 @@ namespace StoreTests
             _appDbContext = new AppDbContext(appDbContextOptions);
             _walletAppDbContext = new WalletAppDbContext(WalletAppDbContextOptions);
             _genericRepoMock = new Mock<IGenericRepoService<Receipt>>();
-            _unitOfWorkMock = new Mock<IUnitOfWorkServiceForStoreDb>();
             _mapperMock = new Mock<IMapper>();
             _loggerMock = new Mock<ILogger<PaymentGateWayService>>();
-            _unitOfWorkForWalletDbMock = unitOfWorkForWalletDbMock;
+            _unitOfWorkMock = new Mock<IUnitOfWorkServiceForStoreDb>();
+            _unitOfWorkForWalletDbMock = new Mock<IUnitOfWorkForWalletDb>();
             _paymentService = new PaymentGateWayService(_emailServiceMock.Object, _unitOfWorkMock.Object, _loggerMock.Object,
                 _mapperMock.Object, _orderServiceMock.Object, _externalLogServiceMock.Object, _unitOfWorkForWalletDbMock.Object);
         }
@@ -89,13 +92,16 @@ namespace StoreTests
             await _appDbContext.Orders.AddAsync(newOrder);
             await _appDbContext.Receipts.AddAsync(newReceipt);
             await _appDbContext.SaveChangesAsync();
-
             var newReceiptDto = new ReceiptDto
             {
                 TotalAmount=newOrder.TotalAmount,
                 CreateAt=DateTime.Now,
             };
-            //_orderServiceMock.Setup(x => x.GetOrder()).ReturnsAsync(newOrder);
+            _orderServiceMock.Setup(x => x.GetOrder()).ReturnsAsync(ResultResponse<Order>.Pass(newOrder,StatusCodes.Status200OK));
+            _unitOfWorkForWalletDbMock.Setup(a => a.Wallets.GetFirstOrDefault(It.IsAny<Expression<Func<Wallet,bool>>>())).ReturnsAsync(newWallet);
+            _unitOfWorkMock.Setup(a => a.Receipts.CreateAsync(It.IsAny<Receipt>())).Returns(Task.CompletedTask);
+            _unitOfWorkMock.Setup(a => a.SaveChangesAsync()).ReturnsAsync(1);
+            _unitOfWorkForWalletDbMock.Setup(a => a.SaveChangeAsync()).ReturnsAsync(1);
             _mapperMock.Setup(a => a.Map<ReceiptDto>(It.IsAny<Receipt>())).Returns(newReceiptDto);
             var result = await _paymentService.PayForOrder();
             Assert.Equal(newReceiptDto.TotalAmount, result.Result.TotalAmount);

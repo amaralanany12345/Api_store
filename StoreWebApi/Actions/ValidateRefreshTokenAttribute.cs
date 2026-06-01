@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using StoreDataBase.AppContexts;
 using System.Security.Claims;
-
+using StoreDomain.Models;
+using StoreService.ResponseModel;
+using StoreDomain.Enums;
 namespace StoreWebApi.Actions
 {
     public class ValidateRefreshTokenAttribute:ActionFilterAttribute
@@ -25,19 +27,23 @@ namespace StoreWebApi.Actions
             if (currentUserEmail == null)
             {
                 _logger.LogWarning("user email is not found");
+                //return ResultResponse<User>.Fail("", ErrorTypes.NotFound, StatusCodes.Status404NotFound);
                 throw new ArgumentException("user email is not found");
             }
             var user = await _context.Users.Where(a => a.Email == currentUserEmail).FirstOrDefaultAsync();
             if (user == null)
             {
                 _logger.LogWarning("user is not found");
+                //return ResultResponse<User>.Fail("", ErrorTypes.NotFound, StatusCodes.Status404NotFound);
                 throw new ArgumentException("user is not found");
             }
             var currentUserRefreshToken = await _context.RefreshTokens.Where(a => a.UserId == user.Id).OrderByDescending(A => A.CreatedAt).FirstOrDefaultAsync();
             if (currentUserRefreshToken == null)
             {
                 _logger.LogWarning("your token is not found");
+                //return ResultResponse<User>.Fail("", ErrorTypes.NotFound, StatusCodes.Status404NotFound);
                 throw new ArgumentException("your token is not found");
+
             }
             if (currentUserRefreshToken.isValid)
             {
@@ -45,9 +51,10 @@ namespace StoreWebApi.Actions
             }
             else
             {
-                _logger.LogWarning("your token is expired an not valid please refresh you token");
+                _logger.LogWarning("your token is expired and not valid please refresh you token");
                 context.Result = new UnauthorizedObjectResult("your token is expired");
-                return;
+                //return ResultResponse<User>.Pass(user, StatusCodes.Status200OK);
+
             }
         }
     }

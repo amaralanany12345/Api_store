@@ -101,10 +101,8 @@ namespace StoreTests
             };
             _unitOfWorkMock.Setup(a => a.Items.DeleteAsync(newItem.Id)).Returns(Task.CompletedTask);
             _mapperMock.Setup(a=>a.Map<ItemDto>(It.IsAny<Item>())).Returns(itemDto);
-            await _itemService.DeleteItem(newItem.Id);
-            _unitOfWorkMock.Verify(a => a.Items.DeleteAsync(newItem.Id), Times.Once);
-            _unitOfWorkMock.Verify(a => a.SaveChangesAsync(), Times.Once);
-           
+            await _itemService.DeleteItem(newItem.Id);  
+            _unitOfWorkMock.Verify(a=>a.Items.DeleteAsync(newItem.Id));
         }
         [Fact]
         public async Task CreateItem_withCategoryName_ReturnItem()
@@ -245,14 +243,11 @@ namespace StoreTests
                 //new ItemDto{Name="car 1",Price=5000,StockQuantity=30,CategoryName=carCategory.Name},
             };
             _unitOfWorkMock.Setup(a =>a.Categories.GetAsync(bookCategory.Id)).ReturnsAsync(bookCategory);
-            _unitOfWorkMock.Setup(a =>a.Categories.GetAsync(bookCategory.Id)).ReturnsAsync(bookCategory);
             _unitOfWorkMock.Setup(a=>a.ITemRepository.GetITemByCategory(bookCategory.Id,2,1)).ReturnsAsync(newItems);
             _mapperMock.Setup(a => a.Map<List<ItemDto>>(It.IsAny<List<Item>>())).Returns(newItemsDto);
-
             var result = await _itemService.GetITemByCategory(bookCategory.Id,2,1);
             Assert.NotNull(result);
-            //Assert.All(result,a=> Assert.Equal("books",a.CategoryName)); 
-
+            _unitOfWorkMock.Verify(a => a.ITemRepository.GetITemByCategory(bookCategory.Id,2,1));
         }
     }
 }

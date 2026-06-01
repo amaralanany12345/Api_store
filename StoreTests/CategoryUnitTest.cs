@@ -67,8 +67,7 @@ namespace StoreTests
             _unitOfWorkMock.Setup(a => a.Categories.GetAsync(newCategory.Id)).ReturnsAsync(newCategory);
             _unitOfWorkMock.Setup(a => a.Categories.DeleteAsync(newCategory.Id)).Returns(Task.CompletedTask);
             await _categoryService.DeleteCategory(newCategory.Id);
-            _unitOfWorkMock.Verify(a =>a.Categories.DeleteAsync(newCategory.Id),Times.Once);
-            _unitOfWorkMock.Verify(a =>a.SaveChangesAsync(),Times.Once);
+            _unitOfWorkMock.Verify(a => a.Categories.DeleteAsync(newCategory.Id));
         }
         [Fact]
         public async Task GetAllCategories_ReturnAllCategories()

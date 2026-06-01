@@ -44,8 +44,6 @@ namespace StoreService.Services
             if (newUser.Role == UserRole.Customer.ToString())
             {
                 await _walletService.CreateWalletToUser(email);
-                var newUserWallet=await _walletService.GetWalletOfUser(email);
-                //newUser.Balance = newUserWallet.Balance;
             }
             await _unitOfWork.Users.CreateAsync(newUser);
             await _unitOfWork.SaveChangesAsync();
