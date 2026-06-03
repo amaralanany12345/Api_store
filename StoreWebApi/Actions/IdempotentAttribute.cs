@@ -2,55 +2,58 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 using StoreService.ResponseModel;
+using StoreDataBase.AppContexts;
+using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
+using StoreDomain.Models;
 
 namespace StoreWebApi.Actions
 {
-    public class IdempotentAttribute: ActionFilterAttribute
+    public class IdempotentAttribute: IAsyncActionFilter
     {
-            private const string idempotentAttribute = "X-IdempotentAttribute-Key";
-            public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+        private readonly AppDbContext _context;
+
+        public IdempotentAttribute(AppDbContext context)
+        {
+            _context = context;
+        }
+
+        public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+        {
+            var key = context.HttpContext.Request.Headers["Idempotency-Key"].FirstOrDefault();
+            if (key==null)
             {
-                if (!context.HttpContext.Request.Headers.TryGetValue(idempotentAttribute, out var header) || string.IsNullOrEmpty(idempotentAttribute))
+                Console.WriteLine("key is not found");
+                return;
+            }
+            var existingIdempotency=await _context.IdempotencyRecords.Where(a=>a.Key==key).FirstOrDefaultAsync();
+            if(existingIdempotency!=null)
+            {
+                context.Result = new ContentResult
                 {
-                    context.Result = new BadRequestObjectResult("missing idempotent attribute");
-                    return;
-                }
-                var cacheKey = $"idempotent: {idempotentAttribute}";
-                var cache = context.HttpContext.RequestServices.GetService<IDistributedCache>();
-                var cachedResponseJson = await cache.GetStringAsync(cacheKey);
-                if (!string.IsNullOrEmpty(cachedResponseJson))
-                {
-                    Console.WriteLine("there is cached response in the header");
-                    var cachedResponse = System.Text.Json.JsonSerializer.Deserialize<CacheResponse>(cachedResponseJson);
-                    if (cachedResponse != null)
-                    {
-                        context.Result = new ObjectResult(cachedResponse.Value)
-                        {
-                            StatusCode = cachedResponse.StatusCode,
-                        };
-                        return;
-                    }
-                }
-                else
-                {
-                Console.WriteLine("cached response is not found");
+                    StatusCode=existingIdempotency.StatusCode,
+                    Content=existingIdempotency.Value,
+                    ContentType="application/json",
+                };
+                return;
+            }
+            else
+            {
                 var executedContext = await next();
-                    if (executedContext.Result is ObjectResult objectResult &&
-                    objectResult.StatusCode >= 200 && 
-                    objectResult.StatusCode < 300)
+                if(executedContext.Result is ObjectResult result)
+                {
+                    var response=JsonSerializer.Serialize(result.Value);
+                    await _context.IdempotencyRecords.AddAsync(new IdempotencyRecord
                     {
-                            var cacheResponse = new CacheResponse
-                            {
-                                StatusCode = objectResult.StatusCode ?? 200,
-                                Value = objectResult.Value,
-                            };
-                            var cacheResponseJson = System.Text.Json.JsonSerializer.Serialize(cacheResponse);
-                            await cache.SetStringAsync(cacheKey, cacheResponseJson, new DistributedCacheEntryOptions
-                            {
-                                AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(20),
-                            });
-                        }
+                        CreatedAt=DateTime.Now,
+                        StatusCode=200,
+                        Key=key,
+                        Value=response
+                    });
+                    await _context.SaveChangesAsync();
                 }
             }
+
         }
     }
+}

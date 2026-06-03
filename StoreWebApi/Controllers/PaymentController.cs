@@ -25,7 +25,7 @@ namespace StoreWebApi.Controllers
         /// </summary>
 
         [HttpPost]
-        //[Idempotent]
+        [ServiceFilter(typeof(IdempotentAttribute))]
         [Authorize(Roles ="Customer")]
         public async Task<IActionResult> ApplyPayment()
         {

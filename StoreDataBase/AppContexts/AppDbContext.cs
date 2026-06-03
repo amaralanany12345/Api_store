@@ -14,6 +14,7 @@ namespace StoreDataBase.AppContexts
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<Receipt> Receipts { get; set; }
         public DbSet<ExternalLog> ExternalLogs { get; set; }
+        public DbSet<IdempotencyRecord> IdempotencyRecords { get; set; }
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

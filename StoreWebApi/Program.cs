@@ -97,6 +97,7 @@ builder.Services.AddScoped<IExternalLogService,ExternalLogService>();
 builder.Services.AddScoped<IAuthorizationHandler, CheckRefreshTokenIsValid>();
 builder.Services.AddScoped<IWalletService, WalletService>();
 builder.Services.AddScoped<ValidateRefreshTokenAttribute>();
+builder.Services.AddScoped<IdempotentAttribute>();
 
 
 // JWT Authentication setup
