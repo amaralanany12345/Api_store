@@ -48,7 +48,7 @@ namespace StoreWebApi.Actions
                         CreatedAt=DateTime.Now,
                         StatusCode=200,
                         Key=key,
-                        Value=response
+                        Value=response,
                     });
                     await _context.SaveChangesAsync();
                 }

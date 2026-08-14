@@ -12,14 +12,15 @@ namespace StoreService.Helper
                 .ForMember(dst=>dst.UserName,opt=>opt.MapFrom(a=>a.UserName))
                 .ForMember(dst=>dst.Email,opt=>opt.MapFrom(a=>a.Email))
                 .ForMember(dst=>dst.CreatedAt,opt=>opt.MapFrom(a=>a.CreatedAt))
-                //.ForMember(dst=>dst.Balance,opt=>opt.MapFrom(a=>a.Balance))
                 .ForMember(dst=>dst.Role, opt=>opt.MapFrom(a=>a.Role));
             CreateMap<Item, ItemDto>()
+                .ForMember(dst => dst.Id, opt => opt.MapFrom(a => a.Id))
                 .ForMember(dst => dst.Name, opt => opt.MapFrom(a => a.Name))
                 .ForMember(dst => dst.Price, opt => opt.MapFrom(a => a.Price))
                 .ForMember(dst => dst.StockQuantity, opt => opt.MapFrom(a => a.StockQuantity))
                 .ForMember(dst => dst.CategoryName, opt => opt.MapFrom(a => a.Category.Name));
             CreateMap<Category, CategoryDto>()
+                .ForMember(dst => dst.Id, opt => opt.MapFrom(a => a.Id))
                 .ForMember(dst => dst.Name, opt => opt.MapFrom(a => a.Name))
                 .ForMember(dst => dst.Description, opt => opt.MapFrom(a => a.Description));
             CreateMap<RefreshToken, RefreshTokenDto>()

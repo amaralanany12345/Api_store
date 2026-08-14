@@ -76,7 +76,7 @@ namespace StoreWebApi.Controllers
         /// cancel order
         /// </summary>
         [HttpPut("cancel")]
-        [Authorize(Roles ="Customer")]
+        [Authorize(Roles = "Admin,Customer")]
         public async Task<IActionResult> CancelOrder()
         {
             await _orderService.CancelOrder();
@@ -86,7 +86,7 @@ namespace StoreWebApi.Controllers
         /// get the order Items
         /// </summary>
         [HttpGet("orderItems/{orderId}")]
-        [Authorize(Roles = "Customer")]
+        [Authorize(Roles = "Admin,Customer")]
         public async Task<IActionResult> GetOrderItemsById(int orderId)
         {
             var result=await _orderService.GetOrderItemsById(orderId);

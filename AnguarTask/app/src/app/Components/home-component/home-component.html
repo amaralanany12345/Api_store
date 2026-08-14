@@ -1,0 +1,19 @@
+<h2>products</h2>
+<div class="btns">
+    @if(currentUser()?.role=="Customer"){ 
+        <button class="details"  >Apply Order</button>
+    }
+    @if(currentUser()?.role=="Admin"){
+        <button class="details" (click)="GetAllOrders()" >All Orders</button>
+    }
+</div>
+<div class="products">
+    @for(item of items();track $index;let i=$index)
+    {
+         <div class="product">
+            <h2>{{item.name}}</h2>
+            <p>{{item.price}}</p> 
+            <button class="details" (click)="ViewDetails(item.id)">view details</button>
+        </div>
+    }
+</div>

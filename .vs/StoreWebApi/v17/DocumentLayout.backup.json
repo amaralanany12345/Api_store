@@ -3,16 +3,24 @@
   "WorkspaceRootPath": "D:\\Projects\\StoreWebApi\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Projects\\StoreWebApi\\StoreDataBase\\Migrations\\StoreMigrations\\20260603121728_AddIdempotencyRecord.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:StoreDataBase\\Migrations\\StoreMigrations\\20260603121728_AddIdempotencyRecord.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{EC16AC37-74BA-4F5E-BCB3-EFC7DE9E1A8C}|StoreService\\StoreService.csproj|d:\\projects\\storewebapi\\storeservice\\dto\\orderdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EC16AC37-74BA-4F5E-BCB3-EFC7DE9E1A8C}|StoreService\\StoreService.csproj|solutionrelative:storeservice\\dto\\orderdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D9925EBA-4B68-4611-8887-E02477E0ABA9}|StoreDataBase\\StoreDataBase.csproj|d:\\projects\\storewebapi\\storedatabase\\configuration\\idempotencyrecordconfiguration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D9925EBA-4B68-4611-8887-E02477E0ABA9}|StoreDataBase\\StoreDataBase.csproj|solutionrelative:storedatabase\\configuration\\idempotencyrecordconfiguration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{EC16AC37-74BA-4F5E-BCB3-EFC7DE9E1A8C}|StoreService\\StoreService.csproj|d:\\projects\\storewebapi\\storeservice\\interfaces\\iwalletservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EC16AC37-74BA-4F5E-BCB3-EFC7DE9E1A8C}|StoreService\\StoreService.csproj|solutionrelative:storeservice\\interfaces\\iwalletservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{4DDFA6E3-2F42-4649-88EF-660E1C3AF981}|StoreDomain\\StoreDomain.csproj|d:\\projects\\storewebapi\\storedomain\\models\\idempotencyrecord.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4DDFA6E3-2F42-4649-88EF-660E1C3AF981}|StoreDomain\\StoreDomain.csproj|solutionrelative:storedomain\\models\\idempotencyrecord.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{E8AF71C3-2C3F-4773-B4F8-65536624C05F}|StoreWebApi\\StoreWebApi.csproj|d:\\projects\\storewebapi\\storewebapi\\controllers\\paymentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E8AF71C3-2C3F-4773-B4F8-65536624C05F}|StoreWebApi\\StoreWebApi.csproj|solutionrelative:storewebapi\\controllers\\paymentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EC16AC37-74BA-4F5E-BCB3-EFC7DE9E1A8C}|StoreService\\StoreService.csproj|d:\\projects\\storewebapi\\storeservice\\interfaces\\iorderservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EC16AC37-74BA-4F5E-BCB3-EFC7DE9E1A8C}|StoreService\\StoreService.csproj|solutionrelative:storeservice\\interfaces\\iorderservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E8AF71C3-2C3F-4773-B4F8-65536624C05F}|StoreWebApi\\StoreWebApi.csproj|d:\\projects\\storewebapi\\storewebapi\\controllers\\ordercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E8AF71C3-2C3F-4773-B4F8-65536624C05F}|StoreWebApi\\StoreWebApi.csproj|solutionrelative:storewebapi\\controllers\\ordercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{E8AF71C3-2C3F-4773-B4F8-65536624C05F}|StoreWebApi\\StoreWebApi.csproj|d:\\projects\\storewebapi\\storewebapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -47,53 +55,79 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "20260603121728_AddIdempotencyRecord.cs",
-              "DocumentMoniker": "D:\\Projects\\StoreWebApi\\StoreDataBase\\Migrations\\StoreMigrations\\20260603121728_AddIdempotencyRecord.cs",
-              "RelativeDocumentMoniker": "StoreDataBase\\Migrations\\StoreMigrations\\20260603121728_AddIdempotencyRecord.cs",
-              "ToolTip": "D:\\Projects\\StoreWebApi\\StoreDataBase\\Migrations\\StoreMigrations\\20260603121728_AddIdempotencyRecord.cs",
-              "RelativeToolTip": "StoreDataBase\\Migrations\\StoreMigrations\\20260603121728_AddIdempotencyRecord.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Title": "OrderDto.cs",
+              "DocumentMoniker": "D:\\Projects\\StoreWebApi\\StoreService\\DTO\\OrderDto.cs",
+              "RelativeDocumentMoniker": "StoreService\\DTO\\OrderDto.cs",
+              "ToolTip": "D:\\Projects\\StoreWebApi\\StoreService\\DTO\\OrderDto.cs",
+              "RelativeToolTip": "StoreService\\DTO\\OrderDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAPAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-03T12:17:29.181Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "IdempotencyRecordConfiguration.cs",
-              "DocumentMoniker": "D:\\Projects\\StoreWebApi\\StoreDataBase\\Configuration\\IdempotencyRecordConfiguration.cs",
-              "RelativeDocumentMoniker": "StoreDataBase\\Configuration\\IdempotencyRecordConfiguration.cs",
-              "ToolTip": "D:\\Projects\\StoreWebApi\\StoreDataBase\\Configuration\\IdempotencyRecordConfiguration.cs",
-              "RelativeToolTip": "StoreDataBase\\Configuration\\IdempotencyRecordConfiguration.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAA4AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-03T12:14:03.218Z",
+              "WhenOpened": "2026-08-14T15:09:59.882Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "IdempotencyRecord.cs",
-              "DocumentMoniker": "D:\\Projects\\StoreWebApi\\StoreDomain\\Models\\IdempotencyRecord.cs",
-              "RelativeDocumentMoniker": "StoreDomain\\Models\\IdempotencyRecord.cs",
-              "ToolTip": "D:\\Projects\\StoreWebApi\\StoreDomain\\Models\\IdempotencyRecord.cs",
-              "RelativeToolTip": "StoreDomain\\Models\\IdempotencyRecord.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAvAAAAAAAAAA==",
+              "Title": "PaymentController.cs",
+              "DocumentMoniker": "D:\\Projects\\StoreWebApi\\StoreWebApi\\Controllers\\PaymentController.cs",
+              "RelativeDocumentMoniker": "StoreWebApi\\Controllers\\PaymentController.cs",
+              "ToolTip": "D:\\Projects\\StoreWebApi\\StoreWebApi\\Controllers\\PaymentController.cs",
+              "RelativeToolTip": "StoreWebApi\\Controllers\\PaymentController.cs",
+              "ViewState": "AgIAABEAAAAAAAAAAAAAwAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-03T12:12:27.295Z",
+              "WhenOpened": "2026-08-14T12:51:05.778Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "IWalletService.cs",
+              "DocumentMoniker": "D:\\Projects\\StoreWebApi\\StoreService\\Interfaces\\IWalletService.cs",
+              "RelativeDocumentMoniker": "StoreService\\Interfaces\\IWalletService.cs",
+              "ToolTip": "D:\\Projects\\StoreWebApi\\StoreService\\Interfaces\\IWalletService.cs",
+              "RelativeToolTip": "StoreService\\Interfaces\\IWalletService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAA3AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-14T12:50:52.292Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
+              "Title": "IOrderService.cs",
+              "DocumentMoniker": "D:\\Projects\\StoreWebApi\\StoreService\\Interfaces\\IOrderService.cs",
+              "RelativeDocumentMoniker": "StoreService\\Interfaces\\IOrderService.cs",
+              "ToolTip": "D:\\Projects\\StoreWebApi\\StoreService\\Interfaces\\IOrderService.cs",
+              "RelativeToolTip": "StoreService\\Interfaces\\IOrderService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-14T12:41:10.908Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "OrderController.cs",
+              "DocumentMoniker": "D:\\Projects\\StoreWebApi\\StoreWebApi\\Controllers\\OrderController.cs",
+              "RelativeDocumentMoniker": "StoreWebApi\\Controllers\\OrderController.cs",
+              "ToolTip": "D:\\Projects\\StoreWebApi\\StoreWebApi\\Controllers\\OrderController.cs",
+              "RelativeToolTip": "StoreWebApi\\Controllers\\OrderController.cs",
+              "ViewState": "AgIAABEAAAAAAAAAAAAAwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-14T12:41:02.059Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\Projects\\StoreWebApi\\StoreWebApi\\Program.cs",
               "RelativeDocumentMoniker": "StoreWebApi\\Program.cs",
               "ToolTip": "D:\\Projects\\StoreWebApi\\StoreWebApi\\Program.cs",
               "RelativeToolTip": "StoreWebApi\\Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAABkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-01T11:15:39.667Z",
+              "WhenOpened": "2026-08-14T08:23:13.853Z",
               "EditorCaption": ""
             }
           ]
