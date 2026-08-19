@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper;
 using Microsoft.IdentityModel.Tokens;
 using StoreService.DTO;
 using StoreDomain.Enums;
@@ -88,7 +89,7 @@ namespace StoreService.Services
             {
                 Issuer = _jwt.Issuer,
                 Audience = _jwt.Audience,
-                Expires = DateTime.Now.AddMinutes(30),
+                Expires = DateTime.Now.AddMinutes(10),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwt.Signingkey)),
                 SecurityAlgorithms.HmacSha256Signature),
                 Subject = new System.Security.Claims.ClaimsIdentity(new Claim[]
@@ -115,7 +116,7 @@ namespace StoreService.Services
                 UserId=user.Id,
                 Token=GenerateRandomRefreshToken(),
                 CreatedAt=DateTime.Now,
-                ExpiredAt=DateTime.Now.AddMinutes(50),
+                ExpiredAt=DateTime.Now.AddMinutes(30),
             };
             await _unitOfWork.RefreshTokens.CreateAsync(newRefreshToken);
             await _unitOfWork.SaveChangesAsync();
@@ -136,7 +137,7 @@ namespace StoreService.Services
             }
             refreshToken.Token=GenerateRandomRefreshToken();
             refreshToken.CreatedAt=DateTime.Now;
-            refreshToken.ExpiredAt=DateTime.Now.AddMinutes(50);
+            refreshToken.ExpiredAt=DateTime.Now.AddMinutes(30);
             await _unitOfWork.SaveChangesAsync();
             return ResultResponse<SigningResponse>.Pass(new SigningResponse
             {

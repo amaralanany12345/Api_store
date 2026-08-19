@@ -24,7 +24,10 @@ namespace StoreService.Helper
                 .ForMember(dst => dst.Name, opt => opt.MapFrom(a => a.Name))
                 .ForMember(dst => dst.Description, opt => opt.MapFrom(a => a.Description));
             CreateMap<RefreshToken, RefreshTokenDto>()
-                .ForMember(dst => dst.RefreshToken, opt => opt.MapFrom(a => a.Token));
+                .ForMember(dst => dst.RefreshToken, opt => opt.MapFrom(a => a.Token))
+                .ForMember(dst => dst.CreatedAt, opt => opt.MapFrom(a => a.CreatedAt))
+                //.ForMember(dst => dst.CreatedAt, opt => opt.MapFrom(a => a.isValid))
+                .ForMember(dst => dst.ExpiredAt, opt => opt.MapFrom(a => a.ExpiredAt));
             CreateMap<Order, OrderDto>()
                 .ForMember(dst => dst.Status, opt => opt.MapFrom(a => a.Status))
                 .ForMember(dst => dst.CreatedAt, opt => opt.MapFrom(a => a.CreatedAt))
@@ -32,10 +35,12 @@ namespace StoreService.Helper
                 .ForMember(dst => dst.TotalAmount, opt => opt.MapFrom(a => a.TotalAmount));
             CreateMap<Receipt, ReceiptDto>()
                 .ForMember(dst => dst.CreateAt, opt => opt.MapFrom(a => a.CreatedAt))
+                .ForMember(dst => dst.OrderId, opt => opt.MapFrom(a => a.orderId))
                 .ForMember(dst => dst.TotalAmount, opt => opt.MapFrom(a => a.TotalAmount));
             CreateMap<OrderItem,OrderItemDto>()
-                .ForMember(dst => dst.ItemName, opt => opt.MapFrom(a => a.Item.Name))
+                .ForMember(dst => dst.ItemId, opt => opt.MapFrom(a => a.Item.Id))
                 .ForMember(dst => dst.Price, opt => opt.MapFrom(a => a.Item.Price))
+                .ForMember(dst => dst.ItemName, opt => opt.MapFrom(a => a.Item.Name))
                 .ForMember(dst => dst.Quantity, opt => opt.MapFrom(a => a.Quantity));
 
         }

@@ -179,6 +179,22 @@
   },
   {
     "ContainingType": "StoreWebApi.Controllers.ItemController",
+    "Method": "UpdateItem",
+    "RelativePath": "api/items",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "itemDto",
+        "Type": "StoreService.DTO.ItemDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "StoreWebApi.Controllers.ItemController",
     "Method": "DeleteItem",
     "RelativePath": "api/items/{itemId}",
     "HttpMethod": "DELETE",
@@ -189,37 +205,6 @@
         "Name": "itemId",
         "Type": "System.Int32",
         "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "StoreWebApi.Controllers.ItemController",
-    "Method": "UpdateItem",
-    "RelativePath": "api/items/{itemId}",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "itemId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "newName",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "newPrice",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "stockQuantity",
-        "Type": "System.Int32",
-        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -242,8 +227,24 @@
   },
   {
     "ContainingType": "StoreWebApi.Controllers.ItemController",
-    "Method": "GetItemsByCategory",
+    "Method": "GetItemsByCategoryId",
     "RelativePath": "api/items/category/{categoryId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "categoryId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "StoreWebApi.Controllers.ItemController",
+    "Method": "GetItemsByCategory",
+    "RelativePath": "api/items/category/pagination/{categoryId}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -262,6 +263,22 @@
         "Name": "pageNumber",
         "Type": "System.Int32",
         "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "StoreWebApi.Controllers.ItemController",
+    "Method": "SearchByName",
+    "RelativePath": "api/items/itemName/{itemName}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "itemName",
+        "Type": "System.String",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -298,23 +315,38 @@
   },
   {
     "ContainingType": "StoreWebApi.Controllers.OrderController",
+    "Method": "GetOrder",
+    "RelativePath": "api/orders/current",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "StoreWebApi.Controllers.OrderController",
     "Method": "AddOrderITemToOrder",
-    "RelativePath": "api/orders/orderItems/{itemId}",
+    "RelativePath": "api/orders/orderItems",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "itemId",
-        "Type": "System.Int32",
+        "Name": "orderItemDto",
+        "Type": "StoreService.DTO.OrderItemDto",
         "IsRequired": true
-      },
-      {
-        "Name": "quantity",
-        "Type": "System.Int32",
-        "IsRequired": false
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "StoreWebApi.Controllers.OrderController",
+    "Method": "GetOrderItems",
+    "RelativePath": "api/orders/orderItems",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {
@@ -350,6 +382,38 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "StoreWebApi.Controllers.OrderController",
+    "Method": "DecreaseQuantityOfItem",
+    "RelativePath": "api/orders/orderItems/Decrease",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "orderItemDto",
+        "Type": "StoreService.DTO.OrderItemDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "StoreWebApi.Controllers.OrderController",
+    "Method": "IncreaseQuantityOfItem",
+    "RelativePath": "api/orders/orderItems/Increase",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "orderItemDto",
+        "Type": "StoreService.DTO.OrderItemDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "StoreWebApi.Controllers.PaymentController",
     "Method": "ApplyPayment",
     "RelativePath": "api/Payment",
@@ -357,6 +421,32 @@
     "IsController": true,
     "Order": 0,
     "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "StoreWebApi.Controllers.ReceiptController",
+    "Method": "GetAllReceipts",
+    "RelativePath": "api/Receipt",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "StoreWebApi.Controllers.ReceiptController",
+    "Method": "GetReceipt",
+    "RelativePath": "api/Receipt/{orderId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "orderId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": []
   }
 ]

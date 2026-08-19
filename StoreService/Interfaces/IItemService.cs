@@ -11,5 +11,7 @@ namespace StoreService.Interfaces
         Task<ResultResponse<ItemDto>> UpdateItem(int itemId, string newName, int newPrice,int stockQuantity);
         Task DeleteItem(int itemId);
         Task<ResultResponse<List<ItemDto>>> GetITemByCategory(int categoryId, int pageSize, int pageNumber);
+        Task<ResultResponse<List<ItemDto>>> GetItemsByCategoryId(int categoryId);
+        Task<ResultResponse<List<ItemDto>>> SearchByName(string itemName);
     }
 }

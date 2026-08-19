@@ -91,5 +91,20 @@ namespace StoreService.Services
             return ResultResponse<List<ItemDto>>.Pass(_mapper.Map<List<ItemDto>>(await _unitOfWork.ITemRepository.GetITemByCategory(categoryId, pageSize, pageNumber)),StatusCodes.Status200OK);
         }
 
+        public async Task<ResultResponse<List<ItemDto>>> GetItemsByCategoryId(int categoryId)
+        {
+            var category = await _unitOfWork.Categories.GetAsync(categoryId);
+            if (category == null)
+            {
+                return ResultResponse<List<ItemDto>>.Fail("category is not found", ErrorTypes.NotFound, StatusCodes.Status404NotFound);
+            }
+            return ResultResponse<List<ItemDto>>.Pass(_mapper.Map<List<ItemDto>>(await _unitOfWork.ITemRepository.GetItemsByCategoryId(categoryId)), StatusCodes.Status200OK);
+
+        }
+
+        public async Task<ResultResponse<List<ItemDto>>> SearchByName(string itemName)
+        {
+            return ResultResponse<List<ItemDto>>.Pass(_mapper.Map<List<ItemDto>>(await _unitOfWork.ITemRepository.SearchByName(itemName)),StatusCodes.Status200OK);
+        }
     }
 }

@@ -48,35 +48,35 @@ namespace StoreService.Services
             return ResultResponse<OrderDto>.Pass(_mapper.Map<OrderDto>(newOrder),StatusCodes.Status201Created);
         }
 
-        public async Task<ResultResponse<OrderItem>> AddOrderItemToOrder(int itemId, int quantity)
+        public async Task<ResultResponse<OrderItemDto>> AddOrderItemToOrder(OrderItemDto orderItemDto)
         {
             var order = await GetOrder();
-            var item = await _unitOfWork.Items.GetAsync(itemId);
+            var item = await _unitOfWork.Items.GetAsync(orderItemDto.ItemId);
             if (item == null)
             {
                 _logger.LogWarning("item is not found so you cannot add it to your order");
-                return ResultResponse<OrderItem>.Fail("item is not found so you cannot add it to your order", ErrorTypes.NotFound, StatusCodes.Status404NotFound);
+                return ResultResponse<OrderItemDto>.Fail("item is not found so you cannot add it to your order", ErrorTypes.NotFound, StatusCodes.Status404NotFound);
             }
-            if (quantity > item.StockQuantity)
+            if (orderItemDto.Quantity> item.StockQuantity)
             {
                 _logger.LogWarning("the stock quantity is not enough");
-                return ResultResponse<OrderItem>.Fail("the stock quantity is not enough", ErrorTypes.BadRequest, StatusCodes.Status400BadRequest);
+                return ResultResponse<OrderItemDto>.Fail("the stock quantity is not enough", ErrorTypes.BadRequest, StatusCodes.Status400BadRequest);
             }
             var newOrderITem = new OrderItem
             {
                 Order = order.Result,
                 OrderId = order.Result.Id,
                 Item = item,
-                ItemId = itemId,
-                Quantity = quantity
+                ItemId = orderItemDto.ItemId,
+                Quantity =1,
             };
             order.Result.Status = OrderStatus.InProgress.ToString();
-            order.Result.TotalAmount += quantity * item.Price;
+            order.Result.TotalAmount += item.Price;
             order.Result.UpdatedAt = DateTime.Now;
-            item.StockQuantity -= newOrderITem.Quantity;
+            item.StockQuantity -= 1;
             await _unitOfWork.OrderItems.CreateAsync(newOrderITem);
             await _unitOfWork.SaveChangesAsync();
-            return ResultResponse<OrderItem>.Pass(newOrderITem,StatusCodes.Status200OK);
+            return ResultResponse<OrderItemDto>.Pass(_mapper.Map<OrderItemDto>(newOrderITem),StatusCodes.Status200OK);
         }
 
         public async Task<ResultResponse<List<OrderDto>>> GetAllOrders()
@@ -165,6 +165,66 @@ namespace StoreService.Services
                 return ResultResponse<List<OrderItemDto>>.Fail("", ErrorTypes.NotFound, StatusCodes.Status404NotFound);
             }
             return ResultResponse<List<OrderItemDto>>.Pass(_mapper.Map<List<OrderItemDto>>(result),StatusCodes.Status200OK);
+        }
+
+        public async Task<ResultResponse<OrderItemDto>> IncreaseQuantityOfItem(OrderItemDto orderItemDto)
+        {
+            var order = await GetOrder();
+            var item = await _unitOfWork.Items.GetAsync(orderItemDto.ItemId);
+            if (item == null)
+            {
+                _logger.LogWarning("item is not found so you cannot increase its quantity");
+                return ResultResponse<OrderItemDto>.Fail("item is not found so you cannot increase its quantity", ErrorTypes.NotFound, StatusCodes.Status404NotFound);
+            }
+            var orderItem = await _unitOfWork.OrderItems.GetFirstOrDefault(a => a.ItemId == orderItemDto.ItemId && a.OrderId == order.Result.Id);
+            if (orderItem == null)
+            {
+                _logger.LogWarning("order item is not found so you cannot increase its quantity");
+                return ResultResponse<OrderItemDto>.Fail("order item is not found so you cannot increase its quantity", ErrorTypes.NotFound, StatusCodes.Status404NotFound);
+            }
+            orderItem.Quantity++;
+            if (orderItem.Quantity > item.StockQuantity)
+            {
+                _logger.LogWarning("the stock quantity is not enough");
+                return ResultResponse<OrderItemDto>.Fail("the stock quantity is not enough", ErrorTypes.BadRequest, StatusCodes.Status400BadRequest);
+            }
+
+            order.Result.Status = OrderStatus.InProgress.ToString();
+            order.Result.TotalAmount += item.Price;
+            order.Result.UpdatedAt = DateTime.Now;
+            item.StockQuantity--;
+            await _unitOfWork.SaveChangesAsync();
+            return ResultResponse<OrderItemDto>.Pass(_mapper.Map<OrderItemDto>(orderItem), StatusCodes.Status200OK);
+        }
+
+        public async Task<ResultResponse<OrderItemDto>> DecreaseQuantityOfItem(OrderItemDto orderItemDto)
+        {
+            var order = await GetOrder();
+            var item = await _unitOfWork.Items.GetAsync(orderItemDto.ItemId);
+            if (item == null)
+            {
+                _logger.LogWarning("item is not found so you cannot decrease its quantity");
+                return ResultResponse<OrderItemDto>.Fail("item is not found so you cannot decrease its quantity", ErrorTypes.NotFound, StatusCodes.Status404NotFound);
+            }
+            var orderItem = await _unitOfWork.OrderItems.GetFirstOrDefault(a => a.ItemId == orderItemDto.ItemId && a.OrderId == order.Result.Id);
+            if (orderItem == null)
+            {
+                _logger.LogWarning("order item is not found so you cannot decrease its quantity");
+                return ResultResponse<OrderItemDto>.Fail("order item is not found so you cannot decrease its quantity", ErrorTypes.NotFound, StatusCodes.Status404NotFound);
+            }
+            orderItem.Quantity--;
+            if (orderItem.Quantity <1)
+            {
+                _logger.LogWarning("you can't get quantity less than one");
+                return ResultResponse<OrderItemDto>.Fail("you can't get quantity less than one", ErrorTypes.BadRequest, StatusCodes.Status400BadRequest);
+            }
+
+            order.Result.Status = OrderStatus.InProgress.ToString();
+            order.Result.TotalAmount -= item.Price;
+            order.Result.UpdatedAt = DateTime.Now;
+            item.StockQuantity++;
+            await _unitOfWork.SaveChangesAsync();
+            return ResultResponse<OrderItemDto>.Pass(_mapper.Map<OrderItemDto>(orderItem), StatusCodes.Status200OK);
         }
     }
 }
